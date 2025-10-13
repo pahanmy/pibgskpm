@@ -340,7 +340,7 @@
                     voterName: currentVoterData.name,
                     choice: voteOption,
                     reason: voteReason || "",
-                    votedAt: serverTimestamp()
+                    votedAt: new Date() // Correct way to store timestamp
                 };
 
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
