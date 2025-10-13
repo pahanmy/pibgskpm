@@ -1,1 +1,333 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Undian PIBG | SK Pulau Melayu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid #4f46e5; border-radius: 50%;
+            width: 40px; height: 40px; animation: spin 2s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://placehold.co/40x40/4f46e5/ffffff?text=SKPM" alt="Logo SK Pulau Melayu" class="h-10 w-10 rounded-md">
+                <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
+            </a>
+            <div class="flex space-x-8">
+                <a href="mohon.html" class="text-slate-600 hover:text-indigo-600 font-semibold">Kembali ke Senarai Permohonan</a>
+            </div>
+        </nav>
+    </header>
 
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <div id="main-content" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-4xl mx-auto">
+            
+            <!-- IC Verification Section -->
+            <div id="ic-verification-section" class="p-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Pengesahan Exco PIBG</h2>
+                <p class="text-slate-500 mb-6">Sila masukkan No. Kad Pengenalan anda untuk meneruskan proses undian.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label for="voter-ic-verify" class="block text-sm font-medium text-slate-700 mb-1">No. Kad Pengenalan <span class="text-red-600">*</span></label>
+                        <input type="text" id="voter-ic-verify" placeholder="cth: 801010-01-xxxx" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <button id="verify-ic-btn" class="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Sahkan</button>
+                </div>
+                <p id="ic-verify-feedback" class="text-sm mt-4 text-center h-5"></p>
+            </div>
+
+            <!-- Voting Form Section (Initially Hidden) -->
+            <div id="voting-section" class="hidden">
+                 <div class="p-6 border-b border-slate-200 bg-slate-50 rounded-t-xl">
+                    <h2 class="text-2xl font-bold text-slate-900">Borang Undian Permohonan</h2>
+                    <p id="voter-info" class="mt-1 text-slate-500">Mengundi sebagai: <span class="font-semibold">Nama Pengundi (Jawatan)</span></p>
+                </div>
+                <form id="voteForm" class="p-8">
+                    <!-- Application Details -->
+                    <div class="mb-6 pb-6 border-b">
+                        <h3 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h3>
+                        <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
+                         <div class="mt-4 bg-gray-50 p-4 rounded-lg border">
+                            <h5 class="font-semibold mb-2">Perincian Bajet:</h5>
+                            <div class="text-sm space-y-1">
+                               <div class="flex justify-between"><span>Makan Minum:</span> <span id="vote-budget-makan">RM 0.00</span></div>
+                               <div class="flex justify-between"><span>Pengangkutan:</span> <span id="vote-budget-angkut">RM 0.00</span></div>
+                               <div class="flex justify-between"><span>Lain-lain:</span> <span id="vote-budget-lain">RM 0.00</span></div>
+                               <div class="flex justify-between border-t mt-2 pt-2 font-bold"><span>Jumlah Keseluruhan:</span> <span id="vote-budget-total">RM 0.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Voting Statistics -->
+                    <div class="mb-6">
+                        <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
+                        <div class="flex items-center">
+                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4"></div>
+                            </div>
+                            <span id="vote-progress-text" class="ml-3 font-medium text-sm">0/0 (0%)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Voting Options -->
+                    <div class="space-y-4 pt-6 border-t">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
+                             <div class="flex flex-col md:flex-row gap-4">
+                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="sokong" class="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500" required><span class="ml-3 text-green-700 font-semibold">Menyokong</span></label>
+                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="tolak" class="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"><span class="ml-3 text-red-700 font-semibold">Tidak Menyokong</span></label>
+                            </div>
+                        </div>
+                        <div id="reason-container" class="hidden">
+                            <label for="vote-reason" class="block text-sm font-medium text-gray-700 mb-1">Sebab Tidak Menyokong <span class="text-red-600">*</span></label>
+                            <textarea id="vote-reason" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                        </div>
+                         <div class="pt-4">
+                            <div class="flex items-center">
+                                <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
+                                <label for="vote-agreement" class="ml-2 block text-sm text-gray-800">Saya mengesahkan undian saya dan bersetuju dengan keputusan ini.</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
+                        <button type="submit" id="submitVoteBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Hantar Undian</button>
+                    </div>
+                </form>
+                 <div id="vote-feedback-message" class="hidden text-center p-8"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
+            &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
+        </div>
+    </footer>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
+        <p id="toast-message">This is a toast message!</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Setup ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
+            authDomain: "pibgskpm-01.firebaseapp.com",
+            projectId: "pibgskpm-01",
+            storageBucket: "pibgskpm-01.appspot.com",
+            messagingSenderId: "166309223339",
+            appId: "1:166309223339:web:cbe72e17506b40820c90ee"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const applicationsCol = collection(db, `/artifacts/${appId}/public/data/applications`);
+        const excoMembersCol = collection(db, `/artifacts/${appId}/public/data/exco_members`);
+
+        // --- UI Elements ---
+        const icVerificationSection = document.getElementById('ic-verification-section');
+        const votingSection = document.getElementById('voting-section');
+        const verifyIcBtn = document.getElementById('verify-ic-btn');
+        const icVerifyInput = document.getElementById('voter-ic-verify');
+        const icVerifyFeedback = document.getElementById('ic-verify-feedback');
+        const voteForm = document.getElementById('voteForm');
+        const reasonContainer = document.getElementById('reason-container');
+        const reasonInput = document.getElementById('vote-reason');
+        const mainContent = document.getElementById('main-content');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        let currentApplicationId = null;
+        let currentVoterData = null;
+
+        // --- General Functions ---
+        const showToast = (message, type = 'success') => {
+            toastMessage.textContent = message;
+            toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
+        };
+
+        const showFeedback = (element, message, type) => {
+            element.textContent = message;
+            element.className = `text-sm mt-4 text-center h-5 ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
+        };
+        
+        // --- Page Load Logic ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                console.log("Firebase authentication successful.");
+
+                const urlParams = new URLSearchParams(window.location.search);
+                currentApplicationId = urlParams.get('id') || urlParams.get('vote');
+
+                if (!currentApplicationId) {
+                    mainContent.innerHTML = `<div class="p-8 text-center"><h2 class="text-2xl font-bold text-red-600">ID Permohonan Tidak Sah</h2><p class="mt-2 text-slate-500">Sila kembali ke senarai permohonan dan cuba lagi.</p></div>`;
+                }
+
+            } catch (error) {
+                 console.error("Firebase authentication failed:", error);
+                showToast("Gagal menyambung ke pangkalan data.", 'error');
+            }
+        });
+
+        // --- Verification and Voting Logic ---
+        verifyIcBtn.addEventListener('click', async () => {
+            const icValue = icVerifyInput.value.trim();
+            if (!icValue) {
+                showFeedback(icVerifyFeedback, "Sila masukkan No. KP anda.", 'error');
+                return;
+            }
+
+            verifyIcBtn.disabled = true;
+            verifyIcBtn.textContent = "Menyemak...";
+            icVerifyFeedback.textContent = "";
+
+            try {
+                // 1. Verify Exco
+                const q = query(excoMembersCol, where("ic", "==", icValue));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    throw new Error("No. KP tidak sah atau bukan Exco.");
+                }
+                currentVoterData = querySnapshot.docs[0].data();
+
+                // 2. Load Application
+                const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
+                const appSnap = await getDoc(appDocRef);
+
+                if (!appSnap.exists()) {
+                    throw new Error("Permohonan tidak dijumpai.");
+                }
+                const appData = appSnap.data();
+
+                // 3. Check if already voted
+                if (appData.votes?.some(vote => vote.voterIc === icValue)) {
+                    throw new Error("Anda telah mengundi untuk permohonan ini.");
+                }
+
+                // 4. Check if voting period is expired (14 days)
+                const fourteenDaysInMillis = 14 * 24 * 60 * 60 * 1000;
+                const applicationDate = appData.createdAt.toDate();
+                if (Date.now() - applicationDate.getTime() > fourteenDaysInMillis) {
+                    throw new Error("Tempoh undian untuk permohonan ini telah tamat.");
+                }
+
+                // 5. Populate and show voting form
+                await populateVotingForm(appData);
+                icVerificationSection.classList.add('hidden');
+                votingSection.classList.remove('hidden');
+
+            } catch (error) {
+                showFeedback(icVerifyFeedback, error.message, 'error');
+            } finally {
+                verifyIcBtn.disabled = false;
+                verifyIcBtn.textContent = "Sahkan";
+            }
+        });
+
+        const populateVotingForm = async (app) => {
+            // Populate voter info
+            document.getElementById('voter-info').innerHTML = `Mengundi sebagai: <span class="font-semibold">${currentVoterData.name} (${currentVoterData.pibgPosition})</span>`;
+            
+            // Populate application details
+            document.getElementById('vote-program-name').textContent = app.purpose;
+            document.getElementById('vote-program-applicant').textContent = `Oleh: ${app.applicant}`;
+            document.getElementById('vote-budget-makan').textContent = `RM ${app.budget.makan.toFixed(2)}`;
+            document.getElementById('vote-budget-angkut').textContent = `RM ${app.budget.angkut.toFixed(2)}`;
+            document.getElementById('vote-budget-lain').textContent = `RM ${app.budget.lain.toFixed(2)}`;
+            document.getElementById('vote-budget-total').textContent = `RM ${app.amount.toFixed(2)}`;
+            
+            // Populate voting stats
+            const excoSnapshot = await getDocs(excoMembersCol);
+            const totalExco = excoSnapshot.size;
+            const currentVotes = app.votes?.length || 0;
+            const percentage = totalExco > 0 ? Math.round((currentVotes / totalExco) * 100) : 0;
+            document.getElementById('vote-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('vote-progress-text').textContent = `${currentVotes}/${totalExco} telah mengundi (${percentage}%)`;
+        };
+
+        voteForm.addEventListener('change', (e) => {
+            if (e.target.name === 'vote_option') {
+                if (e.target.value === 'tolak') {
+                    reasonContainer.classList.remove('hidden');
+                    reasonInput.required = true;
+                } else {
+                    reasonContainer.classList.add('hidden');
+                    reasonInput.required = false;
+                }
+            }
+        });
+
+        voteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitVoteBtn = document.getElementById('submitVoteBtn');
+            submitVoteBtn.disabled = true;
+            submitVoteBtn.textContent = "Menghantar...";
+
+            try {
+                const voteOption = voteForm.querySelector('input[name="vote_option"]:checked').value;
+                const voteReason = reasonInput.value.trim();
+
+                if(voteOption === 'tolak' && !voteReason) {
+                    throw new Error("Sila nyatakan sebab anda tidak menyokong.");
+                }
+
+                const voteData = {
+                    voterIc: icVerifyInput.value.trim(),
+                    voterName: currentVoterData.name,
+                    choice: voteOption,
+                    reason: voteReason || "",
+                    votedAt: serverTimestamp()
+                };
+
+                const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
+                await updateDoc(appDocRef, { votes: arrayUnion(voteData) });
+
+                votingSection.innerHTML = `
+                    <div class="p-8 text-center">
+                        <h2 class="text-2xl font-bold text-green-600">Undian Berjaya Dihantar!</h2>
+                        <p class="mt-2 text-slate-500">Terima kasih atas undian anda. Anda boleh menutup tetingkap ini.</p>
+                        <a href="mohon.html" class="mt-6 inline-block px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Kembali</a>
+                    </div>
+                `;
+
+            } catch (error) {
+                 showToast(error.message, 'error');
+            } finally {
+                submitVoteBtn.disabled = false;
+                submitVoteBtn.textContent = "Hantar Undian";
+            }
+        });
+    </script>
+</body>
+</html>
