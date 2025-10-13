@@ -215,7 +215,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" /></svg>
                                 <span>Sistem Peruntukan PIBG</span>
                             </a>
-                            <a href="#" id="openRegistrationBtn" class="w-full flex items-center space-x-3 px-4 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors duration-300">
+                            <a href="#" id="openExcoModalBtn" class="w-full flex items-center space-x-3 px-4 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4a1 1 0 00-1 1v1a1 1 0 002 0V5a1 1 0 00-1-1zm12 0a1 1 0 00-1 1v1a1 1 0 002 0V5a1 1 0 00-1-1zM2 10a1 1 0 001 1h1a1 1 0 100-2H3a1 1 0 00-1 1zm14 0a1 1 0 001 1h1a1 1 0 100-2h-1a1 1 0 00-1 1zM4 16a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm12 0a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1z" /><path fill-rule="evenodd" d="M10 5a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
                                 <span>Daftar Exco PIBG</span>
                             </a>
@@ -226,8 +226,54 @@
         </div>
     </main>
 
+    <!-- Modal Senarai Exco -->
+    <div id="excoListModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Senarai Exco PIBG Berdaftar</h3>
+                <button id="closeExcoListModal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="overflow-y-auto p-6 md:p-8">
+                <div class="flex justify-end mb-6">
+                    <button id="goToRegisterBtn" class="flex items-center space-x-2 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Daftar Nama</span>
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Bil.</th>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nama</th>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jawatan PIBG</th>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Sesi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="excoListBody" class="divide-y divide-slate-200">
+                             <!-- Loader Row -->
+                             <tr>
+                                <td colspan="4" class="text-center py-10">
+                                    <div class="flex justify-center items-center text-slate-500">
+                                        <span>Memuatkan data...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Modal Pendaftaran Exco -->
-    <div id="registrationModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+    <div id="registrationModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
             <!-- Modal Header -->
             <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
@@ -318,44 +364,60 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibg-skpm-portal';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO", authDomain: "DEMO", projectId: "DEMO" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
+            authDomain: "pibgskpm-01.firebaseapp.com",
+            projectId: "pibgskpm-01",
+            storageBucket: "pibgskpm-01.firebasestorage.app",
+            messagingSenderId: "166309223339",
+            appId: "1:166309223339:web:cbe72e17506b40820c90ee"
+        };
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const excoMembersCol = collection(db, `/artifacts/${appId}/public/data/exco_members`);
-
-        // Authenticate user
-        (async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                console.log("Firebase authentication successful.");
-            } catch (error) {
-                console.error("Firebase authentication failed:", error);
-                showToast("Gagal menyambung ke pangkalan data.", 'error');
-            }
-        })();
+        const excoMembersCol = collection(db, `/artifacts/${firebaseConfig.projectId}/public/data/exco_members`);
 
         // --- UI Elements ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         const registrationModal = document.getElementById('registrationModal');
-        const openRegistrationBtn = document.getElementById('openRegistrationBtn');
         const closeRegistrationModalBtn = document.getElementById('closeRegistrationModal');
         const cancelRegistrationBtn = document.getElementById('cancelRegistrationBtn');
         const registrationForm = document.getElementById('registrationForm');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
+        
+        // Exco List Modal Elements
+        const excoListModal = document.getElementById('excoListModal');
+        const openExcoModalBtn = document.getElementById('openExcoModalBtn');
+        const closeExcoListModalBtn = document.getElementById('closeExcoListModal');
+        const goToRegisterBtn = document.getElementById('goToRegisterBtn');
+        const excoListBody = document.getElementById('excoListBody');
+
+        // Authenticate user and set up listeners
+        (async () => {
+            try {
+                await signInAnonymously(auth);
+                console.log("Firebase authentication successful (anonymous).");
+                listenForExcoMembers(); // Start listening for exco members
+            } catch (error) {
+                console.error("Firebase authentication failed:", error);
+                if (error.code === 'auth/operation-not-allowed') {
+                    showToast("Sila aktifkan 'Anonymous sign-in' di Firebase Console anda.", 'error');
+                } else if (error.code === 'auth/configuration-not-found') {
+                     showToast("Ralat Konfigurasi Firebase. Sila pastikan Anonymous sign-in telah diaktifkan.", 'error');
+                }
+                else {
+                    showToast("Gagal menyambung ke pangkalan data.", 'error');
+                }
+            }
+        })();
 
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
@@ -364,12 +426,15 @@
             toast.classList.remove('opacity-0', 'translate-y-10');
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-10');
-            }, 3000);
+            }, 5000); // Increased timeout for visibility
         };
 
         const closeModal = (modalElement) => {
             modalElement.classList.replace('flex', 'hidden');
-            document.body.style.overflow = 'auto';
+            const isAnyModalOpen = document.querySelector('.fixed.inset-0.flex');
+            if (!isAnyModalOpen) {
+                 document.body.style.overflow = 'auto';
+            }
         };
 
         const openModal = (modalElement) => {
@@ -380,15 +445,53 @@
         // --- Mobile Menu ---
         mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
+        // --- Exco List Modal Logic ---
+        const listenForExcoMembers = () => {
+            onSnapshot(excoMembersCol, (snapshot) => {
+                excoListBody.innerHTML = ''; // Clear previous data
+                if (snapshot.empty) {
+                    excoListBody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-500">Tiada Exco yang berdaftar buat masa ini.</td></tr>`;
+                    return;
+                }
+
+                const members = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                members.sort((a, b) => (a.registeredAt?.seconds || 0) - (b.registeredAt?.seconds || 0));
+
+                members.forEach((member, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50';
+                    row.innerHTML = `
+                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${index + 1}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-sm font-medium text-slate-900">${member.name}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${member.pibgPosition}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${member.session}</td>
+                    `;
+                    excoListBody.appendChild(row);
+                });
+            });
+        };
+
+        openExcoModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(excoListModal);
+        });
+
+        closeExcoListModalBtn.addEventListener('click', () => closeModal(excoListModal));
+        excoListModal.addEventListener('click', (event) => { if (event.target === excoListModal) closeModal(excoListModal); });
+        
+        goToRegisterBtn.addEventListener('click', () => {
+            openModal(registrationModal); // Open registration form on top
+        });
+
+
         // --- Modal: Exco Registration ---
         const childrenContainer = document.getElementById('children-container');
         const addChildBtn = document.getElementById('addChildBtn');
         let childCount = 1;
 
-        openRegistrationBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal(registrationModal);
-            registrationForm.reset();
+        // Reset form when opening
+        const resetRegistrationForm = () => {
+             registrationForm.reset();
             childrenContainer.innerHTML = `
                 <div class="child-entry grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -402,6 +505,12 @@
                 </div>`;
             childCount = 1;
             document.getElementById('registration-feedback-message').classList.add('hidden');
+        }
+
+        // Call reset when the 'Daftar Nama' button is clicked.
+        goToRegisterBtn.addEventListener('click', () => {
+            resetRegistrationForm();
+            openModal(registrationModal);
         });
         
         addChildBtn.addEventListener('click', () => {
@@ -461,7 +570,10 @@
                 feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Pendaftaran Berjaya!</h3><p>Terima kasih. Maklumat anda telah disimpan.</p>`;
                 feedbackEl.classList.remove('hidden');
 
-                setTimeout(() => closeModal(registrationModal), 3000);
+                setTimeout(() => {
+                    closeModal(registrationModal);
+                    closeModal(excoListModal);
+                }, 3000);
             } catch (error) {
                 feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-red-100 text-red-800';
                 feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Pendaftaran Gagal</h3><p>${error.message}</p>`;
