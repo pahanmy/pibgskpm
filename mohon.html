@@ -13,6 +13,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc; /* slate-50 */
         }
+        .form-step { display: none; }
         .form-step.active { display: block; }
         .step-indicator .step-circle {
             width: 3rem; height: 3rem; border-radius: 50%; background-color: #e5e7eb; color: #6b7280;
@@ -91,40 +92,123 @@
                             </div>
                             <!-- Step 1: Maklumat Pemohon -->
                             <div id="form-step-1" class="form-step space-y-6 active">
-                                <p class="mt-2 text-sm text-slate-600">Sila lengkapkan maklumat di bawah. Medan bertanda <span class="text-red-600">*</span> adalah wajib diisi.</p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label for="nama_pemohon" class="block text-sm font-medium text-slate-700 mb-1">Nama Pemohon <span class="text-red-600">*</span></label>
-                                        <input type="text" id="nama_pemohon" name="nama_pemohon" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                <div>
+                                    <label for="no_ic_pemohon" class="block text-sm font-medium text-slate-700 mb-1">No. Kad Pengenalan Exco <span class="text-red-600">*</span></label>
+                                    <input type="text" id="no_ic_pemohon" name="no_ic_pemohon" placeholder="Masukkan No. KP dan tekan Enter atau alih kursor" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <p id="ic-feedback" class="text-sm mt-2 h-5"></p>
+                                    <div id="teacher-reg-option" class="hidden mt-2">
+                                        <p class="text-slate-600 text-sm">Bukan seorang Exco?
+                                            <button type="button" id="register-teacher-btn" class="ml-2 text-indigo-600 font-semibold hover:underline">Klik di sini jika anda seorang Guru</button>
+                                        </p>
+                                    </div>
+                                </div>
+                                <fieldset id="applicant-details-fieldset" disabled class="space-y-6 border-t border-slate-200 mt-6 pt-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label for="nama_pemohon" class="block text-sm font-medium text-slate-700 mb-1">Nama Pemohon <span class="text-red-600">*</span></label>
+                                            <input type="text" id="nama_pemohon" name="nama_pemohon" class="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100" required readonly>
+                                        </div>
+                                        <div>
+                                            <label for="jawatan" class="block text-sm font-medium text-slate-700 mb-1">Jawatan <span class="text-red-600">*</span></label>
+                                            <input type="text" id="jawatan" name="jawatan" class="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100" required readonly>
+                                        </div>
                                     </div>
                                     <div>
-                                        <label for="jawatan" class="block text-sm font-medium text-slate-700 mb-1">Jawatan <span class="text-red-600">*</span></label>
-                                        <input type="text" id="jawatan" name="jawatan" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                        <label for="no_telefon" class="block text-sm font-medium text-slate-700 mb-1">No Telefon Untuk Berhubung <span class="text-red-600">*</span></label>
+                                        <input type="tel" id="no_telefon" name="no_telefon" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                                     </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label for="nama_bank" class="block text-sm font-medium text-slate-700 mb-1">Nama Bank <span class="text-red-600">*</span></label>
+                                            <input type="text" id="nama_bank" name="nama_bank" placeholder="Cth: Maybank" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                        </div>
+                                        <div>
+                                            <label for="no_akaun" class="block text-sm font-medium text-slate-700 mb-1">No. Akaun Bank <span class="text-red-600">*</span></label>
+                                            <input type="text" id="no_akaun" name="no_akaun" placeholder="xxxxxxxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <!-- Step 2: Maklumat Program -->
+                            <div id="form-step-2" class="form-step space-y-6">
+                                <div>
+                                    <label for="tujuan" class="block text-sm font-medium text-slate-700 mb-1">Tujuan Pemohonan <span class="text-red-600">*</span></label>
+                                    <textarea id="tujuan" name="tujuan" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
                                 </div>
                                 <div>
-                                    <label for="no_telefon" class="block text-sm font-medium text-slate-700 mb-1">No Telefon Untuk Berhubung <span class="text-red-600">*</span></label>
-                                    <input type="tel" id="no_telefon" name="no_telefon" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                    <label for="tarikh_program" class="block text-sm font-medium text-slate-700 mb-1">Tarikh Program Bermula</label>
+                                    <input type="date" id="tarikh_program" name="tarikh_program" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6">
-                                    <div>
-                                        <label for="nama_bank" class="block text-sm font-medium text-slate-700 mb-1">Nama Bank <span class="text-red-600">*</span></label>
-                                        <input type="text" id="nama_bank" name="nama_bank" placeholder="Cth: Maybank" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                                    </div>
-                                    <div>
-                                        <label for="no_akaun" class="block text-sm font-medium text-slate-700 mb-1">No. Akaun Bank <span class="text-red-600">*</span></label>
-                                        <input type="text" id="no_akaun" name="no_akaun" placeholder="xxxxxxxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Kategori Pemohonan <span class="text-red-600">*</span></label>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center"><input type="radio" name="kategori" value="Akademik" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500" required> <label class="ml-2 text-sm text-slate-700">Akademik</label></div>
+                                        <div class="flex items-center"><input type="radio" name="kategori" value="Kokurikulum" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"> <label class="ml-2 text-sm text-slate-700">Kokurikulum</label></div>
+                                        <div class="flex items-center"><input type="radio" name="kategori" value="Sahsiah Murid" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"> <label class="ml-2 text-sm text-slate-700">Sahsiah Murid</label></div>
+                                        <div class="flex items-center"><input type="radio" name="kategori" value="Lain-lain" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"> <label class="ml-2 text-sm text-slate-700">Lain-lain:</label> <input type="text" name="kategori_lain" class="ml-2 border-0 border-b border-slate-300 focus:ring-0 focus:border-indigo-500 text-sm"></div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Step 2, 3, 4 and success message here -->
+                            <!-- Step 3: Perincian Bajet -->
+                            <div id="form-step-3" class="form-step space-y-6">
+                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="jumlah_peserta" class="block text-sm font-medium text-slate-700 mb-1">Jumlah Peserta (Termasuk guru)</label>
+                                        <input type="number" id="jumlah_peserta" name="jumlah_peserta" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label for="jumlah_hari" class="block text-sm font-medium text-slate-700 mb-1">Jumlah Hari</label>
+                                        <input type="number" id="jumlah_hari" name="jumlah_hari" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium text-slate-800 mb-2 border-t pt-4">Perincian Pemohonan Harian</h5>
+                                    <p class="text-xs text-slate-500 mb-4">Masukkan nilai sebenar untuk memudahkan proses semakan.</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-1">Makan Minum (RM) <span class="text-red-600">*</span></label>
+                                            <input type="number" step="0.01" id="makan_minum" name="makan_minum" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-1">Pengangkutan (RM) <span class="text-red-600">*</span></label>
+                                            <input type="number" step="0.01" id="pengangkutan" name="pengangkutan" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-1">Lain-lain (RM) <span class="text-red-600">*</span></label>
+                                            <input type="number" step="0.01" id="lain_lain" name="lain_lain" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Jumlah Keseluruhan (RM)</label>
+                                    <input type="text" id="jumlah_keseluruhan" name="jumlah_keseluruhan" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100" readonly>
+                                </div>
+                            </div>
+                            <!-- Step 4: Pengesahan -->
+                            <div id="form-step-4" class="form-step space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Kertas Kerja Yang Telah Disahkan (Jika ada)</label>
+                                    <p class="text-xs text-slate-500 mb-2">Muat naik 1 fail sokongan. Saiz maksimum 10MB.</p>
+                                    <input type="file" name="lampiran" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"/>
+                                </div>
+                                <div class="border-t pt-4">
+                                    <div class="flex items-center">
+                                        <input id="agreement" name="agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500" required>
+                                        <label for="agreement" class="ml-2 block text-sm text-slate-800">Saya dengan ini mengesahkan bahawa semua maklumat yang diberikan adalah benar dan sahih. <span class="text-red-600">*</span></label>
+                                    </div>
+                                </div>
+                                <div id="success-message" class="hidden text-center p-4 bg-green-100 text-green-800 rounded-lg">
+                                    <h3 class="font-bold text-lg">Permohonan Berjaya Dihantar!</h3>
+                                    <p>Terima kasih. Permohonan anda sedang diproses. Anda akan dialihkan ke senarai permohonan sebentar lagi.</p>
+                                </div>
+                            </div>
                         </div>
                     </form>
                     <!-- Form footer outside of form to keep it visible -->
                      <div id="application-footer" class="p-6 border-t flex-shrink-0 flex justify-between items-center bg-slate-50 rounded-b-xl">
                         <button type="button" id="prevBtn" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed">Kembali</button>
                         <div>
-                            <button type="button" id="nextBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Seterusnya</button>
+                            <button type="button" id="nextBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm" disabled>Seterusnya</button>
                             <button type="submit" id="submitBtn" form="applicationForm" class="hidden px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 shadow-sm">Hantar Permohonan</button>
                         </div>
                     </div>
@@ -140,17 +224,17 @@
                         </button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white">
+                        <table class="min-w-full w-full bg-white table-fixed">
                             <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">No.</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nama Pemohon</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tujuan</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh Mohon</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jumlah (RM)</th>
-                                    <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Peratus Undian</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[5%]">No.</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[15%]">Nama Pemohon</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[25%]">Tujuan</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[10%]">Tarikh Mohon</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[10%]">Jumlah (RM)</th>
+                                    <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-[10%]">Tindakan</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[15%]">Peratus Undian</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[10%]">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="applicationListBody" class="divide-y divide-slate-200">
@@ -165,7 +249,63 @@
 
     <!-- Modal Undian Exco -->
     <div id="votingModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
-        <!-- ... modal content ... -->
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-800">Undian Exco PIBG</h3>
+                <button id="closeVotingModal" class="text-gray-400 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <div class="overflow-y-auto p-6 md:p-8">
+                <div id="vote-feedback-message" class="hidden text-center p-4 mb-6 rounded-lg"></div>
+                <form id="voteForm">
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h4>
+                        <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
+                    </div>
+                    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                        <h5 class="font-semibold mb-2">Perincian Bajet:</h5>
+                        <div class="text-sm space-y-1">
+                           <div class="flex justify-between"><span>Makan Minum:</span> <span id="vote-budget-makan">RM 0.00</span></div>
+                           <div class="flex justify-between"><span>Pengangkutan:</span> <span id="vote-budget-angkut">RM 0.00</span></div>
+                           <div class="flex justify-between"><span>Lain-lain:</span> <span id="vote-budget-lain">RM 0.00</span></div>
+                           <div class="flex justify-between border-t mt-2 pt-2 font-bold"><span>Jumlah Keseluruhan:</span> <span id="vote-budget-total">RM 0.00</span></div>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
+                        <div class="flex items-center">
+                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4"></div>
+                            </div>
+                            <span id="vote-progress-text" class="ml-3 font-medium text-sm">0/0 (0%)</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4 border-t pt-6">
+                        <div>
+                            <label for="voter-ic" class="block text-sm font-medium text-gray-700 mb-1">No. Kad Pengenalan (untuk pengesahan) <span class="text-red-600">*</span></label>
+                            <input type="text" id="voter-ic" name="voter-ic" placeholder="cth: 801010-01-xxxx" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
+                             <div class="flex flex-col md:flex-row gap-4">
+                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="sokong" class="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500" required><span class="ml-3 text-green-700 font-semibold">Menyokong</span></label>
+                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="tolak" class="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"><span class="ml-3 text-red-700 font-semibold">Menolak</span></label>
+                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="berkecuali" class="h-4 w-4 text-yellow-600 border-gray-300 focus:ring-yellow-500"><span class="ml-3 text-yellow-700 font-semibold">Berkecuali</span></label>
+                            </div>
+                        </div>
+                         <div class="pt-4">
+                            <div class="flex items-center">
+                                <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
+                                <label for="vote-agreement" class="ml-2 block text-sm text-gray-800">Saya bersetuju untuk mengundi secara telus dan bertanggungjawab.</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
+                        <button type="button" id="cancelVoteBtn" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Batal</button>
+                        <button type="submit" id="submitVoteBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Hantar Undian</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <footer class="bg-white border-t mt-12">
@@ -182,11 +322,18 @@
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, addDoc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, addDoc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, serverTimestamp, getDoc, Timestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibg-skpm-portal';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO", authDomain: "DEMO", projectId: "DEMO" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
+            authDomain: "pibgskpm-01.firebaseapp.com",
+            projectId: "pibgskpm-01",
+            storageBucket: "pibgskpm-01.appspot.com",
+            messagingSenderId: "166309223339",
+            appId: "1:166309223339:web:cbe72e17506b40820c90ee"
+        };
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -207,7 +354,7 @@
                 listenForApplications(); 
             } catch (error) {
                 console.error("Firebase authentication failed:", error);
-                showToast("Gagal menyambung ke pangkalan data.", 'error');
+                showToast("Gagal menyambung ke pangkalan data. Sila pastikan Anonymous Sign-in diaktifkan di Firebase Console.", 'error');
             }
         })();
 
@@ -239,28 +386,225 @@
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
         const switchTab = (targetTabId) => {
-            tabButtons.forEach(btn => {
-                btn.classList.toggle('active-tab', btn.id === targetTabId);
-            });
-            tabContents.forEach(content => {
-                content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content'));
-            });
+            tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
+            tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
         };
         tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
+        
         newApplicationBtn.addEventListener('click', () => {
             switchTab('tab-form-btn');
-            // Reset form state if needed
+            resetApplicationForm();
         });
         
         // --- Application Form Logic ---
-        // (Similar to previous version, just scoped to this page)
-        // ... all the form steps, validation, progress bar, and submission logic ...
+        const formSteps = document.querySelectorAll('.form-step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const stepIndicators = document.querySelectorAll('.step-indicator');
+        const successMessage = document.getElementById('success-message');
+        const icInput = document.getElementById('no_ic_pemohon');
+        const icFeedback = document.getElementById('ic-feedback');
+        const applicantDetailsFieldset = document.getElementById('applicant-details-fieldset');
+        const applicantNameInput = document.getElementById('nama_pemohon');
+        const applicantPositionInput = document.getElementById('jawatan');
+        const teacherRegOption = document.getElementById('teacher-reg-option');
+        const registerTeacherBtn = document.getElementById('register-teacher-btn');
+
+        let currentStep = 1;
+
+        const updateFormSteps = () => {
+            formSteps.forEach(step => step.classList.remove('active'));
+            document.getElementById(`form-step-${currentStep}`).classList.add('active');
+        };
+
+        const updateProgressBar = () => {
+            stepIndicators.forEach((indicator, index) => {
+                const step = index + 1;
+                indicator.classList.remove('active', 'completed');
+                if (step < currentStep) indicator.classList.add('completed');
+                else if (step === currentStep) indicator.classList.add('active');
+            });
+        };
+
+        const updateButtons = () => {
+            prevBtn.disabled = currentStep === 1;
+            prevBtn.classList.toggle('opacity-50', currentStep === 1);
+            prevBtn.classList.toggle('cursor-not-allowed', currentStep === 1);
+            nextBtn.classList.toggle('hidden', currentStep === formSteps.length);
+            submitBtn.classList.toggle('hidden', currentStep !== formSteps.length);
+        };
+
+        const validateStep = (step) => {
+            const currentFormStep = document.getElementById(`form-step-${step}`);
+            const inputs = currentFormStep.querySelectorAll('input[required], textarea[required]');
+            let isValid = true;
+            inputs.forEach(input => {
+                let isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
+                if (input.closest('fieldset')?.disabled) return;
+                input.classList.toggle('border-red-500', !isInputValid);
+                if (!isInputValid) isValid = false;
+            });
+             if (step === 1 && applicantDetailsFieldset.disabled) isValid = false;
+            return isValid;
+        };
+        
+        const resetApplicationForm = () => {
+            applicationForm.reset();
+            currentStep = 1;
+            updateFormSteps();
+            updateProgressBar();
+            updateButtons();
+            icFeedback.textContent = '';
+            icFeedback.className = 'text-sm mt-2 h-5';
+            applicantDetailsFieldset.disabled = true;
+            nextBtn.disabled = true;
+            successMessage.classList.add('hidden');
+            document.getElementById('form-steps-container').style.display = 'block';
+
+            // Reset teacher specific UI
+            teacherRegOption.classList.add('hidden');
+            applicantNameInput.readOnly = true;
+            applicantNameInput.classList.add('bg-slate-100');
+            applicantPositionInput.readOnly = true;
+            applicantPositionInput.classList.add('bg-slate-100');
+        };
+
+        icInput.addEventListener('blur', async () => {
+            const icValue = icInput.value.trim();
+             // Reset state before new check
+            teacherRegOption.classList.add('hidden');
+            applicantNameInput.readOnly = true;
+            applicantNameInput.classList.add('bg-slate-100');
+            applicantPositionInput.readOnly = true;
+            applicantPositionInput.classList.add('bg-slate-100');
+
+            if (icValue.length < 5) {
+                icFeedback.textContent = '';
+                return;
+            }
+
+            icFeedback.textContent = 'Mencari maklumat Exco...';
+            icFeedback.className = 'text-sm mt-2 h-5 text-slate-500';
+            applicantDetailsFieldset.disabled = true;
+            nextBtn.disabled = true;
+
+            try {
+                const q = query(excoMembersCol, where("ic", "==", icValue));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    icFeedback.textContent = 'No. KP tidak dijumpai dalam senarai Exco.';
+                    icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
+                    applicantNameInput.value = '';
+                    applicantPositionInput.value = '';
+                    teacherRegOption.classList.remove('hidden'); // Show teacher registration option
+                } else {
+                    const excoData = querySnapshot.docs[0].data();
+                    icFeedback.textContent = 'Maklumat Exco dijumpai!';
+                    icFeedback.className = 'text-sm mt-2 h-5 text-green-600';
+                    applicantNameInput.value = excoData.name;
+                    applicantPositionInput.value = excoData.pibgPosition;
+                    applicantDetailsFieldset.disabled = false;
+                    nextBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error("Error fetching exco:", error);
+                icFeedback.textContent = 'Gagal membuat semakan. Sila cuba lagi.';
+                icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
+            }
+        });
+
+        registerTeacherBtn.addEventListener('click', () => {
+            icFeedback.textContent = 'Mod Guru: Sila masukkan nama anda di bawah.';
+            icFeedback.className = 'text-sm mt-2 h-5 text-blue-600';
+            
+            // Make name field writable
+            applicantNameInput.readOnly = false;
+            applicantNameInput.classList.remove('bg-slate-100');
+            applicantNameInput.value = ''; // Clear it
+            applicantNameInput.focus();
+
+            // Set position to 'Guru' and keep it readonly
+            applicantPositionInput.value = 'Guru';
+            applicantPositionInput.readOnly = true;
+            applicantPositionInput.classList.add('bg-slate-100');
+
+            // Enable the form
+            applicantDetailsFieldset.disabled = false;
+            nextBtn.disabled = false;
+            teacherRegOption.classList.add('hidden'); // Hide the button after click
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep) && currentStep < formSteps.length) {
+                currentStep++;
+                updateFormSteps(); updateProgressBar(); updateButtons();
+            }
+        });
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateFormSteps(); updateProgressBar(); updateButtons();
+            }
+        });
+        
+        const costInputs = document.querySelectorAll('.cost-input');
+        const totalCostInput = document.getElementById('jumlah_keseluruhan');
+        const calculateTotal = () => {
+            let total = 0;
+            costInputs.forEach(input => { total += parseFloat(input.value) || 0; });
+            totalCostInput.value = total.toFixed(2);
+        };
+        costInputs.forEach(input => input.addEventListener('input', calculateTotal));
         
         applicationForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // ... submission logic ...
-            // On success:
-            // setTimeout(() => { switchTab('tab-list-btn'); }, 3000);
+            if (!validateStep(currentStep)) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menghantar...';
+            
+            try {
+                const newApplication = {
+                    applicant: applicantNameInput.value,
+                    applicantIC: icInput.value,
+                    position: applicantPositionInput.value,
+                    phone: document.getElementById('no_telefon').value,
+                    bankName: document.getElementById('nama_bank').value,
+                    bankAccount: document.getElementById('no_akaun').value,
+                    purpose: document.getElementById('tujuan').value,
+                    programDate: document.getElementById('tarikh_program').value,
+                    category: document.querySelector('input[name="kategori"]:checked').value === 'Lain-lain' 
+                        ? document.querySelector('input[name="kategori_lain"]').value 
+                        : document.querySelector('input[name="kategori"]:checked').value,
+                    participants: parseInt(document.getElementById('jumlah_peserta').value) || 0,
+                    days: parseInt(document.getElementById('jumlah_hari').value) || 0,
+                    budget: {
+                        makan: parseFloat(document.getElementById('makan_minum').value) || 0,
+                        angkut: parseFloat(document.getElementById('pengangkutan').value) || 0,
+                        lain: parseFloat(document.getElementById('lain_lain').value) || 0
+                    },
+                    amount: parseFloat(totalCostInput.value) || 0,
+                    status: 'Dalam Proses',
+                    votes: [],
+                    createdAt: serverTimestamp()
+                };
+                await addDoc(applicationsCol, newApplication);
+                document.getElementById('form-steps-container').style.display = 'none';
+                successMessage.classList.remove('hidden');
+                setTimeout(() => { 
+                    switchTab('tab-list-btn');
+                    resetApplicationForm();
+                }, 4000);
+
+            } catch (error) {
+                console.error("Error submitting application:", error);
+                showToast('Gagal menghantar permohonan.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Hantar Permohonan';
+            }
         });
 
 
@@ -286,7 +630,7 @@
                 applications.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                 
                 applications.forEach((app, index) => {
-                    const percentage = totalExco > 0 ? Math.round((app.votes.length / totalExco) * 100) : 0;
+                    const percentage = totalExco > 0 ? Math.round(((app.votes?.length || 0) / totalExco) * 100) : 0;
                     let progressBarColor = 'bg-yellow-400';
                     if (app.status === 'Diluluskan') progressBarColor = 'bg-green-600';
                     else if (app.status === 'Ditolak') progressBarColor = 'bg-red-600';
@@ -294,14 +638,14 @@
                     
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${index + 1}</td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm font-medium text-slate-900">${app.applicant}</td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500 max-w-xs truncate">${app.purpose}</td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${formattedDate}</td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${app.amount.toFixed(2)}</td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm text-center"><button class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200" data-id="${app.id}">Undi</button></td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500"><div class="flex items-center"><div class="w-full bg-slate-200 rounded-full h-2.5"><div class="${progressBarColor} h-2.5 rounded-full" style="width: ${percentage}%"></div></div><span class="ml-2 font-medium">${percentage}%</span></div></td>
-                        <td class="py-4 px-4 whitespace-nowrap text-sm">${getStatusBadge(app.status)}</td>
+                        <td class="py-4 px-4 text-sm text-slate-500 align-top">${index + 1}</td>
+                        <td class="py-4 px-4 text-sm font-medium text-slate-900 align-top break-words">${app.applicant}</td>
+                        <td class="py-4 px-4 text-sm text-slate-500 align-top break-words">${app.purpose}</td>
+                        <td class="py-4 px-4 text-sm text-slate-500 align-top">${formattedDate}</td>
+                        <td class="py-4 px-4 text-sm text-slate-500 align-top">${app.amount.toFixed(2)}</td>
+                        <td class="py-4 px-4 text-sm text-center align-top"><button class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200" data-id="${app.id}">Undi</button></td>
+                        <td class="py-4 px-4 text-sm text-slate-500 align-top"><div class="flex items-center"><div class="w-full bg-slate-200 rounded-full h-2.5"><div class="${progressBarColor} h-2.5 rounded-full" style="width: ${percentage}%"></div></div><span class="ml-2 font-medium">${percentage}%</span></div></td>
+                        <td class="py-4 px-4 text-sm align-top">${getStatusBadge(app.status)}</td>
                     `;
                     applicationListBody.appendChild(row);
                 });
@@ -313,13 +657,222 @@
         };
 
         // --- Voting Modal Logic ---
-        // (Similar to previous version, just scoped to this page)
-        // ... openVotingModal, event listeners, and form submission logic ...
+        const openVotingModal = async (appId) => {
+            const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, appId);
+            const excoSnapshot = await getDocs(excoMembersCol);
+            const totalExco = excoSnapshot.size;
+
+            onSnapshot(appDocRef, (docSnap) => {
+                if (!docSnap.exists()) {
+                    showToast('Permohonan tidak dijumpai.', 'error');
+                    return;
+                }
+                const app = { id: docSnap.id, ...docSnap.data() };
+                voteForm.dataset.id = appId;
+                
+                document.getElementById('vote-program-name').textContent = app.purpose;
+                document.getElementById('vote-program-applicant').textContent = `Oleh: ${app.applicant}`;
+                document.getElementById('vote-budget-makan').textContent = `RM ${app.budget.makan.toFixed(2)}`;
+                document.getElementById('vote-budget-angkut').textContent = `RM ${app.budget.angkut.toFixed(2)}`;
+                document.getElementById('vote-budget-lain').textContent = `RM ${app.budget.lain.toFixed(2)}`;
+                document.getElementById('vote-budget-total').textContent = `RM ${app.amount.toFixed(2)}`;
+                
+                const percentage = totalExco > 0 ? Math.round(((app.votes?.length || 0) / totalExco) * 100) : 0;
+                document.getElementById('vote-progress-bar').style.width = `${percentage}%`;
+                document.getElementById('vote-progress-text').textContent = `${app.votes?.length || 0}/${totalExco} (${percentage}%)`;
+                
+                voteForm.reset();
+                document.getElementById('vote-feedback-message').classList.add('hidden');
+                openModal(votingModal);
+            });
+        };
+
+        document.getElementById('closeVotingModal').addEventListener('click', () => closeModal(votingModal));
+        document.getElementById('cancelVoteBtn').addEventListener('click', () => closeModal(votingModal));
+        votingModal.addEventListener('click', (event) => { if (event.target === votingModal) closeModal(votingModal); });
         
-        // Load default tab
+        voteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitVoteBtn = document.getElementById('submitVoteBtn');
+            submitVoteBtn.disabled = true;
+
+            const feedbackEl = document.getElementById('vote-feedback-message');
+            const voterIc = document.getElementById('voter-ic').value.trim();
+            const appId = voteForm.dataset.id;
+            const voteOption = voteForm.querySelector('input[name="vote_option"]:checked')?.value;
+
+            try {
+                const q = query(excoMembersCol, where("ic", "==", voterIc));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) throw new Error("No. KP tidak sah atau bukan Exco.");
+                
+                const excoDoc = querySnapshot.docs[0].data();
+                const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, appId);
+                const appSnap = await getDoc(appDocRef);
+
+                if (appSnap.data().votes?.some(vote => vote.voterIc === voterIc)) {
+                    throw new Error("Anda telah mengundi untuk permohonan ini.");
+                }
+
+                const voteData = { voterIc, voterName: excoDoc.name, choice: voteOption, votedAt: serverTimestamp() };
+                await updateDoc(appDocRef, { votes: arrayUnion(voteData) });
+                
+                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-green-100 text-green-800';
+                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Undian Berjaya Dihantar!</h3>`;
+                feedbackEl.classList.remove('hidden');
+
+                setTimeout(() => closeModal(votingModal), 3000);
+            } catch (error) {
+                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-red-100 text-red-800';
+                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Undian Gagal</h3><p>${error.message}</p>`;
+                feedbackEl.classList.remove('hidden');
+            } finally {
+                submitVoteBtn.disabled = false;
+            }
+        });
+        
+        // --- DATA SEEDING SCRIPT (TEMPORARY) ---
+        const setupSeeding = () => {
+             const cleanNumber = (str) => {
+                if (typeof str !== 'string' && typeof str !== 'number') return 0;
+                if(typeof str === 'number') return str;
+                return parseFloat(String(str).replace(/RM/g, '').replace(/,/g, '').trim()) || 0;
+            };
+
+            const cleanTextNumber = (str) => {
+                if (typeof str !== 'string' && typeof str !== 'number') return 0;
+                const match = String(str).match(/(\d+)/);
+                return match ? parseInt(match[0], 10) : 0;
+            };
+            
+            const seedData = [
+                { ts: "2024-07-04 11:42:04", applicant: "HELLEN LIHAN", position: "Guru Pemulihan Khas", phone: "0198542099", purpose: "KEM LITERASI DAN NUMERASI 2024", category: "PROGRAM PEMULIHAN KHAS", participants: "28 orang", days: "1 hari", makan: "RM280.00", angkut: "RM0.00", lain: 285, amount: "RM565.00", programDate: "2024-08-21", status: "Diluluskan" },
+                { ts: "2024-07-11 10:29:26", applicant: "Hazniza Binti Abdul Rahman", position: "Timb. YDP", phone: "01133802748", purpose: "Mesyuarat Exco PIBG 1.0", category: "Mesyuarat PIBG 1.0", participants: "20", days: "1", makan: "120", angkut: "0", lain: "0", amount: "120", programDate: "2024-07-13", status: "Diluluskan" },
+                { ts: "2024-07-12 12:45:03", applicant: "MOHD ASWADI BIN WAN ABIDIN", position: "GURU PENYELARAS BESTARI", phone: "0198782428", purpose: "PEMBELIAN ALAT GANTI UNTUK PROJEK STEM KERETA KAWALAN JAUH", category: "Akademik", participants: "15", days: "1", makan: "0", angkut: "0", lain: "420", amount: "420", programDate: "2024-07-18", status: "Diluluskan" },
+                { ts: "2024-07-15 13:40:09", applicant: "SHARIFAH MUHAINI BINTI WAN ABIDIN", position: "GURU PRASEKOLAH", phone: "0128966020", purpose: "SAMBUTAN HARI JADI MURID PRASEKOLAH", category: "Sahsiah Murid", participants: "25", days: "1", makan: "200", angkut: "0", lain: "200", amount: "400", programDate: "2024-10-24", status: "Diluluskan" },
+                { ts: "2025-06-23 09:12:08", applicant: "NORAINI RAUT", position: "GURU PENDIDIKAN ISLAM", phone: "0198751914", purpose: "PROGRAM IHYA' RAMADHAN DAN SUMBANGAN HARI RAYA AIDILFITRI", category: "Keagamaan", participants: "180", days: "1", makan: "1000", angkut: "0", lain: "2000", amount: "3000", programDate: "2025-06-23", status: "Dalam Proses" },
+                { ts: "2025-07-21 08:55:58", applicant: "CHRISTIE CHAUNG ANAK KUYAH", position: "GURU AKADEMIK BIASA", phone: "0168002798", purpose: "PENYERTAAN PERTANDINGAN DARE TO SPELL PERINGKAT DAERAH MIRI 2025", category: "Akademik", participants: "2", days: "1", makan: "20", angkut: "20", lain: "10", amount: "50", programDate: "2025-07-23", status: "Dalam Proses" },
+                { ts: "2025-07-21 09:12:01", applicant: "CHRISTIE CHAUNG", position: "GURU", phone: "0168002797", purpose: "PERTANDINGAN DARE TO SPELL PERINGKAT DAERAH MIRI 2025", category: "Akademik", participants: "2", days: "1", makan: "20", angkut: "0", lain: "20", amount: "40", programDate: "2025-07-23", status: "Dalam Proses" },
+                { ts: "2025-07-24 11:32:45", applicant: "NASARUDIN BIN AHAMAD", position: "GURU", phone: "0192514406", purpose: "KARNIVAL BULAN KEMERDEKAAN", category: "Kokurikulum", participants: "180", days: "1", makan: "500", angkut: "0", lain: "1000", amount: "1500", programDate: "2025-08-30", status: "Dalam Proses" },
+                { ts: "2024-07-16 10:00:00", applicant: "John Doe", position: "Guru Sains", phone: "0123456789", purpose: "Lawatan Sambil Belajar ke Petrosains", category: "Akademik", participants: "40", days: "1", makan: "400", angkut: "300", lain: "50", amount: "750", programDate: "2024-09-10", status: "Dalam Proses" },
+                { ts: "2024-07-17 11:30:00", applicant: "Jane Smith", position: "Guru Muzik", phone: "0111222333", purpose: "Pembelian Alat Muzik Rekoder", category: "Kokurikulum", participants: "30", days: "1", makan: "0", angkut: "0", lain: "300", amount: "300", programDate: "2024-08-01", status: "Diluluskan" },
+                { ts: "2024-07-18 14:00:00", applicant: "Ahmad Kassim", position: "Guru Sejarah", phone: "0134567890", purpose: "Pameran Kemerdekaan Peringkat Sekolah", category: "Kokurikulum", participants: "200", days: "3", makan: "300", angkut: "0", lain: "500", amount: "800", programDate: "2024-08-28", status: "Dalam Proses" },
+                { ts: "2024-07-19 09:00:00", applicant: "Siti Nurhaliza", position: "Guru Bahasa Melayu", phone: "0198765432", purpose: "Pertandingan Menulis Esei dan Sajak", category: "Akademik", participants: "50", days: "1", makan: "100", angkut: "0", lain: "150", amount: "250", programDate: "2024-09-15", status: "Ditolak" },
+                { ts: "2024-07-20 16:00:00", applicant: "Lim Ah Kow", position: "Guru Matematik", phone: "0176543210", purpose: "Kelas Tambahan Matematik UPSR", category: "Akademik", participants: "25", days: "10", makan: "500", angkut: "0", lain: "50", amount: "550", programDate: "2024-08-05", status: "Diluluskan" },
+                { ts: "2024-07-21 12:00:00", applicant: "Muthu Samy", position: "Guru Sukan", phone: "0143210987", purpose: "Pembelian Jersi Pasukan Bola Sepak Sekolah", category: "Kokurikulum", participants: "18", days: "1", makan: "0", angkut: "0", lain: "450", amount: "450", programDate: "2024-08-12", status: "Dalam Proses" },
+                { ts: "2024-07-22 08:30:00", applicant: "Farah Adibah", position: "Guru Kaunseling", phone: "0165554444", purpose: "Ceramah Motivasi dan Sahsiah Diri", category: "Sahsiah Murid", participants: "180", days: "1", makan: "200", angkut: "0", lain: "300", amount: "500", programDate: "2024-09-20", status: "Diluluskan" },
+                { ts: "2024-07-23 10:45:00", applicant: "Iskandar Zulkarnain", position: "YDP PIBG", phone: "0122334455", purpose: "Sumbangan Mengecat Pagar Sekolah", category: "Lain-lain", participants: "10", days: "2", makan: "100", angkut: "0", lain: "400", amount: "500", programDate: "2024-08-17", status: "Dalam Proses" },
+                { ts: "2024-07-24 13:15:00", applicant: "Dayang Nurfaizah", position: "Guru Seni", phone: "0133445566", purpose: "Pertandingan Melukis Poster Anti-Dadah", category: "Sahsiah Murid", participants: "60", days: "1", makan: "120", angkut: "0", lain: "200", amount: "320", programDate: "2024-09-25", status: "Dalam Proses" },
+                { ts: "2024-07-25 15:00:00", applicant: "Wong Choon Han", position: "Guru ICT", phone: "0199887766", purpose: "Naik Taraf Makmal Komputer", category: "Akademik", participants: "200", days: "1", makan: "0", angkut: "0", lain: "2500", amount: "2500", programDate: "2024-10-01", status: "Ditolak" },
+                { ts: "2024-07-26 11:00:00", applicant: "Zainal Abidin", position: "Guru Agama", phone: "0188776655", purpose: "Majlis Bacaan Yassin dan Solat Hajat UPSR", category: "Keagamaan", participants: "100", days: "1", makan: "300", angkut: "0", lain: "50", amount: "350", programDate: "2024-09-05", status: "Diluluskan" },
+                { ts: "2024-07-27 10:30:00", applicant: "Elizabeth Tan", position: "Guru Bahasa Inggeris", phone: "0155667788", purpose: "English Day Carnival", category: "Akademik", participants: "150", days: "1", makan: "300", angkut: "0", lain: "400", amount: "700", programDate: "2024-10-10", status: "Dalam Proses" },
+                { ts: "2024-07-28 14:20:00", applicant: "Suria Binti Morni", position: "AJK PIBG", phone: "0123456780", purpose: "Hari Sukan Sekolah", category: "Kokurikulum", participants: "200", days: "1", makan: "1000", angkut: "0", lain: "1500", amount: "2500", programDate: "2024-08-22", status: "Diluluskan" },
+                { ts: "2024-07-29 09:40:00", applicant: "Desmond Jok Ipui", position: "AJK PIBG", phone: "0134567891", purpose: "Program Gotong-Royong Keceriaan Kelas", category: "Lain-lain", participants: "100", days: "1", makan: "300", angkut: "0", lain: "200", amount: "500", programDate: "2024-09-07", status: "Diluluskan" },
+                { ts: "2024-07-30 11:50:00", applicant: "Noraini Raut", position: "AJK PIBG", phone: "0145678902", purpose: "Sumbangan Jamuan Hari Raya", category: "Keagamaan", participants: "200", days: "1", makan: "800", angkut: "0", lain: "200", amount: "1000", programDate: "2025-04-03", status: "Dalam Proses" },
+                { ts: "2024-08-01 10:10:00", applicant: "Mohd Shafeyk Bin Ahmad", position: "AJK PIBG", phone: "0198765433", purpose: "Kem Kepimpinan Pengawas", category: "Sahsiah Murid", participants: "40", days: "2", makan: "800", angkut: "200", lain: "300", amount: "1300", programDate: "2024-09-13", status: "Dalam Proses" },
+                { ts: "2024-08-02 12:30:00", applicant: "Taib Anak Brown", position: "Bendahari", phone: "0176543211", purpose: "Penyelenggaraan Pendingin Hawa Bilik Guru", category: "Lain-lain", participants: "0", days: "1", makan: "0", angkut: "0", lain: "600", amount: "600", programDate: "2024-08-15", status: "Diluluskan" },
+                { ts: "2024-08-03 15:20:00", applicant: "Jolly Labo", position: "Setiausaha", phone: "0165432109", purpose: "Cetakan Laporan dan Minit Mesyuarat Agung PIBG", category: "Lain-lain", participants: "0", days: "1", makan: "0", angkut: "0", lain: "250", amount: "250", programDate: "2025-02-10", status: "Dalam Proses" },
+                { ts: "2024-08-04 09:05:00", applicant: "Iskarnain Bin Dillah", position: "AJK PIBG", phone: "0154321098", purpose: "Hadiah Kecemerlangan Akademik UPSR", category: "Akademik", participants: "10", days: "1", makan: "0", angkut: "0", lain: "500", amount: "500", programDate: "2024-11-20", status: "Dalam Proses" },
+                { ts: "2024-08-05 11:15:00", applicant: "Dayang Mawarhida", position: "AJK PIBG", phone: "0143210988", purpose: "Sumbangan Program RIMUP Deepavali", category: "Kokurikulum", participants: "50", days: "1", makan: "200", angkut: "0", lain: "100", amount: "300", programDate: "2024-10-29", status: "Dalam Proses" },
+                { ts: "2024-08-06 14:45:00", applicant: "Sharifah Muhaini Binti Wan Abidin", position: "AJK PIBG", phone: "0128966020", purpose: "Lawatan Prasekolah ke Balai Bomba", category: "Sahsiah Murid", participants: "25", days: "1", makan: "100", angkut: "150", lain: "0", amount: "250", programDate: "2024-09-18", status: "Diluluskan" },
+                { ts: "2024-08-07 16:00:00", applicant: "Hellen Lihan", position: "Penolong Bendahari", phone: "0198542099", purpose: "Tuntutan Perjalanan Mesyuarat PIBG Daerah", category: "Lain-lain", participants: "2", days: "1", makan: "0", angkut: "50", lain: "0", amount: "50", programDate: "2024-08-10", status: "Diluluskan" },
+                { ts: "2024-08-08 10:25:00", applicant: "Nor Izzati Binti Abdullah", position: "Penolong Setiausaha", phone: "0111223344", purpose: "Pembelian Fail dan Alat Tulis PIBG", category: "Lain-lain", participants: "0", days: "1", makan: "0", angkut: "0", lain: "150", amount: "150", programDate: "2024-08-09", status: "Diluluskan" },
+                { ts: "2024-08-09 13:00:00", applicant: "Muhd. Farhan Bin Sarkawi", position: "YDP", phone: "0122334456", purpose: "Sumbangan Khas kepada Murid Cemerlang Sukan", category: "Kokurikulum", participants: "3", days: "1", makan: "0", angkut: "0", lain: "150", amount: "150", programDate: "2024-08-23", status: "Diluluskan" },
+                { ts: "2024-08-10 15:30:00", applicant: "Zuraidah Binti Ahmat", position: "Guru Besar", phone: "0133445567", purpose: "Jamuan Akhir Tahun Guru dan Staf", category: "Lain-lain", participants: "35", days: "1", makan: "700", angkut: "0", lain: "300", amount: "1000", programDate: "2024-11-22", status: "Dalam Proses" },
+                { ts: "2024-08-11 09:15:00", applicant: "Guru Disiplin", position: "Guru", phone: "0198765123", purpose: "Kempen Anti-Buli Peringkat Sekolah", category: "Sahsiah Murid", participants: "200", days: "1", makan: "100", angkut: "0", lain: "200", amount: "300", programDate: "2024-09-30", status: "Dalam Proses" },
+                { ts: "2024-08-12 11:00:00", applicant: "Panitia Bahasa Cina", position: "Guru", phone: "0176543212", purpose: "Sambutan Tahun Baru Cina", category: "Kokurikulum", participants: "80", days: "1", makan: "400", angkut: "0", lain: "100", amount: "500", programDate: "2025-01-29", status: "Dalam Proses" },
+                { ts: "2024-08-13 14:00:00", applicant: "Kelab Doktor Muda", position: "Guru", phone: "0165432101", purpose: "Ceramah Kesihatan Gigi oleh Klinik Kesihatan", category: "Sahsiah Murid", participants: "100", days: "1", makan: "50", angkut: "0", lain: "50", amount: "100", programDate: "2024-10-15", status: "Dalam Proses" },
+                { ts: "2024-08-14 10:00:00", applicant: "Pusat Sumber Sekolah", position: "Guru", phone: "0143210989", purpose: "Program NILAM dan Anugerah Pembaca Terbanyak", category: "Akademik", participants: "20", days: "1", makan: "0", angkut: "0", lain: "300", amount: "300", programDate: "2024-11-15", status: "Diluluskan" },
+                { ts: "2024-08-15 12:00:00", applicant: "Unit Bimbingan & Kaunseling", position: "Guru", phone: "0132109876", purpose: "Program Transisi Tahun 1", category: "Akademik", participants: "35", days: "3", makan: "350", angkut: "0", lain: "150", amount: "500", programDate: "2025-01-06", status: "Dalam Proses" },
+                { ts: "2024-08-16 15:00:00", applicant: "Panitia RBT", position: "Guru", phone: "0121098765", purpose: "Pertandingan Reka Cipta Bahan Kitar Semula", category: "Akademik", participants: "40", days: "1", makan: "0", angkut: "0", lain: "250", amount: "250", programDate: "2024-10-22", status: "Dalam Proses" },
+                { ts: "2024-08-19 09:30:00", applicant: "Pasukan Pengakap", position: "Guru", phone: "0110987654", purpose: "Perkhemahan Unit Beruniform Peringkat Sekolah", category: "Kokurikulum", participants: "60", days: "2", makan: "1200", angkut: "0", lain: "300", amount: "1500", programDate: "2024-09-27", status: "Dalam Proses" },
+                { ts: "2024-08-20 11:45:00", applicant: "Panitia Sejarah", position: "Guru", phone: "0109876543", purpose: "Kuiz Sejarah Kemerdekaan", category: "Akademik", participants: "100", days: "1", makan: "0", angkut: "0", lain: "150", amount: "150", programDate: "2024-08-29", status: "Diluluskan" },
+                { ts: "2024-08-21 14:10:00", applicant: "Kelab Catur", position: "Guru", phone: "0198765432", purpose: "Pertandingan Catur Dalaman", category: "Kokurikulum", participants: "32", days: "1", makan: "50", angkut: "0", lain: "100", amount: "150", programDate: "2024-09-12", status: "Diluluskan" },
+                { ts: "2024-08-22 10:55:00", applicant: "Panitia Pendidikan Moral", position: "Guru", phone: "0187654321", purpose: "Ceramah Nilai Murni", category: "Sahsiah Murid", participants: "80", days: "1", makan: "50", angkut: "0", lain: "150", amount: "200", programDate: "2024-10-08", status: "Dalam Proses" },
+                { ts: "2024-08-23 13:00:00", applicant: "Unit HEM", position: "Guru", phone: "0176543210", purpose: "Sumbangan kepada Anak Yatim dan Murid Miskin", category: "Sahsiah Murid", participants: "15", days: "1", makan: "0", angkut: "0", lain: "750", amount: "750", programDate: "2024-11-25", status: "Dalam Proses" },
+                { ts: "2024-08-26 16:00:00", applicant: "Pasukan Bola Baling", position: "Guru", phone: "0165432109", purpose: "Yuran Penyertaan Kejohanan MSSD", category: "Kokurikulum", participants: "15", days: "1", makan: "0", angkut: "0", lain: "100", amount: "100", programDate: "2024-09-03", status: "Diluluskan" },
+                { ts: "2024-08-27 09:00:00", applicant: "Panitia Pendidikan Jasmani", position: "Guru", phone: "0154321098", purpose: "Program 1 Murid 1 Sukan", category: "Kokurikulum", participants: "200", days: "1", makan: "200", angkut: "0", lain: "300", amount: "500", programDate: "2024-10-18", status: "Dalam Proses" },
+                { ts: "2024-08-28 11:20:00", applicant: "Kelab Kebudayaan", position: "Guru", phone: "0143210987", purpose: "Latihan Tarian untuk Hari Anugerah Cemerlang", category: "Kokurikulum", participants: "20", days: "5", makan: "200", angkut: "0", lain: "150", amount: "350", programDate: "2024-10-21", status: "Dalam Proses" },
+                { ts: "2024-08-29 14:50:00", applicant: "Surau Sekolah", position: "Guru", phone: "0132109876", purpose: "Program Korban Perdana Aidiladha", category: "Keagamaan", participants: "100", days: "1", makan: "500", angkut: "0", lain: "1000", amount: "1500", programDate: "2025-06-17", status: "Dalam Proses" }
+            ];
+
+            const uploadSeedData = async () => {
+                const btn = document.getElementById('seed-data-btn');
+                btn.disabled = true;
+                btn.textContent = 'Memadam data lama dan memuat naik...';
+
+                // 1. Delete old seed data
+                try {
+                    const q = query(applicationsCol, where("isSeed", "==", true));
+                    const existing = await getDocs(q);
+                    const deletePromises = [];
+                    existing.forEach((doc) => {
+                        deletePromises.push(deleteDoc(doc.ref));
+                    });
+                    await Promise.all(deletePromises);
+                    console.log(`${existing.size} dokumen lama berjaya dipadam.`);
+                } catch (error) {
+                    console.error("Gagal memadam data lama: ", error);
+                    showToast("Gagal memadam data lama. Sila cuba lagi.", "error");
+                    btn.disabled = false;
+                    btn.textContent = 'Muat Naik Data Permohonan Awal (Klik Sekali Sahaja)';
+                    return;
+                }
+
+
+                // 2. Add new, corrected data
+                let successCount = 0;
+                for (const item of seedData) {
+                    const appData = {
+                        createdAt: Timestamp.fromDate(new Date(item.ts)),
+                        applicant: item.applicant,
+                        position: item.position,
+                        phone: String(item.phone),
+                        purpose: item.purpose,
+                        category: item.category,
+                        participants: cleanTextNumber(item.participants),
+                        days: cleanTextNumber(item.days),
+                        budget: {
+                            makan: cleanNumber(item.makan),
+                            angkut: cleanNumber(item.angkut),
+                            lain: cleanNumber(item.lain)
+                        },
+                        amount: cleanNumber(item.amount),
+                        programDate: item.programDate,
+                        status: item.status,
+                        applicantIC: `000000-00-000${successCount + 1}`, // Dummy IC
+                        votes: [],
+                        isSeed: true
+                    };
+
+                    try {
+                        await addDoc(applicationsCol, appData);
+                        successCount++;
+                    } catch (error) {
+                        console.error("Gagal memuat naik data:", item.purpose, error);
+                    }
+                }
+                
+                showToast(`${successCount} permohonan berjaya dimuat naik! Data kini telah dikemaskini.`);
+                btn.textContent = 'Selesai';
+                btn.classList.add('bg-green-500', 'hover:bg-green-600');
+                btn.classList.remove('bg-teal-600', 'hover:bg-teal-700');
+            };
+            
+            const seedButtonContainer = document.createElement('div');
+            seedButtonContainer.className = 'text-center p-4';
+            seedButtonContainer.innerHTML = `<button id="seed-data-btn" class="px-4 py-2 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700 shadow-sm">Muat Naik Data Permohonan Awal (Klik Sekali Sahaja)</button>`;
+            
+            document.querySelector('main').appendChild(seedButtonContainer);
+            document.getElementById('seed-data-btn').addEventListener('click', uploadSeedData);
+        };
+
+        // Load default tab and setup seeding button
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('tab-list-btn');
+            setupSeeding();
         });
     </script>
 </body>
 </html>
+
