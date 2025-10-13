@@ -308,6 +308,58 @@
         </div>
     </div>
 
+    <!-- Modal Keputusan Permohonan -->
+    <div id="decisionModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Keputusan Rasmi Permohonan</h3>
+                <button id="closeDecisionModal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
+            </div>
+            <div id="decisionContent" class="overflow-y-auto p-8 md:p-10 bg-slate-50">
+                <div class="bg-white p-8 rounded-lg shadow-md border">
+                    <h4 class="text-center font-bold text-lg text-indigo-700">KEPUTUSAN PERMOHONAN DANA PIBG</h4>
+                    <p class="text-center text-sm text-slate-500 mb-6">SK Pulau Melayu</p>
+
+                    <p class="mb-4">Assalamualaikum dan salam sejahtera,</p>
+                    <p id="decision-main-text" class="mb-4"></p>
+                    
+                    <div id="actions-container" class="space-y-6">
+                        <div id="bendahari-action" class="bg-slate-50 p-4 rounded-lg border">
+                            <h5 class="font-semibold text-slate-800">1. Bendahari</h5>
+                            <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1 text-sm">
+                                <li>Menguruskan pengeluaran dana sebanyak <strong id="decisionAmount2">RM 0.00</strong> daripada bank Islam PIBG dalam tempoh 14 hari dari tarikh keputusan ini.</li>
+                                <li>Memastikan semua dokumen sokongan berkaitan pengeluaran, termasuk resit rasmi, disimpan dengan teliti untuk tujuan rekod dan rujukan pada masa hadapan.</li>
+                            </ul>
+                        </div>
+                         <div id="pemohon-action" class="bg-slate-50 p-4 rounded-lg border">
+                            <h5 class="font-semibold text-slate-800">2. Pemohon</h5>
+                             <p class="text-sm text-slate-600 mt-2">Berhubung dengan bendahari bagi urusan penerimaan dana.</p>
+                            <p class="text-sm text-slate-600 mt-2">Setelah menerima dana, sila:</p>
+                            <ul class="list-decimal list-inside mt-2 text-slate-600 space-y-1 text-sm pl-4">
+                                <li>Menandatangani Akuan Penerimaan Dana sebagai bukti rasmi penerimaan.</li>
+                                <li>Menyerahkan resit perbelanjaan kepada bendahari dan timbalan bendahari selepas pembelanjaan selesai.</li>
+                                <li>Menyediakan laporan aktiviti dan menyerahkannya kepada setiausaha PIBG untuk tujuan dokumentasi rasmi.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 border-t pt-6">
+                        <h5 class="font-semibold text-red-600">Peringatan Penting</h5>
+                        <p class="mt-2 text-sm text-slate-600">Semua pihak yang terlibat dimohon untuk melaksanakan tanggungjawab masing-masing dengan telus dan teratur bagi memastikan kelancaran proses ini. Kerjasama dan perhatian semua pihak amat dihargai.</p>
+                    </div>
+                     <p class="mt-6">Sekian, terima kasih.</p>
+                </div>
+            </div>
+            <div class="p-6 border-t flex justify-end items-center bg-slate-100 rounded-b-xl">
+                <button id="printDecisionBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
+                    <span>Cetak</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <footer class="bg-white border-t mt-12">
         <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
             &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
@@ -360,6 +412,7 @@
 
         // --- UI Elements ---
         const votingModal = document.getElementById('votingModal');
+        const decisionModal = document.getElementById('decisionModal');
         const applicationForm = document.getElementById('applicationForm');
         const voteForm = document.getElementById('voteForm');
         const toast = document.getElementById('toast');
@@ -640,12 +693,33 @@
                     row.innerHTML = `
                         <td class="py-4 px-4 text-sm text-slate-500 align-top">${index + 1}</td>
                         <td class="py-4 px-4 text-sm font-medium text-slate-900 align-top break-words">${app.applicant}</td>
-                        <td class="py-4 px-4 text-sm text-slate-500 align-top break-words">${app.purpose}</td>
+                        <td class="py-4 px-4 text-sm text-slate-500 align-top break-words">
+                            <div class="font-semibold">${app.purpose}</div>
+                            <div class="text-xs text-slate-400 mt-1">${app.programDate ? new Date(app.programDate).toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric'}) : 'Tiada Tarikh'}</div>
+                        </td>
                         <td class="py-4 px-4 text-sm text-slate-500 align-top">${formattedDate}</td>
                         <td class="py-4 px-4 text-sm text-slate-500 align-top">${app.amount.toFixed(2)}</td>
-                        <td class="py-4 px-4 text-sm text-center align-top"><button class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200" data-id="${app.id}">Undi</button></td>
+                        <td class="py-4 px-4 text-sm text-center align-top">
+                            <div class="flex items-center justify-center space-x-2">
+                                <button class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200" data-id="${app.id}">Undi</button>
+                                <button class="share-btn p-1.5 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200" 
+                                        title="Kongsi Undian"
+                                        data-id="${app.id}" 
+                                        data-index="${index + 1}"
+                                        data-purpose="${app.purpose}" 
+                                        data-amount="${app.amount.toFixed(2)}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
                         <td class="py-4 px-4 text-sm text-slate-500 align-top"><div class="flex items-center"><div class="w-full bg-slate-200 rounded-full h-2.5"><div class="${progressBarColor} h-2.5 rounded-full" style="width: ${percentage}%"></div></div><span class="ml-2 font-medium">${percentage}%</span></div></td>
-                        <td class="py-4 px-4 text-sm align-top">${getStatusBadge(app.status)}</td>
+                        <td class="py-4 px-4 text-sm align-top">
+                            <button class="status-btn w-full text-left" data-id="${app.id}" data-index="${index + 1}">
+                                ${getStatusBadge(app.status)}
+                            </button>
+                        </td>
                     `;
                     applicationListBody.appendChild(row);
                 });
@@ -655,6 +729,43 @@
                 });
             });
         };
+
+        // --- Event Delegation for Table Buttons ---
+        applicationListBody.addEventListener('click', (e) => {
+            const shareBtn = e.target.closest('.share-btn');
+            const statusBtn = e.target.closest('.status-btn');
+
+            if (shareBtn) {
+                const appId = shareBtn.dataset.id;
+                const appIndex = shareBtn.dataset.index;
+                const appPurpose = shareBtn.dataset.purpose;
+                const appAmount = shareBtn.dataset.amount;
+
+                const url = new URL(window.location.href);
+                const cleanUrl = `${url.origin}${url.pathname}`;
+                const shareUrl = `${cleanUrl}?vote=${appId}`;
+                
+                const message = `Salam semua.\nSaya perlukan undian untuk pemohonan ${appIndex} : ${appPurpose}\n\nJumlah Pemohonan : RM ${appAmount}\n\nMohon tandakan ✅ untuk setuju melalui pautan yang berikut.\n${shareUrl}`;
+
+                const textarea = document.createElement('textarea');
+                textarea.value = message;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Teks undian telah disalin ke papan klip!');
+                } catch (err) {
+                    showToast('Gagal menyalin teks.', 'error');
+                    console.error('Failed to copy text: ', err);
+                }
+                document.body.removeChild(textarea);
+            }
+
+            if (statusBtn) {
+                 openDecisionModal(statusBtn.dataset.id, statusBtn.dataset.index);
+            }
+        });
+
 
         // --- Voting Modal Logic ---
         const openVotingModal = async (appId) => {
@@ -731,9 +842,74 @@
             }
         });
 
-        // Load default tab
+        // --- Decision Modal Logic ---
+        const openDecisionModal = async (appId, appIndex) => {
+            try {
+                const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, appId);
+                const docSnap = await getDoc(appDocRef);
+
+                if (!docSnap.exists()) {
+                    showToast('Maklumat permohonan tidak dijumpai.', 'error');
+                    return;
+                }
+                const app = docSnap.data();
+                
+                const bendahariAction = document.getElementById('bendahari-action');
+                const pemohonAction = document.getElementById('pemohon-action');
+                const mainText = document.getElementById('decision-main-text');
+                const decisionDate = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                if (app.status === 'Diluluskan') {
+                    mainText.innerHTML = `Merujuk kepada keputusan yang telah dibuat melalui undian 2/3 ahli Exco PIBG pada <strong>${decisionDate}</strong> berhubung <strong>Permohonan ${appIndex} : ${app.purpose}</strong>, dengan ini dimaklumkan bahawa Exco PIBG telah bersetuju untuk <strong class="text-green-600">meluluskan</strong> pengeluaran dana berjumlah <strong>RM ${app.amount.toFixed(2)}</strong>.`;
+                    document.getElementById('decisionAmount2').textContent = `RM ${app.amount.toFixed(2)}`;
+                    bendahariAction.style.display = 'block';
+                    pemohonAction.style.display = 'block';
+                } else {
+                    const statusText = app.status === 'Ditolak' ? '<strong class="text-red-600">menolak</strong> permohonan ini' : '<strong class="text-yellow-600">sedang memproses</strong> permohonan ini';
+                    mainText.innerHTML = `Merujuk kepada <strong>Permohonan ${appIndex} : ${app.purpose}</strong>, dengan ini dimaklumkan bahawa permohonan anda ${statusText}.`;
+                    bendahariAction.style.display = 'none';
+                    pemohonAction.style.display = 'none';
+                }
+                openModal(decisionModal);
+
+            } catch (error) {
+                console.error("Gagal membuka keputusan:", error);
+                showToast("Gagal memaparkan keputusan.", 'error');
+            }
+        };
+
+        document.getElementById('closeDecisionModal').addEventListener('click', () => closeModal(decisionModal));
+        decisionModal.addEventListener('click', (event) => { if (event.target === decisionModal) closeModal(decisionModal); });
+
+        document.getElementById('printDecisionBtn').addEventListener('click', () => {
+            const content = document.getElementById('decisionContent').innerHTML;
+            const printWindow = window.open('', '', 'height=800,width=800');
+            printWindow.document.write('<html><head><title>Keputusan Permohonan</title>');
+            printWindow.document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+            printWindow.document.write('</head><body class="p-8">');
+            printWindow.document.write(content);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => { printWindow.print(); }, 500); 
+        });
+
+        // Load default tab and check for vote parameter
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('tab-list-btn');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const voteAppId = urlParams.get('vote');
+            if (voteAppId) {
+                setTimeout(() => {
+                    const voteButton = document.querySelector(`.vote-btn[data-id="${voteAppId}"]`);
+                    if(voteButton) {
+                        openVotingModal(voteAppId);
+                    } else {
+                        showToast('Permohonan untuk diundi tidak dijumpai.', 'error');
+                    }
+                }, 1500); 
+            }
         });
     </script>
 </body>
