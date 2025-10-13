@@ -247,67 +247,6 @@
         </div>
     </main>
 
-    <!-- Modal Undian Exco -->
-    <div id="votingModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
-                <h3 class="text-2xl font-bold text-gray-800">Undian Exco PIBG</h3>
-                <button id="closeVotingModal" class="text-gray-400 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            <div class="overflow-y-auto p-6 md:p-8">
-                <div id="vote-feedback-message" class="hidden text-center p-4 mb-6 rounded-lg"></div>
-                <form id="voteForm">
-                    <div class="mb-6">
-                        <h4 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h4>
-                        <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
-                    </div>
-                    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-                        <h5 class="font-semibold mb-2">Perincian Bajet:</h5>
-                        <div class="text-sm space-y-1">
-                           <div class="flex justify-between"><span>Makan Minum:</span> <span id="vote-budget-makan">RM 0.00</span></div>
-                           <div class="flex justify-between"><span>Pengangkutan:</span> <span id="vote-budget-angkut">RM 0.00</span></div>
-                           <div class="flex justify-between"><span>Lain-lain:</span> <span id="vote-budget-lain">RM 0.00</span></div>
-                           <div class="flex justify-between border-t mt-2 pt-2 font-bold"><span>Jumlah Keseluruhan:</span> <span id="vote-budget-total">RM 0.00</span></div>
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
-                        <div class="flex items-center">
-                            <div class="w-full bg-gray-200 rounded-full h-4">
-                                <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4"></div>
-                            </div>
-                            <span id="vote-progress-text" class="ml-3 font-medium text-sm">0/0 (0%)</span>
-                        </div>
-                    </div>
-                    <div class="space-y-4 border-t pt-6">
-                        <div>
-                            <label for="voter-ic" class="block text-sm font-medium text-gray-700 mb-1">No. Kad Pengenalan (untuk pengesahan) <span class="text-red-600">*</span></label>
-                            <input type="text" id="voter-ic" name="voter-ic" placeholder="cth: 801010-01-xxxx" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
-                             <div class="flex flex-col md:flex-row gap-4">
-                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="sokong" class="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500" required><span class="ml-3 text-green-700 font-semibold">Menyokong</span></label>
-                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="tolak" class="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"><span class="ml-3 text-red-700 font-semibold">Menolak</span></label>
-                                <label class="flex-1 flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"><input type="radio" name="vote_option" value="berkecuali" class="h-4 w-4 text-yellow-600 border-gray-300 focus:ring-yellow-500"><span class="ml-3 text-yellow-700 font-semibold">Berkecuali</span></label>
-                            </div>
-                        </div>
-                         <div class="pt-4">
-                            <div class="flex items-center">
-                                <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
-                                <label for="vote-agreement" class="ml-2 block text-sm text-gray-800">Saya bersetuju untuk mengundi secara telus dan bertanggungjawab.</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
-                        <button type="button" id="cancelVoteBtn" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Batal</button>
-                        <button type="submit" id="submitVoteBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Hantar Undian</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal Keputusan Permohonan -->
     <div id="decisionModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
@@ -411,10 +350,8 @@
         })();
 
         // --- UI Elements ---
-        const votingModal = document.getElementById('votingModal');
         const decisionModal = document.getElementById('decisionModal');
         const applicationForm = document.getElementById('applicationForm');
-        const voteForm = document.getElementById('voteForm');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
         const newApplicationBtn = document.getElementById('newApplicationBtn');
@@ -701,7 +638,7 @@
                         <td class="py-4 px-4 text-sm text-slate-500 align-top">${app.amount.toFixed(2)}</td>
                         <td class="py-4 px-4 text-sm text-center align-top">
                             <div class="flex items-center justify-center space-x-2">
-                                <button class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200" data-id="${app.id}">Undi</button>
+                                <a href="undi.html?id=${app.id}" class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200">Undi</a>
                                 <button class="share-btn p-1.5 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200" 
                                         title="Kongsi Undian"
                                         data-id="${app.id}" 
@@ -730,8 +667,7 @@
         applicationListBody.addEventListener('click', (e) => {
             const shareBtn = e.target.closest('.share-btn');
             const statusBtn = e.target.closest('.status-btn');
-            const voteBtn = e.target.closest('.vote-btn');
-
+            
             if (shareBtn) {
                 const appId = shareBtn.dataset.id;
                 const appIndex = shareBtn.dataset.index;
@@ -739,7 +675,7 @@
                 const appAmount = shareBtn.dataset.amount;
 
                 const url = new URL(window.location.href);
-                const cleanUrl = `${url.origin}${url.pathname}`;
+                const cleanUrl = `${url.origin}${url.pathname.replace('mohon.html', 'undi.html')}`;
                 const shareUrl = `${cleanUrl}?vote=${appId}`;
                 
                 const message = `Salam semua.\nSaya perlukan undian untuk pemohonan ${appIndex} : ${appPurpose}\n\nJumlah Pemohonan : RM ${appAmount}\n\nMohon tandakan ✅ untuk setuju melalui pautan yang berikut.\n${shareUrl}`;
@@ -760,86 +696,6 @@
 
             if (statusBtn) {
                  openDecisionModal(statusBtn.dataset.id, statusBtn.dataset.index);
-            }
-            
-            if (voteBtn) {
-                openVotingModal(voteBtn.dataset.id);
-            }
-        });
-
-
-        // --- Voting Modal Logic ---
-        const openVotingModal = async (appId) => {
-            const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, appId);
-            const excoSnapshot = await getDocs(excoMembersCol);
-            const totalExco = excoSnapshot.size;
-
-            onSnapshot(appDocRef, (docSnap) => {
-                if (!docSnap.exists()) {
-                    showToast('Permohonan tidak dijumpai.', 'error');
-                    return;
-                }
-                const app = { id: docSnap.id, ...docSnap.data() };
-                voteForm.dataset.id = appId;
-                
-                document.getElementById('vote-program-name').textContent = app.purpose;
-                document.getElementById('vote-program-applicant').textContent = `Oleh: ${app.applicant}`;
-                document.getElementById('vote-budget-makan').textContent = `RM ${app.budget.makan.toFixed(2)}`;
-                document.getElementById('vote-budget-angkut').textContent = `RM ${app.budget.angkut.toFixed(2)}`;
-                document.getElementById('vote-budget-lain').textContent = `RM ${app.budget.lain.toFixed(2)}`;
-                document.getElementById('vote-budget-total').textContent = `RM ${app.amount.toFixed(2)}`;
-                
-                const percentage = totalExco > 0 ? Math.round(((app.votes?.length || 0) / totalExco) * 100) : 0;
-                document.getElementById('vote-progress-bar').style.width = `${percentage}%`;
-                document.getElementById('vote-progress-text').textContent = `${app.votes?.length || 0}/${totalExco} (${percentage}%)`;
-                
-                voteForm.reset();
-                document.getElementById('vote-feedback-message').classList.add('hidden');
-                openModal(votingModal);
-            });
-        };
-
-        document.getElementById('closeVotingModal').addEventListener('click', () => closeModal(votingModal));
-        document.getElementById('cancelVoteBtn').addEventListener('click', () => closeModal(votingModal));
-        votingModal.addEventListener('click', (event) => { if (event.target === votingModal) closeModal(votingModal); });
-        
-        voteForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitVoteBtn = document.getElementById('submitVoteBtn');
-            submitVoteBtn.disabled = true;
-
-            const feedbackEl = document.getElementById('vote-feedback-message');
-            const voterIc = document.getElementById('voter-ic').value.trim();
-            const appId = voteForm.dataset.id;
-            const voteOption = voteForm.querySelector('input[name="vote_option"]:checked')?.value;
-
-            try {
-                const q = query(excoMembersCol, where("ic", "==", voterIc));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) throw new Error("No. KP tidak sah atau bukan Exco.");
-                
-                const excoDoc = querySnapshot.docs[0].data();
-                const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, appId);
-                const appSnap = await getDoc(appDocRef);
-
-                if (appSnap.data().votes?.some(vote => vote.voterIc === voterIc)) {
-                    throw new Error("Anda telah mengundi untuk permohonan ini.");
-                }
-
-                const voteData = { voterIc, voterName: excoDoc.name, choice: voteOption, votedAt: serverTimestamp() };
-                await updateDoc(appDocRef, { votes: arrayUnion(voteData) });
-                
-                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-green-100 text-green-800';
-                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Undian Berjaya Dihantar!</h3>`;
-                feedbackEl.classList.remove('hidden');
-
-                setTimeout(() => closeModal(votingModal), 3000);
-            } catch (error) {
-                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-red-100 text-red-800';
-                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Undian Gagal</h3><p>${error.message}</p>`;
-                feedbackEl.classList.remove('hidden');
-            } finally {
-                submitVoteBtn.disabled = false;
             }
         });
 
@@ -902,14 +758,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const voteAppId = urlParams.get('vote');
             if (voteAppId) {
-                setTimeout(() => {
-                    const voteButton = document.querySelector(`.vote-btn[data-id="${voteAppId}"]`);
-                    if(voteButton) {
-                        openVotingModal(voteAppId);
-                    } else {
-                        showToast('Permohonan untuk diundi tidak dijumpai.', 'error');
-                    }
-                }, 1500); 
+                const voteUrl = `undi.html?id=${voteAppId}`;
+                window.location.href = voteUrl;
             }
         });
     </script>
