@@ -723,10 +723,6 @@
                     `;
                     applicationListBody.appendChild(row);
                 });
-                
-                document.querySelectorAll('.vote-btn').forEach(button => {
-                    button.addEventListener('click', (e) => openVotingModal(e.target.dataset.id));
-                });
             });
         };
 
@@ -734,6 +730,7 @@
         applicationListBody.addEventListener('click', (e) => {
             const shareBtn = e.target.closest('.share-btn');
             const statusBtn = e.target.closest('.status-btn');
+            const voteBtn = e.target.closest('.vote-btn');
 
             if (shareBtn) {
                 const appId = shareBtn.dataset.id;
@@ -763,6 +760,10 @@
 
             if (statusBtn) {
                  openDecisionModal(statusBtn.dataset.id, statusBtn.dataset.index);
+            }
+            
+            if (voteBtn) {
+                openVotingModal(voteBtn.dataset.id);
             }
         });
 
