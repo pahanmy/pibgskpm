@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIBG SK Pulau Melayu | Portal Rasmi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4f46e5; /* indigo-600 */
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .fade-in {
+            animation: fadeInAnimation 1s ease-in-out forwards;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #4f46e5, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        @keyframes fadeInAnimation {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://placehold.co/40x40/4f46e5/ffffff?text=SKPM" alt="Logo SK Pulau Melayu" class="h-10 w-10 rounded-md">
+                <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
+            </a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#utama" class="nav-link text-slate-600 hover:text-indigo-600 active">Utama</a>
+                <a href="#tentang-kami" class="nav-link text-slate-600 hover:text-indigo-600">Tentang Kami</a>
+                <a href="#jawatankuasa" class="nav-link text-slate-600 hover:text-indigo-600">Jawatankuasa</a>
+                <a href="#aktiviti" class="nav-link text-slate-600 hover:text-indigo-600">Aktiviti</a>
+                <a href="#hubungi-kami" class="nav-link text-slate-600 hover:text-indigo-600">Hubungi Kami</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-slate-600 hover:text-indigo-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#utama" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Utama</a>
+            <a href="#tentang-kami" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Tentang Kami</a>
+            <a href="#jawatankuasa" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Jawatankuasa</a>
+            <a href="#aktiviti" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Aktiviti</a>
+            <a href="#hubungi-kami" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Hubungi Kami</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="utama" class="relative text-white text-center py-24 md:py-40 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop')">
+            <div class="absolute inset-0 bg-slate-900 opacity-60"></div>
+            <div class="relative z-10 container mx-auto px-6 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg">Portal Rasmi PIBG SK Pulau Melayu</h1>
+                <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto text-slate-200">Mengeratkan kerjasama antara ibu bapa dan guru demi kecemerlangan anak-anak kita.</p>
+            </div>
+        </section>
+
+        <!-- Content with Sidebar -->
+        <div class="container mx-auto px-6 py-16">
+            <div class="lg:flex lg:space-x-12">
+                <!-- Main content area -->
+                <div class="lg:w-2/3">
+                    <!-- About Us Section -->
+                    <section id="tentang-kami" class="mb-16 fade-in">
+                        <h2 class="text-3xl font-bold mb-4 gradient-text">Mengenai PIBG SK Pulau Melayu</h2>
+                        <p class="text-slate-600 leading-relaxed text-lg">Persatuan Ibu Bapa dan Guru (PIBG) SK Pulau Melayu merupakan sebuah badan yang ditubuhkan untuk menjadi medium perantaraan antara pihak sekolah dengan para ibu bapa dan penjaga. Matlamat utama kami adalah untuk bekerjasama dalam merancang dan melaksanakan pelbagai program yang bermatlamat untuk meningkatkan kecemerlangan akademik, kokurikulum, dan sahsiah para pelajar.</p>
+                    </section>
+
+                    <!-- Jawatankuasa Section -->
+                    <section id="jawatankuasa" class="mb-16 fade-in">
+                        <h2 class="text-3xl font-bold mb-8 text-center gradient-text">Ahli Jawatankuasa PIBG Sesi 2024/2026</h2>
+                        
+                        <div class="bg-white p-8 rounded-lg shadow-lg border border-slate-200">
+                            <!-- Penasihat -->
+                            <div class="text-center mb-10">
+                                <div class="inline-block bg-white p-5">
+                                    <h4 class="font-bold text-lg text-indigo-700">Penasihat</h4>
+                                    <p class="text-slate-800 font-semibold text-xl mt-1">Pn. Zuraidah Binti Ahmat</p>
+                                    <p class="text-sm text-slate-500">Guru Besar SK Pulau Melayu</p>
+                                </div>
+                            </div>
+                            
+                            <!-- YDP & NYDP -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                <div class="bg-slate-50 p-5 rounded-lg text-center border border-slate-200">
+                                    <h4 class="font-bold text-md text-indigo-600">Yang Dipertua</h4>
+                                    <p class="text-slate-800 font-semibold text-lg mt-1">En. Muhd. Farhan Bin Sarkawi</p>
+                                </div>
+                                <div class="bg-slate-50 p-5 rounded-lg text-center border border-slate-200">
+                                    <h4 class="font-bold text-md text-indigo-600">Naib Yang Dipertua</h4>
+                                    <p class="text-slate-800 font-semibold text-lg mt-1">Pn. Hazniza Binti Abdul Rahman</p>
+                                </div>
+                            </div>
+
+                            <!-- Ahli-ahli -->
+                            <div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Ahli-ahli Jawatankuasa</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Dayang Mawarhida Binti Abang Mansor</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Sharifah Muhaini Binti Wan Abidin</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Noraini Raut</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Mohd Aswadi Bin Wan Abidin</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Mohd Shafeyk Bin Ahmad</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Iskarnain Bin Dillah</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Suriya Binti Morni</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Elizabeth Binti Lai</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Desmond Jok Ipui</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Activity Section -->
+                    <section id="aktiviti" class="mb-16 fade-in">
+                        <h2 class="text-3xl font-bold mb-6 gradient-text">Aktiviti & Program Terkini</h2>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Activity Card 1 -->
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all duration-300">
+                                <img src="https://images.unsplash.com/photo-1618474618822-2aeff2424137?q=80&w=1974&auto=format&fit=crop" alt="Gotong-royong" class="w-full h-56 object-cover">
+                                <div class="p-5">
+                                    <h3 class="font-bold text-xl mb-2">Gotong-Royong Perdana</h3>
+                                    <p class="text-slate-600">Terima kasih kepada semua yang hadir menjayakan program gotong-royong membersihkan dan menceriakan kawasan sekolah.</p>
+                                </div>
+                            </div>
+                             <!-- Activity Card 2 -->
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all duration-300">
+                                <img src="https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13?q=80&w=2069&auto=format&fit=crop" alt="Sumbangan Hari Guru" class="w-full h-56 object-cover">
+                                <div class="p-5">
+                                    <h3 class="font-bold text-xl mb-2">Sumbangan Hari Guru</h3>
+                                    <p class="text-slate-600">PIBG telah menyampaikan cenderahati kepada para guru sebagai tanda penghargaan atas jasa mereka mendidik anak bangsa.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                     <!-- Contact Section -->
+                    <section id="hubungi-kami" class="fade-in">
+                        <h2 class="text-3xl font-bold mb-4 gradient-text">Hubungi Kami</h2>
+                        <p class="text-slate-600 text-lg">Untuk sebarang pertanyaan atau cadangan, sila hubungi kami melalui e-mel:</p>
+                        <p class="mt-2 text-indigo-600 font-semibold text-lg">pibg.skpulau.melayu@gmail.com</p>
+                    </section>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="lg:w-1/3 mt-12 lg:mt-0">
+                    <div class="sticky top-28 bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-3 mb-4">Akses Pantas</h3>
+                        <div class="space-y-3">
+                            <a href="mohon.html" class="w-full flex items-center space-x-3 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 shadow">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" /></svg>
+                                <span>Sistem Peruntukan PIBG</span>
+                            </a>
+                            <a href="#" id="openRegistrationBtn" class="w-full flex items-center space-x-3 px-4 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4a1 1 0 00-1 1v1a1 1 0 002 0V5a1 1 0 00-1-1zm12 0a1 1 0 00-1 1v1a1 1 0 002 0V5a1 1 0 00-1-1zM2 10a1 1 0 001 1h1a1 1 0 100-2H3a1 1 0 00-1 1zm14 0a1 1 0 001 1h1a1 1 0 100-2h-1a1 1 0 00-1 1zM4 16a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm12 0a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1z" /><path fill-rule="evenodd" d="M10 5a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
+                                <span>Daftar Exco PIBG</span>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Pendaftaran Exco -->
+    <div id="registrationModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Pendaftaran Exco PIBG</h3>
+                <button id="closeRegistrationModal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="overflow-y-auto p-6 md:p-8">
+                 <div id="registration-feedback-message" class="hidden text-center p-4 mb-6 rounded-lg"></div>
+                <form id="registrationForm" class="space-y-6">
+                    <div>
+                        <p class="text-sm text-red-600 mb-4">* Semua bahagian adalah wajib diisi.</p>
+                        <label for="reg-nama" class="block text-sm font-medium text-slate-700 mb-1">Nama Penuh <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-nama" name="reg-nama" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label for="reg-ic" class="block text-sm font-medium text-slate-700 mb-1">No. Kad Pengenalan <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-ic" name="reg-ic" placeholder="cth: 801010-01-xxxx" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label for="reg-pekerjaan" class="block text-sm font-medium text-slate-700 mb-1">Pekerjaan <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-pekerjaan" name="reg-pekerjaan" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                           <label for="reg-jawatan" class="block text-sm font-medium text-slate-700 mb-1">Jawatan (dalam PIBG) <span class="text-red-600">*</span></label>
+                           <select id="reg-jawatan" name="reg-jawatan" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                               <option value="">-- Sila Pilih --</option>
+                               <option value="YDP">Yang Dipertua (YDP)</option>
+                               <option value="NYDP">Naib Yang Dipertua (NYDP)</option>
+                               <option value="Setiausaha">Setiausaha Kehormat</option>
+                               <option value="Bendahari">Bendahari Kehormat</option>
+                               <option value="AJK Ibu Bapa">AJK Ibu Bapa</option>
+                               <option value="AJK Guru">AJK Guru</option>
+                           </select>
+                       </div>
+                        <div>
+                            <label for="reg-telefon" class="block text-sm font-medium text-slate-700 mb-1">No. Telefon <span class="text-red-600">*</span></label>
+                            <input type="tel" id="reg-telefon" name="reg-telefon" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                    </div>
+                     <div>
+                        <label for="reg-sesi" class="block text-sm font-medium text-slate-700 mb-1">Sesi <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-sesi" name="reg-sesi" value="2024-2026" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-100" required>
+                    </div>
+
+                    <!-- Children Information Section -->
+                    <div class="border-t pt-6">
+                        <h4 class="font-medium text-slate-800 mb-4">Maklumat Anak</h4>
+                        <div id="children-container" class="space-y-4">
+                            <!-- Child 1 (template) -->
+                            <div class="child-entry grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Anak <span class="text-red-600">*</span></label>
+                                    <input type="text" name="reg-nama-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Kelas <span class="text-red-600">*</span></label>
+                                    <input type="text" name="reg-kelas-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="addChildBtn" class="mt-4 text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Tambah Anak</button>
+                    </div>
+
+                     <!-- Modal Footer -->
+                    <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
+                        <button type="button" id="cancelRegistrationBtn" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
+                        <button type="submit" class="px-6 py-2 bg-slate-700 text-white font-semibold rounded-md hover:bg-slate-800 shadow-sm">Daftar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-16">
+        <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
+            &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
+        </div>
+    </footer>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
+        <p id="toast-message">This is a toast message!</p>
+    </div>
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Setup ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibg-skpm-portal';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO", authDomain: "DEMO", projectId: "DEMO" };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const excoMembersCol = collection(db, `/artifacts/${appId}/public/data/exco_members`);
+
+        // Authenticate user
+        (async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                console.log("Firebase authentication successful.");
+            } catch (error) {
+                console.error("Firebase authentication failed:", error);
+                showToast("Gagal menyambung ke pangkalan data.", 'error');
+            }
+        })();
+
+        // --- UI Elements ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const registrationModal = document.getElementById('registrationModal');
+        const openRegistrationBtn = document.getElementById('openRegistrationBtn');
+        const closeRegistrationModalBtn = document.getElementById('closeRegistrationModal');
+        const cancelRegistrationBtn = document.getElementById('cancelRegistrationBtn');
+        const registrationForm = document.getElementById('registrationForm');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        // --- General Functions ---
+        const showToast = (message, type = 'success') => {
+            toastMessage.textContent = message;
+            toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+            }, 3000);
+        };
+
+        const closeModal = (modalElement) => {
+            modalElement.classList.replace('flex', 'hidden');
+            document.body.style.overflow = 'auto';
+        };
+
+        const openModal = (modalElement) => {
+            modalElement.classList.replace('hidden', 'flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        // --- Mobile Menu ---
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // --- Modal: Exco Registration ---
+        const childrenContainer = document.getElementById('children-container');
+        const addChildBtn = document.getElementById('addChildBtn');
+        let childCount = 1;
+
+        openRegistrationBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(registrationModal);
+            registrationForm.reset();
+            childrenContainer.innerHTML = `
+                <div class="child-entry grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Anak <span class="text-red-600">*</span></label>
+                        <input type="text" name="reg-nama-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kelas <span class="text-red-600">*</span></label>
+                        <input type="text" name="reg-kelas-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                    </div>
+                </div>`;
+            childCount = 1;
+            document.getElementById('registration-feedback-message').classList.add('hidden');
+        });
+        
+        addChildBtn.addEventListener('click', () => {
+            childCount++;
+            const newChildEntry = document.createElement('div');
+            newChildEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-2 gap-4 relative pt-2';
+            newChildEntry.innerHTML = `
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Anak ${childCount} <span class="text-red-600">*</span></label>
+                    <input type="text" name="reg-nama-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                </div>
+                <div class="flex items-end">
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kelas <span class="text-red-600">*</span></label>
+                        <input type="text" name="reg-kelas-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                    </div>
+                    <button type="button" class="remove-child-btn ml-2 mb-1 p-2 text-red-500 hover:text-red-700 text-2xl font-bold" title="Padam Anak">&times;</button>
+                </div>`;
+            childrenContainer.appendChild(newChildEntry);
+            newChildEntry.querySelector('.remove-child-btn').addEventListener('click', (e) => e.target.closest('.child-entry').remove());
+        });
+
+        closeRegistrationModalBtn.addEventListener('click', () => closeModal(registrationModal));
+        cancelRegistrationBtn.addEventListener('click', () => closeModal(registrationModal));
+        registrationModal.addEventListener('click', (event) => { if (event.target === registrationModal) closeModal(registrationModal); });
+
+        registrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedbackEl = document.getElementById('registration-feedback-message');
+            
+            try {
+                const ic = document.getElementById('reg-ic').value.trim();
+                const q = query(excoMembersCol, where("ic", "==", ic));
+                const existing = await getDocs(q);
+                if (!existing.empty) {
+                    throw new Error("No. KP ini telah didaftarkan.");
+                }
+
+                const childrenNames = Array.from(document.querySelectorAll('input[name="reg-nama-anak[]"]')).map(input => input.value);
+                const childrenClasses = Array.from(document.querySelectorAll('input[name="reg-kelas-anak[]"]')).map(input => input.value);
+                const children = childrenNames.map((name, index) => ({ name: name, class: childrenClasses[index] }));
+
+                const newExco = {
+                    name: document.getElementById('reg-nama').value,
+                    ic: ic,
+                    occupation: document.getElementById('reg-pekerjaan').value,
+                    pibgPosition: document.getElementById('reg-jawatan').value,
+                    phone: document.getElementById('reg-telefon').value,
+                    session: document.getElementById('reg-sesi').value,
+                    children: children,
+                    registeredAt: serverTimestamp()
+                };
+
+                await addDoc(excoMembersCol, newExco);
+                
+                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-green-100 text-green-800';
+                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Pendaftaran Berjaya!</h3><p>Terima kasih. Maklumat anda telah disimpan.</p>`;
+                feedbackEl.classList.remove('hidden');
+
+                setTimeout(() => closeModal(registrationModal), 3000);
+            } catch (error) {
+                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-red-100 text-red-800';
+                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Pendaftaran Gagal</h3><p>${error.message}</p>`;
+                feedbackEl.classList.remove('hidden');
+            }
+        });
+
+        // --- Active Nav Link on Scroll ---
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                if (window.pageYOffset >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
