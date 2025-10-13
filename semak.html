@@ -406,21 +406,6 @@
         const toastMessage = document.getElementById('toast-message');
         const newApplicationBtn = document.getElementById('newApplicationBtn');
 
-        // --- Authentication & Initial Load ---
-        (async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                fetchApplications();
-            } catch (error) {
-                console.error("Firebase authentication failed:", error);
-                analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
-            }
-        })();
-        
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
             toastMessage.textContent = message;
@@ -436,17 +421,10 @@
             tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
             tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
         };
-        tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
         
-        newApplicationBtn.addEventListener('click', () => {
-            switchTab('tab-form-btn');
-            resetApplicationForm();
-        });
-
-
         // --- Data Fetching and Processing ---
         const fetchApplications = () => {
-             analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Memuatkan data...</td></tr>`;
+             analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10">Memuatkan data...</td></tr>`;
             onSnapshot(applicationsCol, (snapshot) => {
                 allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
@@ -456,6 +434,21 @@
                 applyFiltersAndRender();
             });
         };
+
+        // --- Authentication & Initial Load ---
+        (async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                fetchApplications();
+            } catch (error) {
+                console.error("Firebase authentication failed:", error);
+                analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
+            }
+        })();
 
         const calculateStats = () => {
             document.getElementById('total-apps').textContent = allApps.length;
@@ -513,7 +506,7 @@
         const renderTable = () => {
             analysisTableBody.innerHTML = '';
             if (filteredApps.length === 0) {
-                analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
+                analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
                 updatePaginationControls();
                 return;
             }
@@ -532,6 +525,12 @@
                     <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
                     <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
                     <td class="py-3 px-4 text-sm text-slate-500">${app.amount.toFixed(2)}</td>
+                     <td class="py-4 px-4 text-sm text-center align-top">
+                        <div class="flex items-center justify-center space-x-2">
+                            <a href="undi.html?id=${app.id}&index=${startIndex + index + 1}" class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200">Undi</a>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4 text-sm text-slate-500 align-top"><div class="flex items-center"><div class="w-full bg-slate-200 rounded-full h-2.5"><div class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div></div><span class="ml-2 font-medium">0%</span></div></td>
                     <td class="py-3 px-4 text-sm text-slate-500">${getStatusBadge(app.status)}</td>
                 `;
                 analysisTableBody.appendChild(row);
@@ -786,21 +785,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('tab-analysis-btn');
             resetApplicationForm();
+             // Event Listeners for tab buttons
+            tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
+        
+            newApplicationBtn.addEventListener('click', () => {
+                switchTab('tab-form-btn');
+                resetApplicationForm();
+            });
         });
 
     </script>
 </body>
 </html>
-" between  and  in the most up-to-date Canvas "Analisis & Permohonan PIBG" document above and am asking a query about/based on this code below.
-Instructions to follow:
-  * Don't output/edit the document if the query is Direct/Simple. For example, if the query asks for a simple explanation, output a direct answer.
-  * Make sure to **edit** the document if the query shows the intent of editing the document, in which case output the entire edited document, **not just that section or the edits**.
-    * Don't output the same document/empty document and say that you have edited it.
-    * Don't change unrelated code in the document.
-  * Don't output  and  in your final response.
-  * Any references like "this" or "selected code" refers to the code between  and  tags.
-  * Just acknowledge my request in the introduction.
-  * Make sure to refer to the document as "Canvas" in your response.
-
-bagaimana orang nak memohon la? perlu ada juga di semak.html itu butang untuk pemohon.
 
