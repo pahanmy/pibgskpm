@@ -498,10 +498,25 @@
                 renderTable();
                 calculateStats(); 
             };
-
-            const getStatusBadge = (status) => {
-                const colors = { 'Diluluskan': 'bg-green-100 text-green-800', 'Dalam Proses': 'bg-yellow-100 text-yellow-800', 'Ditolak': 'bg-red-100 text-red-800' };
-                return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[status] || 'bg-slate-100 text-slate-800'}">${status}</span>`;
+            
+            const renderStatusDisplay = (status) => {
+                let icon = '';
+                let colors = '';
+                switch (status) {
+                    case 'Diluluskan':
+                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
+                        colors = 'bg-green-100 text-green-800';
+                        break;
+                    case 'Ditolak':
+                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>`;
+                        colors = 'bg-red-100 text-red-800';
+                        break;
+                    default: // Dalam Proses
+                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>`;
+                        colors = 'bg-yellow-100 text-yellow-800';
+                        break;
+                }
+                return `<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${colors}">${icon} ${status}</span>`;
             };
 
             const getProgressColor = (percentage) => {
@@ -529,23 +544,23 @@
                     // --- Logic for Keputusan Button ---
                     const totalMembers = 15;
                     const approvalThreshold = 10; // 2/3 of 15
-                    const approvalVotes = app.votes ? app.votes.filter(v => v.vote === 'approve').length : 0;
+                    const approvalVotes = app.votes && Array.isArray(app.votes) ? app.votes.filter(v => v.vote === 'approve').length : 0;
                     
                     const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
                     const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
 
-                    let finalStatus = app.status; // Default to original status
+                    let finalStatus = app.status; 
                     let showKeputusanBtn = false;
 
                     if (approvalVotes >= approvalThreshold) {
                         finalStatus = 'Diluluskan';
                         showKeputusanBtn = true;
                     } else if (votingPeriodEnded) {
-                        finalStatus = (approvalVotes >= approvalThreshold) ? 'Diluluskan' : 'Ditolak';
-                        showKeputusanBtn = true;
+                        finalStatus = 'Ditolak';
+                        showKeputusanBtn = true; 
                     }
                     
-                    const votePercentage = app.votes ? Math.round((approvalVotes / totalMembers) * 100) : 0;
+                    const votePercentage = app.votes && Array.isArray(app.votes) ? Math.round((approvalVotes / totalMembers) * 100) : 0;
                     const progressColorClass = getProgressColor(votePercentage);
 
                     const row = document.createElement('tr');
@@ -559,8 +574,8 @@
                         <td class="py-3 px-4 text-xs text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
                         <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center space-x-2">
-                                ${getStatusBadge(finalStatus)}
-                                ${showKeputusanBtn ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>` : ''}
+                                ${renderStatusDisplay(finalStatus)}
+                                ${showKeputusanBtn && finalStatus === 'Diluluskan' ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>` : ''}
                             </div>
                         </td>
                          <td class="py-3 px-4 text-xs text-slate-500">
