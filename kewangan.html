@@ -547,6 +547,12 @@
             const reportEndDateInput = document.getElementById('report-end-date');
             
             // --- General Functions ---
+            const formatNumber = (num) => {
+                if (typeof num !== 'number') num = 0;
+                return num.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            };
+            const formatCurrency = (num) => `RM ${formatNumber(num)}`;
+            
             const showToast = (message, type = 'success') => {
                 toastMessage.textContent = message;
                 toast.className = `fixed bottom-5 right-5 py-3 px-5 rounded-lg shadow-lg transition-all duration-300 ${type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-900 text-white'}`;
@@ -610,8 +616,6 @@
                 let totalOut = transactionsToProcess.reduce((sum, t) => sum + (t.type === 'keluar' ? t.amount : 0), 0);
                 let bakiAkhir = bakiAwal + totalIn - totalOut;
                 
-                const formatCurrency = (num) => `RM ${num.toFixed(2)}`;
-
                 if (accountId === 'keseluruhan') {
                     document.getElementById('keseluruhan-baki-awal').textContent = formatCurrency(bakiAwal);
                     document.getElementById('keseluruhan-kutipan').textContent = formatCurrency(totalIn);
@@ -643,7 +647,7 @@
 
                 if (accountId !== 'keseluruhan') {
                     const year = new Date().getFullYear();
-                    const bakiRow = `<tr class="bg-slate-50 font-semibold"><td class="px-2"></td><td class="py-3 px-4">01/01/${year}</td><td class="py-3 px-4" colspan="3">BAKI AWAL</td><td class="py-3 px-4 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td class="px-4"></td></tr>`;
+                    const bakiRow = `<tr class="bg-slate-50 font-semibold"><td class="px-2"></td><td class="py-3 px-4">01/01/${year}</td><td class="py-3 px-4" colspan="3">BAKI AWAL</td><td class="py-3 px-4 text-right">${formatNumber(BAKI_AWAL_TAHUN[accountId] || 0)}</td><td class="px-4"></td></tr>`;
                     tableBody.innerHTML += bakiRow;
                 }
                 
@@ -658,8 +662,8 @@
                             <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
                             <td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNames[t.account] || t.account}</td>
                             <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
-                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
-                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${formatNumber(t.amount)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${formatNumber(t.amount)}` : '-'}</td>
                         `;
                     } else {
                         runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
@@ -667,9 +671,9 @@
                             <td class="py-3 px-2 text-center"><input type="checkbox" data-action="select-row" data-id="${t.id}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></td>
                             <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
                             <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
-                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
-                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
-                            <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${runningBalance.toFixed(2)}</td>
+                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${formatNumber(t.amount)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${formatNumber(t.amount)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${formatNumber(runningBalance)}</td>
                             <td class="py-3 px-4 text-center">
                                 <button data-action="edit" data-id="${t.id}" class="action-btn bg-yellow-100 text-yellow-700" title="KEMASKINI"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>
                                 <button data-action="delete" data-id="${t.id}" class="action-btn bg-red-100 text-red-700" title="PADAM"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg></button>
@@ -795,46 +799,46 @@
                 
                 // --- RENDER INCOME ---
                 let bakiAwalBank = BAKI_AWAL_TAHUN.bank_islam || 0;
-                incomeTableBank.innerHTML = `<tr><td class="${tableCellClasses}" colspan="2">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${bakiAwalBank.toFixed(2)}</td></tr>`;
+                incomeTableBank.innerHTML = `<tr><td class="${tableCellClasses}" colspan="2">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${formatNumber(bakiAwalBank)}</td></tr>`;
                 const periodIncomeBank = incomeBank.reduce((sum, t) => sum + t.amount, 0);
                 incomeBank.forEach(t => {
-                    incomeTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
+                    incomeTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${formatNumber(t.amount)}</td></tr>`;
                 });
                 const finalTotalIncomeBank = bakiAwalBank + periodIncomeBank;
-                incomeTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${finalTotalIncomeBank.toFixed(2)}</td></tr>`;
+                incomeTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${formatNumber(finalTotalIncomeBank)}</td></tr>`;
 
                 let bakiAwalPetty = (BAKI_AWAL_TAHUN.petty_cash || 0) + (BAKI_AWAL_TAHUN.koperasi_mini || 0);
-                incomeTablePetty.innerHTML = `<tr><td class="${tableCellClasses}" colspan="3">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${bakiAwalPetty.toFixed(2)}</td></tr>`;
+                incomeTablePetty.innerHTML = `<tr><td class="${tableCellClasses}" colspan="3">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${formatNumber(bakiAwalPetty)}</td></tr>`;
                 const periodIncomePetty = incomePetty.reduce((sum, t) => sum + t.amount, 0);
                 incomePetty.forEach(t => {
-                    incomeTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
+                    incomeTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${formatNumber(t.amount)}</td></tr>`;
                 });
                 const finalTotalIncomePetty = bakiAwalPetty + periodIncomePetty;
-                incomeTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${finalTotalIncomePetty.toFixed(2)}</td></tr>`;
+                incomeTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${formatNumber(finalTotalIncomePetty)}</td></tr>`;
 
                 // --- RENDER EXPENSES ---
                 expenseTableBank.innerHTML = '';
                 expenseBank.forEach(t => {
-                    expenseTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
+                    expenseTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${formatNumber(t.amount)}</td></tr>`;
                 });
                 const totalExpenseBank = expenseBank.reduce((sum, t) => sum + t.amount, 0);
-                expenseTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${totalExpenseBank.toFixed(2)}</td></tr>`;
+                expenseTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${formatNumber(totalExpenseBank)}</td></tr>`;
 
                 expenseTablePetty.innerHTML = '';
                 expensePetty.forEach(t => {
-                    expenseTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
+                    expenseTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${formatNumber(t.amount)}</td></tr>`;
                 });
                 const totalExpensePetty = expensePetty.reduce((sum, t) => sum + t.amount, 0);
-                expenseTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${totalExpensePetty.toFixed(2)}</td></tr>`;
+                expenseTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${formatNumber(totalExpensePetty)}</td></tr>`;
                 
                 // --- RENDER GRAND SUMMARY ---
                 const grandTotalIncome = periodIncomeBank + periodIncomePetty;
                 const grandTotalExpense = totalExpenseBank + totalExpensePetty;
                 const surplus = grandTotalIncome - grandTotalExpense;
                 grandSummaryTable.innerHTML = `
-                    <tr><td class="${tableCellClasses}">JUMLAH PENDAPATAN (DALAM TEMPOH)</td><td class="text-right ${tableCellClasses}">${grandTotalIncome.toFixed(2)}</td></tr>
-                    <tr><td class="${tableCellClasses}">JUMLAH PERBELANJAAN (DALAM TEMPOH)</td><td class="text-right ${tableCellClasses}">${grandTotalExpense.toFixed(2)}</td></tr>
-                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">LEBIHAN / (KURANGAN)</td><td class="text-right ${tableCellClasses}">${surplus.toFixed(2)}</td></tr>
+                    <tr><td class="${tableCellClasses}">JUMLAH PENDAPATAN (DALAM TEMPOH)</td><td class="text-right ${tableCellClasses}">${formatNumber(grandTotalIncome)}</td></tr>
+                    <tr><td class="${tableCellClasses}">JUMLAH PERBELANJAAN (DALAM TEMPOH)</td><td class="text-right ${tableCellClasses}">${formatNumber(grandTotalExpense)}</td></tr>
+                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">LEBIHAN / (KURANGAN)</td><td class="text-right ${tableCellClasses}">${formatNumber(surplus)}</td></tr>
                 `;
 
                 // --- RENDER BALANCE SUMMARY ---
@@ -843,9 +847,9 @@
                 const jumlahBaki = bakiBank + bakiTangan;
 
                 balanceTable.innerHTML = `
-                    <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="text-right ${tableCellClasses}">${bakiBank.toFixed(2)}</td></tr>
-                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN (TUNAI RUNCIT + KOPERASI)</td><td class="text-right ${tableCellClasses}">${bakiTangan.toFixed(2)}</td></tr>
-                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="text-right ${tableCellClasses}">${jumlahBaki.toFixed(2)}</td></tr>`;
+                    <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="text-right ${tableCellClasses}">${formatNumber(bakiBank)}</td></tr>
+                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN (TUNAI RUNCIT + KOPERASI)</td><td class="text-right ${tableCellClasses}">${formatNumber(bakiTangan)}</td></tr>
+                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="text-right ${tableCellClasses}">${formatNumber(jumlahBaki)}</td></tr>`;
             };
 
             // --- Authentication & Initial Load ---
@@ -1033,10 +1037,10 @@
                     let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
                     const body = filteredData.map(t => {
                         if (activeTab === 'keseluruhan') {
-                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), accountNames[t.account] || t.account, t.description, t.type === 'masuk' ? t.amount.toFixed(2): '', t.type==='keluar' ? t.amount.toFixed(2):''];
+                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), accountNames[t.account] || t.account, t.description, t.type === 'masuk' ? formatNumber(t.amount): '', t.type==='keluar' ? formatNumber(t.amount):''];
                         } else {
                             baki += (t.type === 'masuk' ? t.amount : -t.amount);
-                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, t.type === 'masuk' ? t.amount.toFixed(2) : '', t.type === 'keluar' ? t.amount.toFixed(2) : '', baki.toFixed(2)];
+                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, t.type === 'masuk' ? formatNumber(t.amount) : '', t.type === 'keluar' ? formatNumber(t.amount) : '', formatNumber(baki)];
                         }
                     });
                     doc.autoTable({ head, body, startY: 20, headStyles: { fillColor: [79, 70, 229] } });
