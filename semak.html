@@ -34,11 +34,13 @@
             width: 40px; height: 40px; animation: spin 2s linear infinite;
         }
         .tab-button {
-            border-bottom-width: 2px; border-color: transparent;
+            border-bottom-width: 2px;
+            border-color: transparent;
             transition: all 0.2s ease-in-out;
         }
         .tab-button.active-tab {
-            border-color: #4f46e5; color: #4f46e5;
+            border-color: #4f46e5;
+            color: #4f46e5;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -133,7 +135,7 @@
                         
                         <div class="flex justify-between items-center mb-6 mt-8">
                             <h2 class="text-2xl font-bold text-slate-800">Senarai Permohonan</h2>
-                            <button id="newApplicationBtn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm flex items-center space-x-2">
+                            <button id="newApplicationBtnInAnalysis" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm flex items-center space-x-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
                                 <span>Mohon Peruntukan Baru</span>
                             </button>
@@ -404,7 +406,9 @@
         const applicationForm = document.getElementById('applicationForm');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
-        const newApplicationBtn = document.getElementById('newApplicationBtn');
+        const newApplicationBtnInAnalysis = document.getElementById('newApplicationBtnInAnalysis');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
 
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
@@ -415,8 +419,6 @@
         };
 
         // --- Tab Management ---
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
         const switchTab = (targetTabId) => {
             tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
             tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
@@ -424,7 +426,7 @@
         
         // --- Data Fetching and Processing ---
         const fetchApplications = () => {
-             analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10">Memuatkan data...</td></tr>`;
+             analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Memuatkan data...</td></tr>`;
             onSnapshot(applicationsCol, (snapshot) => {
                 allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
@@ -434,22 +436,7 @@
                 applyFiltersAndRender();
             });
         };
-
-        // --- Authentication & Initial Load ---
-        (async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                fetchApplications();
-            } catch (error) {
-                console.error("Firebase authentication failed:", error);
-                analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
-            }
-        })();
-
+        
         const calculateStats = () => {
             document.getElementById('total-apps').textContent = allApps.length;
             
@@ -506,7 +493,7 @@
         const renderTable = () => {
             analysisTableBody.innerHTML = '';
             if (filteredApps.length === 0) {
-                analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
+                analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
                 updatePaginationControls();
                 return;
             }
@@ -525,12 +512,6 @@
                     <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
                     <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
                     <td class="py-3 px-4 text-sm text-slate-500">${app.amount.toFixed(2)}</td>
-                     <td class="py-4 px-4 text-sm text-center align-top">
-                        <div class="flex items-center justify-center space-x-2">
-                            <a href="undi.html?id=${app.id}&index=${startIndex + index + 1}" class="vote-btn px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full hover:bg-indigo-200">Undi</a>
-                        </div>
-                    </td>
-                    <td class="py-4 px-4 text-sm text-slate-500 align-top"><div class="flex items-center"><div class="w-full bg-slate-200 rounded-full h-2.5"><div class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div></div><span class="ml-2 font-medium">0%</span></div></td>
                     <td class="py-3 px-4 text-sm text-slate-500">${getStatusBadge(app.status)}</td>
                 `;
                 analysisTableBody.appendChild(row);
@@ -788,7 +769,7 @@
              // Event Listeners for tab buttons
             tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
         
-            newApplicationBtn.addEventListener('click', () => {
+            newApplicationBtnInAnalysis.addEventListener('click', () => {
                 switchTab('tab-form-btn');
                 resetApplicationForm();
             });
