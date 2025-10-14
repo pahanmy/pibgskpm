@@ -284,6 +284,8 @@
                         <table class="w-full text-sm border-collapse border border-slate-400">
                             <thead>
                                 <tr>
+                                    <th class="py-2 px-4 border border-slate-300 text-left">TARIKH</th>
+                                    <th class="py-2 px-4 border border-slate-300 text-left">AKAUN</th>
                                     <th class="py-2 px-4 border border-slate-300 text-left">BUTIRAN</th>
                                     <th class="py-2 px-4 border border-slate-300 text-right">JUMLAH (RM)</th>
                                 </tr>
@@ -297,6 +299,8 @@
                         <table class="w-full text-sm border-collapse border border-slate-400">
                              <thead>
                                 <tr>
+                                    <th class="py-2 px-4 border border-slate-300 text-left">TARIKH</th>
+                                    <th class="py-2 px-4 border border-slate-300 text-left">AKAUN</th>
                                     <th class="py-2 px-4 border border-slate-300 text-left">BUTIRAN</th>
                                     <th class="py-2 px-4 border border-slate-300 text-right">JUMLAH (RM)</th>
                                 </tr>
@@ -537,67 +541,55 @@
                     }
                 }
             };
-            
-            const renderKeseluruhanTable = (transactions) => {
-                 const tableBody = document.getElementById('keseluruhan-table');
-                 tableBody.innerHTML = '';
-                 if (transactions.length === 0) {
-                     tableBody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-500">TIADA TRANSAKSI.</td></tr>`;
-                     return;
-                 }
-                 transactions.forEach(t => {
-                     const row = document.createElement('tr');
-                     const isIncome = t.type === 'masuk';
-                     row.className = isIncome ? 'bg-green-50/5' : 'bg-red-50/5';
-                     row.innerHTML = `
-                        <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        <td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNames[t.account] || t.account}</td>
-                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
-                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
-                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
-                     `;
-                     tableBody.appendChild(row);
-                 })
-            };
 
             const renderTable = (accountId, transactionsToRender) => {
-                 if(accountId === 'keseluruhan') {
-                     renderKeseluruhanTable(transactionsToRender);
-                     return;
-                 }
                 const contentEl = document.getElementById(`${accountId}-content`);
                 if(!contentEl) return;
-                
-                const tableBody = contentEl.querySelector('[data-id="table-body"]');
+
+                const tableBody = contentEl.querySelector(accountId === 'keseluruhan' ? '#keseluruhan-table' : '[data-id="table-body"]');
                 tableBody.innerHTML = '';
                 
                 if (transactionsToRender.length === 0) {
-                     tableBody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-500">TIADA TRANSAKSI DIREKODKAN.</td></tr>`;
-                     return;
+                    const colspan = accountId === 'keseluruhan' ? 5 : 7;
+                    tableBody.innerHTML = `<tr><td colspan="${colspan}" class="py-10 text-center text-slate-500">TIADA TRANSAKSI.</td></tr>`;
+                    return;
                 }
-                const year = new Date().getFullYear();
-                const bakiRow = `<tr class="bg-slate-50 font-semibold"><td class="px-2"></td><td class="py-3 px-4">01/01/${year}</td><td class="py-3 px-4" colspan="3">BAKI AWAL</td><td class="py-3 px-4 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td class="px-4"></td></tr>`;
-                tableBody.innerHTML += bakiRow;
 
+                if (accountId !== 'keseluruhan') {
+                    const year = new Date().getFullYear();
+                    const bakiRow = `<tr class="bg-slate-50 font-semibold"><td class="px-2"></td><td class="py-3 px-4">01/01/${year}</td><td class="py-3 px-4" colspan="3">BAKI AWAL</td><td class="py-3 px-4 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td class="px-4"></td></tr>`;
+                    tableBody.innerHTML += bakiRow;
+                }
+                
                 let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
                 transactionsToRender.forEach(t => {
-                    runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
                     const row = document.createElement('tr');
                     const isIncome = t.type === 'masuk';
-                    row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
-
-                    row.innerHTML = `
-                        <td class="py-3 px-2 text-center"><input type="checkbox" data-action="select-row" data-id="${t.id}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></td>
-                        <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
-                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
-                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
-                        <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${runningBalance.toFixed(2)}</td>
-                        <td class="py-3 px-4 text-center">
-                            <button data-action="edit" data-id="${t.id}" class="action-btn bg-yellow-100 text-yellow-700" title="KEMASKINI"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>
-                            <button data-action="delete" data-id="${t.id}" class="action-btn bg-red-100 text-red-700" title="PADAM"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg></button>
-                        </td>
-                    `;
+                    row.className = isIncome ? 'bg-green-50/5' : 'bg-red-50/5';
+                    
+                    if (accountId === 'keseluruhan') {
+                        row.innerHTML = `
+                            <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNames[t.account] || t.account}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
+                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
+                        `;
+                    } else {
+                        runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
+                        row.innerHTML = `
+                            <td class="py-3 px-2 text-center"><input type="checkbox" data-action="select-row" data-id="${t.id}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></td>
+                            <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
+                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${runningBalance.toFixed(2)}</td>
+                            <td class="py-3 px-4 text-center">
+                                <button data-action="edit" data-id="${t.id}" class="action-btn bg-yellow-100 text-yellow-700" title="KEMASKINI"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>
+                                <button data-action="delete" data-id="${t.id}" class="action-btn bg-red-100 text-red-700" title="PADAM"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg></button>
+                            </td>
+                        `;
+                    }
                     tableBody.appendChild(row);
                 });
             };
@@ -626,7 +618,7 @@
                 const totalItems = filtered.length;
                 const totalPages = Math.ceil(totalItems / selectedLimit);
                 const startIndex = (currentPage - 1) * selectedLimit;
-                const paginated = filtered.slice(startIndex, startIndex + selectedLimit);
+                const paginated = filtered.slice(startIndex, startIndex + totalPages > 0 ? startIndex + selectedLimit: 0);
                 
                 renderTable(activeTab, paginated);
                 renderPaginationControls(currentPage, totalPages);
@@ -695,10 +687,19 @@
 
                 document.getElementById('report-date-range').textContent = `BERMULA ${startDate.toLocaleDateString('ms-MY')} HINGGA ${endDate.toLocaleDateString('ms-MY')}`;
                 
-                const rangeTransactions = allTransactions.filter(t => {
-                    const transDate = t.timestamp.toDate();
-                    return transDate >= startDate && transDate <= endDate;
-                });
+                const accountSortOrder = { 'bank_islam': 1, 'petty_cash': 2, 'koperasi_mini': 3 };
+                
+                const rangeTransactions = allTransactions
+                    .filter(t => {
+                        const transDate = t.timestamp.toDate();
+                        return transDate >= startDate && transDate <= endDate;
+                    })
+                    .sort((a, b) => {
+                        const orderA = accountSortOrder[a.account] || 99;
+                        const orderB = accountSortOrder[b.account] || 99;
+                        if (orderA !== orderB) return orderA - orderB;
+                        return a.timestamp.seconds - b.timestamp.seconds;
+                    });
                 
                 const incomeTable = document.getElementById('income-report-table');
                 const expenseTable = document.getElementById('expense-report-table');
@@ -706,34 +707,35 @@
                 const tableCellClasses = "py-2 px-4 border border-slate-300";
                 const totalRowClasses = "font-bold border-t-2 border-slate-800";
                 
-                const groupTransactions = (transactions) => {
-                    return transactions.reduce((acc, t) => {
-                        const key = t.description.toLowerCase().trim();
-                        if (!acc[key]) acc[key] = { description: t.description, total: 0 };
-                        acc[key].total += t.amount;
-                        return acc;
-                    }, {});
-                };
-
                 // Populate Income
                 let totalIncome = Object.values(BAKI_AWAL_TAHUN).reduce((a,b) => a + b, 0);
-                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">BAKI AWAL TAHUN</td><td class="text-right ${tableCellClasses}">${totalIncome.toFixed(2)}</td></tr>`;
-                const groupedIncome = groupTransactions(rangeTransactions.filter(t => t.type === 'masuk'));
-                Object.values(groupedIncome).forEach(g => {
-                    totalIncome += g.total;
-                    incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="text-right ${tableCellClasses}">${g.total.toFixed(2)}</td></tr>`;
+                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}" colspan="3">BAKI AWAL TAHUN</td><td class="text-right ${tableCellClasses}">${totalIncome.toFixed(2)}</td></tr>`;
+                const incomeTransactions = rangeTransactions.filter(t => t.type === 'masuk');
+                incomeTransactions.forEach(t => {
+                    incomeTable.innerHTML += `<tr>
+                        <td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                        <td class="${tableCellClasses}">${accountNames[t.account] || t.account}</td>
+                        <td class="${tableCellClasses}">${t.description}</td>
+                        <td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td>
+                    </tr>`;
                 });
-                incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PENDAPATAN</td><td class="text-right ${tableCellClasses}">${totalIncome.toFixed(2)}</td></tr>`;
+                const finalTotalIncome = totalIncome + incomeTransactions.reduce((sum, t) => sum + t.amount, 0);
+                incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH PENDAPATAN</td><td class="text-right ${tableCellClasses}">${finalTotalIncome.toFixed(2)}</td></tr>`;
 
                 // Populate Expenses
                 let totalExpense = 0;
                 expenseTable.innerHTML = '';
-                const groupedExpense = groupTransactions(rangeTransactions.filter(t => t.type === 'keluar'));
-                Object.values(groupedExpense).forEach(g => {
-                    totalExpense += g.total;
-                    expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="text-right ${tableCellClasses}">${g.total.toFixed(2)}</td></tr>`;
+                const expenseTransactions = rangeTransactions.filter(t => t.type === 'keluar');
+                expenseTransactions.forEach(t => {
+                    totalExpense += t.amount;
+                    expenseTable.innerHTML += `<tr>
+                        <td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                        <td class="${tableCellClasses}">${accountNames[t.account] || t.account}</td>
+                        <td class="${tableCellClasses}">${t.description}</td>
+                        <td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td>
+                    </tr>`;
                 });
-                expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PERBELANJAAN</td><td class="text-right ${tableCellClasses}">${totalExpense.toFixed(2)}</td></tr>`;
+                expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH PERBELANJAAN</td><td class="text-right ${tableCellClasses}">${totalExpense.toFixed(2)}</td></tr>`;
                 
                 // Populate Balance Summary
                 const bankIn = rangeTransactions.filter(t => t.account === 'bank_islam' && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
