@@ -60,10 +60,11 @@
                             <th class="py-3 px-5 text-left text-xs font-semibold uppercase">Jenis</th>
                             <th class="py-3 px-5 text-left text-xs font-semibold uppercase">Tarikh</th>
                             <th class="py-3 px-5 text-center text-xs font-semibold uppercase">Status Peruntukan</th>
+                            <th class="py-3 px-5 text-center text-xs font-semibold uppercase">Tindakan</th>
                         </tr>
                     </thead>
                     <tbody id="programsListBody" class="divide-y divide-slate-200">
-                        <tr><td colspan="5" class="text-center p-10 text-slate-500">Memuatkan data...</td></tr>
+                        <tr><td colspan="6" class="text-center p-10 text-slate-500">Memuatkan data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -122,7 +123,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, collection, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, addDoc, collection, serverTimestamp, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -164,7 +165,7 @@
                 listenForData(); 
             } catch (e) { 
                 console.error("Authentication failed:", e); 
-                programsListBody.innerHTML = `<tr><td colspan="5" class="text-center p-10 text-red-500">Gagal menyambung ke pangkalan data.</td></tr>`;
+                programsListBody.innerHTML = `<tr><td colspan="6" class="text-center p-10 text-red-500">Gagal menyambung ke pangkalan data.</td></tr>`;
             } 
         })();
 
@@ -199,7 +200,6 @@
                     createdAt: serverTimestamp()
                 });
                 programModal.classList.replace('flex', 'hidden');
-                // No need for alert, onSnapshot will update the list automatically.
             } catch (error) { 
                 console.error("Error adding program:", error); 
                 alert("Gagal menyimpan program."); 
@@ -208,17 +208,45 @@
                 submitBtn.textContent = 'Simpan Program';
             }
         });
+        
+        programsListBody.addEventListener('click', async (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
+
+            const programId = target.dataset.id;
+            const programSource = target.dataset.source;
+
+            if (target.classList.contains('delete-btn')) {
+                if (confirm('Anda pasti ingin memadam program ini? Tindakan ini tidak boleh diubah.')) {
+                    try {
+                        const collectionRef = programSource === 'programs' ? programsCol : applicationsCol;
+                        await deleteDoc(doc(db, collectionRef.path, programId));
+                        // UI will update automatically via onSnapshot
+                    } catch (error) {
+                        console.error("Gagal memadam program:", error);
+                        alert("Gagal memadam program tersebut.");
+                    }
+                }
+            } else if (target.classList.contains('edit-btn')) {
+                // Placeholder for edit functionality
+                alert('Fungsi kemaskini akan dilaksanakan pada masa akan datang.');
+                // To implement:
+                // 1. Fetch the specific document using getDoc.
+                // 2. Populate the programModal with the data.
+                // 3. Change the form submission to update the doc instead of adding a new one.
+            }
+        });
+
 
         // --- Data Fetching and Rendering ---
         const renderCombinedPrograms = () => {
             const allPrograms = [...programsFromPrograms, ...programsFromApplications];
             
-            // Sort by start date, most recent first
             allPrograms.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 
             programsListBody.innerHTML = '';
             if (allPrograms.length === 0) {
-                programsListBody.innerHTML = `<tr><td colspan="5" class="text-center p-10">Belum ada sebarang program yang didaftarkan.</td></tr>`;
+                programsListBody.innerHTML = `<tr><td colspan="6" class="text-center p-10">Belum ada sebarang program yang didaftarkan.</td></tr>`;
                 return;
             }
 
@@ -236,13 +264,27 @@
                         <td class="py-4 px-5 text-sm text-slate-600">${prog.type}</td>
                         <td class="py-4 px-5 text-sm text-slate-600">${date}</td>
                         <td class="py-4 px-5 text-center"><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td class="py-4 px-5 text-center">
+                            <div class="flex items-center justify-center space-x-2">
+                                <button data-id="${prog.id}" data-source="${prog.source}" title="Kemaskini" class="edit-btn p-2 text-slate-500 hover:text-indigo-600 rounded-full hover:bg-indigo-50 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <button data-id="${prog.id}" data-source="${prog.source}" title="Padam" class="delete-btn p-2 text-slate-500 hover:text-red-600 rounded-full hover:bg-red-50 transition-colors">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
                     </tr>`;
                 programsListBody.innerHTML += row;
             });
         };
 
         const listenForData = () => {
-            // Listener for programs without funding
             const qPrograms = query(programsCol, orderBy("createdAt", "desc"));
             onSnapshot(qPrograms, (snapshot) => {
                 programsFromPrograms = snapshot.docs.map(doc => {
@@ -253,13 +295,13 @@
                         type: data.type,
                         startDate: data.startDate,
                         endDate: data.endDate,
-                        fundingStatus: data.fundingStatus
+                        fundingStatus: data.fundingStatus,
+                        source: 'programs' // Identify the source collection
                     };
                 });
                 renderCombinedPrograms();
             }, error => console.error("Error listening to programs collection:", error));
 
-            // Listener for programs from funding applications
             const qApplications = query(applicationsCol, orderBy("createdAt", "desc"));
             onSnapshot(qApplications, (snapshot) => {
                 programsFromApplications = snapshot.docs.map(doc => {
@@ -269,8 +311,9 @@
                         name: data.purpose,
                         type: data.category,
                         startDate: data.programDate,
-                        endDate: null, // Applications don't have an end date
-                        fundingStatus: data.status
+                        endDate: null,
+                        fundingStatus: data.status,
+                        source: 'applications' // Identify the source collection
                     };
                 });
                 renderCombinedPrograms();
