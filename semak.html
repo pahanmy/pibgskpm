@@ -342,6 +342,21 @@
         </div>
     </footer>
 
+    <div id="keputusan-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold text-slate-800">Keputusan Undian</h3>
+                <button id="close-modal-btn" class="text-slate-500 hover:text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-slate-600">Keputusan undian akan dipaparkan di sini.</p>
+                </div>
+        </div>
+    </div>
+
+
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
         <p id="toast-message">This is a toast message!</p>
     </div>
@@ -402,6 +417,8 @@
             const applicantPositionInput = document.getElementById('jawatan');
             const teacherRegOption = document.getElementById('teacher-reg-option');
             const registerTeacherBtn = document.getElementById('register-teacher-btn');
+            const keputusanModal = document.getElementById('keputusan-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -497,10 +514,16 @@
                         <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
                         <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
                         <td class="py-3 px-4 text-sm text-slate-500">${app.amount.toFixed(2)}</td>
-                        <td class="py-3 px-4 text-sm text-slate-500">${getStatusBadge(app.status)}</td>
                         <td class="py-3 px-4 text-sm text-slate-500">
                             <div class="flex items-center space-x-2">
-                                <button class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-md hover:bg-indigo-200">Undi</button>
+                                ${getStatusBadge(app.status)}
+                                <button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-slate-500">
+                            <div class="flex items-center space-x-2">
+                                <a href="undi.html" class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-md hover:bg-indigo-200">Undi</a>
+                                <button class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-md hover:bg-green-200">Kongsi</button>
                                 <button class="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-md hover:bg-red-200">Delete</button>
                             </div>
                         </td>
@@ -524,6 +547,15 @@
                 document.getElementById('page-info-end').textContent = end;
                 document.getElementById('page-info-total').textContent = filteredApps.length;
             };
+
+             // --- Modal Management ---
+            const openModal = () => {
+                keputusanModal.classList.remove('hidden');
+            };
+            const closeModal = () => {
+                keputusanModal.classList.add('hidden');
+            };
+
             
             // --- Application Form Logic ---
             const updateFormSteps = () => {
@@ -618,6 +650,25 @@
                 const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
                 const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
                 if(currentPage < totalPages){ currentPage++; renderTable(); }
+            });
+
+             // Modal Listeners
+            closeModalBtn.addEventListener('click', closeModal);
+            keputusanModal.addEventListener('click', (e) => {
+                if(e.target === keputusanModal) { // only close if clicking the background
+                    closeModal();
+                }
+            });
+
+            // Event delegation for dynamically created "Keputusan" buttons
+            analysisTableBody.addEventListener('click', (e) => {
+                const keputusanBtn = e.target.closest('.keputusan-btn');
+                if (keputusanBtn) {
+                    const appId = keputusanBtn.dataset.id;
+                    // You can use appId to fetch and display specific vote results in the future
+                    console.log("Opening results for application ID:", appId);
+                    openModal();
+                }
             });
 
             icInput.addEventListener('blur', async () => {
