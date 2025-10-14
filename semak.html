@@ -75,49 +75,59 @@
                 <div id="tab-analysis-content" class="tab-content">
                     <div class="p-6 md:p-8">
                          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-                            <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex items-center space-x-4">
-                                <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-slate-500">Jumlah Permohonan</p>
-                                    <p id="total-apps" class="text-2xl font-bold text-slate-900">0</p>
-                                </div>
-                            </div>
-                             <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex items-center space-x-4">
-                                <div class="bg-green-100 text-green-600 p-3 rounded-full">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-slate-500">Diluluskan</p>
-                                    <p id="total-approved" class="text-2xl font-bold text-slate-900">0</p>
+                            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Jumlah Permohonan</p>
+                                        <p id="total-apps" class="text-2xl font-bold text-slate-900">4</p>
+                                    </div>
                                 </div>
                             </div>
-                             <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex items-center space-x-4">
-                                <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-slate-500">Dalam Proses</p>
-                                    <p id="total-pending" class="text-2xl font-bold text-slate-900">0</p>
-                                </div>
-                            </div>
-                            <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex items-center space-x-4">
-                                <div class="bg-red-100 text-red-600 p-3 rounded-full">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-slate-500">Ditolak</p>
-                                    <p id="total-rejected" class="text-2xl font-bold text-slate-900">0</p>
+                             <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Diluluskan</p>
+                                        <p id="total-approved" class="text-2xl font-bold text-slate-900">0</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 flex items-center space-x-4">
-                                <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
-                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                             <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Dalam Proses</p>
+                                        <p id="total-pending" class="text-2xl font-bold text-slate-900">4</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm text-slate-500">Dana Diluluskan</p>
-                                    <p id="total-amount" class="text-2xl font-bold text-slate-900">RM 0.00</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-red-100 text-red-600 p-3 rounded-full">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Ditolak</p>
+                                        <p id="total-rejected" class="text-2xl font-bold text-slate-900">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-slate-500">Dana Diluluskan</p>
+                                        <p id="total-amount" class="text-2xl font-bold text-slate-900">RM 0.00</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +187,7 @@
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh Mohon</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jumlah (RM)</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
+                                            <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
                                         </tr>
                                     </thead>
                                     <tbody id="analysis-table-body" class="divide-y divide-slate-200">
@@ -342,8 +352,8 @@
         </div>
     </footer>
 
-    <div id="keputusan-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+    <div id="keputusan-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="modal-panel">
             <div class="p-6 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold text-slate-800">Keputusan Undian</h3>
                 <button id="close-modal-btn" class="text-slate-500 hover:text-slate-800">
@@ -364,7 +374,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, serverTimestamp, query, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -419,6 +429,7 @@
             const registerTeacherBtn = document.getElementById('register-teacher-btn');
             const keputusanModal = document.getElementById('keputusan-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalPanel = document.getElementById('modal-panel');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -437,11 +448,12 @@
             // --- Data Fetching and Processing ---
             const fetchApplications = () => {
                  analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
-                onSnapshot(applicationsCol, (snapshot) => {
+                onSnapshot(query(applicationsCol), (snapshot) => {
                     allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                     
-                    calculateStats();
+                    // Keep user-defined values on first load, then update with real data
+                    // calculateStats(); 
                     populateYearFilter();
                     applyFiltersAndRender();
                 });
@@ -455,7 +467,7 @@
                 document.getElementById('total-approved').textContent = approvedApps.length;
                 document.getElementById('total-pending').textContent = pendingApps.length;
                 document.getElementById('total-rejected').textContent = rejectedApps.length;
-                const totalAmount = approvedApps.reduce((sum, app) => sum + app.amount, 0);
+                const totalAmount = approvedApps.reduce((sum, app) => sum + parseFloat(app.amount), 0);
                 document.getElementById('total-amount').textContent = `RM ${totalAmount.toFixed(2)}`;
             };
 
@@ -485,6 +497,7 @@
                 });
                 currentPage = 1;
                 renderTable();
+                calculateStats(); // Update stats after filtering
             };
 
             const getStatusBadge = (status) => {
@@ -513,7 +526,7 @@
                         <td class="py-3 px-4 text-sm font-medium text-slate-900">${app.applicant}</td>
                         <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
                         <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
-                        <td class="py-3 px-4 text-sm text-slate-500">${app.amount.toFixed(2)}</td>
+                        <td class="py-3 px-4 text-sm text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
                         <td class="py-3 px-4 text-sm text-slate-500">
                             <div class="flex items-center space-x-2">
                                 ${getStatusBadge(app.status)}
@@ -521,10 +534,16 @@
                             </div>
                         </td>
                         <td class="py-3 px-4 text-sm text-slate-500">
-                            <div class="flex items-center space-x-2">
-                                <a href="undi.html" class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-md hover:bg-indigo-200">Undi</a>
-                                <button class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-md hover:bg-green-200">Kongsi</button>
-                                <button class="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-md hover:bg-red-200">Delete</button>
+                            <div class="flex items-center justify-center space-x-3">
+                                <a href="undi.html?id=${app.id}" title="Undi Permohonan" class="text-indigo-600 hover:text-indigo-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                                </a>
+                                <button data-id="${app.id}" data-purpose="${app.purpose}" title="Kongsi" class="share-btn text-green-600 hover:text-green-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" /></svg>
+                                </button>
+                                <button data-id="${app.id}" title="Padam" class="delete-btn text-red-600 hover:text-red-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                                </button>
                             </div>
                         </td>
                     `;
@@ -551,12 +570,54 @@
              // --- Modal Management ---
             const openModal = () => {
                 keputusanModal.classList.remove('hidden');
+                setTimeout(() => { 
+                    keputusanModal.classList.remove('opacity-0');
+                    modalPanel.classList.remove('scale-95', 'opacity-0');
+                }, 10);
             };
             const closeModal = () => {
-                keputusanModal.classList.add('hidden');
+                keputusanModal.classList.add('opacity-0');
+                modalPanel.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    keputusanModal.classList.add('hidden');
+                }, 300);
             };
 
+            // --- Button Actions ---
+            const shareApplication = async (id, purpose) => {
+                const url = `${window.location.href.split('?')[0]}?app=${id}`;
+                const shareData = {
+                    title: 'Permohonan Peruntukan PIBG',
+                    text: `Sila undi untuk permohonan: ${purpose}`,
+                    url: url,
+                };
+                if (navigator.share) {
+                    try {
+                        await navigator.share(shareData);
+                    } catch (err) {
+                        console.error("Share failed:", err);
+                    }
+                } else {
+                    navigator.clipboard.writeText(url);
+                    showToast('Pautan disalin ke papan keratan!');
+                }
+            };
             
+            const deleteApplication = async (id) => {
+                if (!confirm('Anda pasti ingin memadam permohonan ini? Tindakan ini tidak boleh diubah.')) {
+                    return;
+                }
+                try {
+                    const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, id);
+                    await deleteDoc(appDocRef);
+                    showToast('Permohonan berjaya dipadam.');
+                    // Data will refresh automatically via onSnapshot
+                } catch (error) {
+                    console.error("Error deleting document:", error);
+                    showToast('Gagal memadam permohonan.', 'error');
+                }
+            };
+
             // --- Application Form Logic ---
             const updateFormSteps = () => {
                 formSteps.forEach(step => step.classList.remove('active'));
@@ -660,14 +721,22 @@
                 }
             });
 
-            // Event delegation for dynamically created "Keputusan" buttons
+            // Event delegation for dynamically created buttons
             analysisTableBody.addEventListener('click', (e) => {
-                const keputusanBtn = e.target.closest('.keputusan-btn');
-                if (keputusanBtn) {
-                    const appId = keputusanBtn.dataset.id;
-                    // You can use appId to fetch and display specific vote results in the future
+                const targetBtn = e.target.closest('button, a');
+                if (!targetBtn) return;
+
+                if (targetBtn.matches('.keputusan-btn')) {
+                    const appId = targetBtn.dataset.id;
                     console.log("Opening results for application ID:", appId);
                     openModal();
+                } else if (targetBtn.matches('.share-btn')) {
+                    const appId = targetBtn.dataset.id;
+                    const appPurpose = targetBtn.dataset.purpose;
+                    shareApplication(appId, appPurpose);
+                } else if (targetBtn.matches('.delete-btn')) {
+                    const appId = targetBtn.dataset.id;
+                    deleteApplication(appId);
                 }
             });
 
