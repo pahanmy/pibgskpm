@@ -53,7 +53,7 @@
                 <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
             </a>
             <div class="flex space-x-8">
-                <a href="index.html" class="text-slate-600 hover:text-indigo-600 font-semibold">Kembali ke Laman Utama</a>
+                <a href="semak.html" class="text-slate-600 hover:text-indigo-600 font-semibold">Kembali ke Senarai Permohonan</a>
             </div>
         </nav>
     </header>
@@ -400,6 +400,7 @@
             let filteredApps = [];
             let currentPage = 1;
             let formCurrentStep = 1;
+            let countdownInterval = null;
 
             // --- UI Elements ---
             const monthFilter = document.getElementById('month-filter');
@@ -525,6 +526,28 @@
                 return 'bg-green-500';
             };
 
+            const updateCountdownTimers = () => {
+                const timers = document.querySelectorAll('.countdown-timer');
+                timers.forEach(timer => {
+                    const createdAt = parseInt(timer.dataset.createdat, 10);
+                    if (isNaN(createdAt)) return;
+                    
+                    const now = Math.floor(new Date().getTime() / 1000);
+                    const endTime = createdAt + (48 * 60 * 60);
+                    const remainingSeconds = endTime - now;
+
+                    if (remainingSeconds > 0) {
+                        const hours = Math.floor(remainingSeconds / 3600);
+                        const minutes = Math.floor((remainingSeconds % 3600) / 60);
+                        const seconds = remainingSeconds % 60;
+                        timer.innerHTML = `Tamat dalam: <strong>${hours}j ${minutes}m ${seconds}s</strong>`;
+                    } else {
+                        timer.innerHTML = `<span class="text-slate-500 font-normal">Tempoh Undian Tamat</span>`;
+                        timer.classList.remove('countdown-timer'); // Stop updating this timer
+                    }
+                });
+            };
+
             const renderTable = () => {
                 analysisTableBody.innerHTML = '';
                 if (filteredApps.length === 0) {
@@ -566,16 +589,19 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="py-3 px-4 text-xs text-slate-500">${startIndex + index + 1}</td>
-                        <td class="py-3 px-4 text-xs font-medium text-slate-900">${app.applicant}</td>
+                        <td class="py-3 px-4">
+                            <div class="text-xs font-medium text-slate-900">${app.applicant}</div>
+                            ${finalStatus === 'Dalam Proses' ? `<div class="countdown-timer text-red-500 font-normal text-xs mt-1" data-createdat="${app.createdAt?.seconds || 0}"></div>` : ''}
+                        </td>
                         <td class="py-3 px-4">
                             <div class="font-medium text-xs text-slate-900">${app.purpose}</div>
                             <div class="text-xs text-slate-500 mt-1">${programDateFormatted}</div>
                         </td>
                         <td class="py-3 px-4 text-xs text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
                         <td class="py-3 px-4 text-xs text-slate-500">
-                            <div class="flex items-center space-x-2">
+                            <div class="flex flex-col items-start space-y-1">
                                 ${renderStatusDisplay(finalStatus)}
-                                ${showKeputusanBtn && finalStatus === 'Diluluskan' ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>` : ''}
+                                ${showKeputusanBtn && finalStatus === 'Diluluskan' ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200 mt-1">Lihat Keputusan</button>` : ''}
                             </div>
                         </td>
                          <td class="py-3 px-4 text-xs text-slate-500">
@@ -603,6 +629,11 @@
                     `;
                     analysisTableBody.appendChild(row);
                 });
+
+                if (countdownInterval) clearInterval(countdownInterval);
+                countdownInterval = setInterval(updateCountdownTimers, 1000);
+                updateCountdownTimers();
+
                 updatePaginationControls();
             };
             
@@ -946,7 +977,8 @@
                     console.error("Error submitting application:", error);
                     showToast('Gagal menghantar permohonan.', 'error');
                 } finally {
-                    submitBtn.disabled = false; submitBtn.textContent = 'Hantar Permohonan';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Hantar Permohonan';
                 }
             });
         });
