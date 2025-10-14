@@ -146,7 +146,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -321,15 +321,15 @@
                     throw new Error("Sila nyatakan sebab anda tidak menyokong.");
                 }
 
-                // **FIX:** Standardize the vote value to 'approve' or 'reject'
+                // FIX: Standardize the vote value to 'approve' or 'reject'
                 const voteValue = voteOptionValue === 'sokong' ? 'approve' : 'reject';
 
                 const voteData = {
                     voterIc: icVerifyInput.value.trim(),
                     voterName: currentVoterData.name,
-                    vote: voteValue, // **FIX:** Use 'vote' instead of 'choice'
+                    vote: voteValue, // FIX: Use 'vote' instead of 'choice'
                     reason: voteReason || "",
-                    votedAt: serverTimestamp() // Use server timestamp for accuracy
+                    votedAt: new Date() // FIX: Use client timestamp as serverTimestamp is not allowed in arrayUnion
                 };
 
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
