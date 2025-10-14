@@ -44,6 +44,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        .status-tiada { background-color: #f3f4f6; color: #4b5563; } /* gray */
         .status-baru { background-color: #e0e7ff; color: #3730a3; } /* indigo */
         .status-lulus { background-color: #d1fae5; color: #065f46; } /* green */
         .status-tolak { background-color: #fee2e2; color: #991b1b; } /* red */
@@ -79,11 +80,17 @@
     </header>
 
     <main class="container mx-auto px-6 py-16">
-        <div class="mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold gradient-text">Takwim & Program PIBG</h1>
-            <p class="mt-3 text-lg text-slate-600 max-w-3xl">
-                Senarai ini memaparkan semua program dan aktiviti yang mendapat tajaan atau melibatkan PIBG. Senarai ini dijana secara automatik daripada <a href="semak.html" class="font-semibold text-indigo-600 hover:underline">Sistem Peruntukan PIBG</a>.
-            </p>
+        <div class="flex flex-col md:flex-row justify-between md:items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold gradient-text">Takwim & Program PIBG</h1>
+                <p class="mt-2 text-lg text-slate-600">Daftar dan pantau semua aktiviti anjuran atau yang melibatkan PIBG.</p>
+            </div>
+            <button id="addProgramBtn" class="flex-shrink-0 flex items-center justify-center space-x-2 px-5 py-2.5 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-900 transition-colors duration-300 shadow-md">
+                <svg xmlns="http://www.w.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                <span>Tambah Program</span>
+            </button>
         </div>
         
         <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
@@ -100,18 +107,75 @@
                     </thead>
                     <tbody id="programsListBody" class="divide-y divide-slate-200">
                         <tr>
-                            <td colspan="5" class="text-center p-10">
-                                <div class="flex justify-center items-center text-slate-500">
-                                    <span>Memuatkan data program...</span>
-                                </div>
+                            <td colspan="5" class="text-center p-10 text-slate-500">
+                                Sila tambah program baharu atau tunggu data dimuatkan...
                             </td>
                         </tr>
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
     </main>
     
+    <div id="programModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Daftar Program / Aktiviti</h3>
+                <button id="closeProgramModalBtn" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
+            </div>
+            <div class="overflow-y-auto p-6 md:p-8">
+                <form id="programForm" class="space-y-6">
+                    <div>
+                        <label for="prog-nama" class="block text-sm font-medium text-slate-700 mb-1">Nama Program <span class="text-red-600">*</span></label>
+                        <input type="text" id="prog-nama" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                       <label for="prog-jenis" class="block text-sm font-medium text-slate-700 mb-1">Jenis Program <span class="text-red-600">*</span></label>
+                       <select id="prog-jenis" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                           <option value="">-- Sila Pilih --</option>
+                           <option value="Program Khas">Program Khas</option>
+                           <option value="Mesyuarat EXCO">Mesyuarat EXCO</option>
+                           <option value="Mesyuarat Agung Tahunan">Mesyuarat Agung Tahunan</option>
+                           <option value="Lawatan">Lawatan</option>
+                           <option value="Gotong-Royong">Gotong-Royong</option>
+                           <option value="Sumbangan/Derma">Sumbangan/Derma</option>
+                           <option value="Lain-lain">Lain-lain</option>
+                       </select>
+                   </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="prog-tarikh-mula" class="block text-sm font-medium text-slate-700 mb-1">Tarikh Mula <span class="text-red-600">*</span></label>
+                            <input type="date" id="prog-tarikh-mula" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                        </div>
+                        <div>
+                           <label for="prog-tarikh-akhir" class="block text-sm font-medium text-slate-700 mb-1">Tarikh Akhir (Jika lebih sehari)</label>
+                           <input type="date" id="prog-tarikh-akhir" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <label class="block text-sm font-medium text-slate-900 mb-3">Adakah program ini memerlukan peruntukan kewangan PIBG? <span class="text-red-600">*</span></label>
+                        <div class="flex items-center space-x-6">
+                            <label class="flex items-center">
+                                <input type="radio" name="requires_funding" value="tidak" class="h-4 w-4 text-indigo-600 border-slate-300" checked required>
+                                <span class="ml-2 text-slate-700">Tidak</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="requires_funding" value="ya" class="h-4 w-4 text-indigo-600 border-slate-300">
+                                <span class="ml-2 text-slate-700">Ya, perlu mohon peruntukan</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-8 flex justify-end items-center space-x-4">
+                        <button type="button" id="cancelProgramBtn" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
+                        <button type="submit" class="px-6 py-2 bg-slate-700 text-white font-semibold rounded-md hover:bg-slate-800 shadow-sm">Simpan Program</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-white border-t mt-16">
         <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
             &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
@@ -123,12 +187,10 @@
     </div>
 
     <script type="module">
-        // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, addDoc, collection, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
@@ -142,72 +204,116 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const programsCol = collection(db, `/artifacts/${appId}/public/data/pibg_programs`);
 
-        // DIUBAHSUAI: Nama koleksi ditukar untuk selaraskan dengan sistem peruntukan
-        const programsCol = collection(db, `/artifacts/${appId}/public/data/pibg_allocations`);
-
-        // --- UI Elements ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         const programsListBody = document.getElementById('programsListBody');
+        const addProgramBtn = document.getElementById('addProgramBtn');
+        const programModal = document.getElementById('programModal');
+        const closeProgramModalBtn = document.getElementById('closeProgramModalBtn');
+        const cancelProgramBtn = document.getElementById('cancelProgramBtn');
+        const programForm = document.getElementById('programForm');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
 
-        // Authenticate user
         (async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                console.log("Firebase authentication successful.");
-                listenForPrograms(); // Start listening for programs data
-            } catch (error) {
-                console.error("Firebase authentication failed:", error);
-                alert("Gagal menyambung ke pangkalan data.");
-            }
+                } else { await signInAnonymously(auth); }
+                listenForPrograms();
+            } catch (error) { console.error("Firebase auth failed:", error); }
         })();
 
-        // --- Mobile Menu ---
+        const showToast = (message) => {
+            toastMessage.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+            }, 3000);
+        };
+        const closeModal = () => {
+            programModal.classList.replace('flex', 'hidden');
+            document.body.style.overflow = 'auto';
+        };
+        const openModal = () => {
+            programForm.reset();
+            programModal.classList.replace('hidden', 'flex');
+            document.body.style.overflow = 'hidden';
+        };
+
         mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        addProgramBtn.addEventListener('click', openModal);
+        closeProgramModalBtn.addEventListener('click', closeModal);
+        cancelProgramBtn.addEventListener('click', closeModal);
+        programModal.addEventListener('click', (e) => { if (e.target === programModal) closeModal(); });
 
-        // --- Firestore Data Listener ---
+        programForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const requiresFunding = document.querySelector('input[name="requires_funding"]:checked').value === 'ya';
+            let fundingStatus = requiresFunding ? 'Baru' : 'Tidak Berkaitan';
+
+            try {
+                const newProgram = {
+                    name: document.getElementById('prog-nama').value,
+                    type: document.getElementById('prog-jenis').value,
+                    startDate: document.getElementById('prog-tarikh-mula').value,
+                    endDate: document.getElementById('prog-tarikh-akhir').value || null,
+                    requiresFunding: requiresFunding,
+                    fundingStatus: fundingStatus,
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(programsCol, newProgram);
+                
+                showToast('Program baharu berjaya disimpan!');
+                closeModal();
+
+                if(requiresFunding) {
+                    setTimeout(() => {
+                        alert("Program telah disimpan. Sila ke Sistem Peruntukan untuk melengkapkan permohonan kewangan.");
+                        // Nanti kita boleh tukar ke redirect: window.location.href = 'semak.html';
+                    }, 500);
+                }
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Gagal menyimpan program. Sila cuba lagi.");
+            }
+        });
+
         const listenForPrograms = () => {
-            // Query untuk mendapatkan data, diisih mengikut tarikh program
-            const q = query(programsCol, orderBy("programDate", "desc"));
-
+            const q = query(programsCol, orderBy("startDate", "desc"));
             onSnapshot(q, (snapshot) => {
-                programsListBody.innerHTML = ''; // Kosongkan data lama
+                programsListBody.innerHTML = '';
                 if (snapshot.empty) {
-                    programsListBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">Tiada program yang telah memohon peruntukan buat masa ini.</td></tr>`;
+                    programsListBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">Belum ada program yang didaftarkan.</td></tr>`;
                     return;
                 }
-
                 snapshot.docs.forEach((doc, index) => {
                     const program = doc.data();
-                    
-                    // Format tarikh
-                    let dateDisplay = new Date(program.programDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
-                    if (program.programEndDate) {
-                         dateDisplay += ` - ${new Date(program.programEndDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+                    let dateDisplay = new Date(program.startDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+                    if (program.endDate) {
+                         dateDisplay += ` - ${new Date(program.endDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}`;
                     }
 
-                    // Tentukan kelas CSS dan teks untuk status
-                    let statusClass = 'status-baru';
-                    let statusText = program.status || 'BARU'; // Default kepada 'BARU' jika tiada
-                    if (statusText.toLowerCase() === 'diluluskan') {
-                        statusClass = 'status-lulus';
-                    } else if (statusText.toLowerCase() === 'ditolak') {
-                        statusClass = 'status-tolak';
+                    let statusClass = '';
+                    let statusText = program.fundingStatus || 'N/A';
+                    switch (statusText.toLowerCase()) {
+                        case 'tidak berkaitan': statusClass = 'status-tiada'; break;
+                        case 'baru': statusClass = 'status-baru'; break;
+                        case 'diluluskan': statusClass = 'status-lulus'; break;
+                        case 'ditolak': statusClass = 'status-tolak'; break;
+                        default: statusClass = 'status-tiada';
                     }
                     
                     const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50 transition-colors';
                     row.innerHTML = `
-                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${index + 1}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm font-medium text-slate-900">${program.programName}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${program.programType}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${dateDisplay}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600 text-center">
+                        <td class="py-4 px-5 text-sm text-slate-600">${index + 1}</td>
+                        <td class="py-4 px-5 text-sm font-medium text-slate-900">${program.name}</td>
+                        <td class="py-4 px-5 text-sm text-slate-600">${program.type}</td>
+                        <td class="py-4 px-5 text-sm text-slate-600">${dateDisplay}</td>
+                        <td class="py-4 px-5 text-center">
                             <span class="status-badge ${statusClass}">${statusText}</span>
                         </td>
                     `;
@@ -215,7 +321,6 @@
                 });
             });
         };
-
     </script>
 </body>
 </html>
