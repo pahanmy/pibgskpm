@@ -113,15 +113,9 @@
                  <!-- Transactions Table -->
                 <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
                      <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
-                        <h2 class="text-2xl font-bold text-slate-800">Butiran Transaksi (Keseluruhan)</h2>
+                        <h2 class="text-2xl font-bold text-slate-800">Rumusan Transaksi Bulanan</h2>
                         <div class="flex items-center space-x-4">
                             <div>
-                                <label for="keseluruhan-month-filter" class="text-sm font-medium text-slate-700">Bulan:</label>
-                                <select data-filter-for="keseluruhan" name="month-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                     <option value="all">Semua</option><option value="0">Januari</option><option value="1">Februari</option><option value="2">Mac</option><option value="3">April</option><option value="4">Mei</option><option value="5">Jun</option><option value="6">Julai</option><option value="7">Ogos</option><option value="8">September</option><option value="9">Oktober</option><option value="10">November</option><option value="11">Disember</option>
-                                </select>
-                            </div>
-                             <div>
                                 <label for="keseluruhan-year-filter" class="text-sm font-medium text-slate-700">Tahun:</label>
                                 <select data-filter-for="keseluruhan" name="year-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                     <option value="all">Semua</option>
@@ -135,10 +129,9 @@
                         <table class="min-w-full w-full bg-white">
                             <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Bulan/Tahun</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Butiran</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Masuk (RM)</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Keluar (RM)</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BULAN</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">JUMLAH MASUK (RM)</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">JUMLAH KELUAR (RM)</th>
                                 </tr>
                             </thead>
                             <tbody id="keseluruhan-table" class="divide-y divide-slate-200"></tbody>
@@ -416,7 +409,6 @@
             let allTransactions = [];
             let activeTab = 'keseluruhan';
             let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
-            let currentPages = { bank_islam: 1, petty_cash: 1, koperasi_mini: 1, keseluruhan: 1 };
             
             // --- UI Elements ---
             const tabContainer = document.getElementById('tab-container');
@@ -429,6 +421,8 @@
             const toastMessage = document.getElementById('toast-message');
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
+            const allYearFilters = document.querySelectorAll('[name="year-filter"]');
+            const reportYearInput = document.getElementById('laporan-year-filter');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -504,52 +498,64 @@
                 
                 tableBody.innerHTML = '';
                 
-                if (transactionsToRender.length === 0) {
-                    const colspan = isKeseluruhan ? 5 : 6;
+                if (transactionsToRender.length === 0 ) {
+                    const colspan = isKeseluruhan ? 4 : 6;
                     tableBody.innerHTML = `<tr><td colspan="${colspan}" class="py-10 text-center text-slate-500">Tiada transaksi direkodkan.</td></tr>`;
                     if(!isKeseluruhan) updatePaginationControls(accountId, []);
                     return;
                 }
                 
-                const itemsPerPage = parseInt(contentEl.querySelector('[name="items-per-page-select"]')?.value || 15, 10);
-                const currentPage = currentPages[accountId] || 1;
-                const startIndex = (currentPage - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
-                const pageItems = transactionsToRender.slice(startIndex, endIndex);
+                if (isKeseluruhan) {
+                    const monthlySummary = {};
+                    transactionsToRender.forEach(t => {
+                        const monthYear = t.timestamp.toDate().toLocaleString('ms-MY', { month: 'long', year: 'numeric' });
+                        if (!monthlySummary[monthYear]) {
+                            monthlySummary[monthYear] = { masuk: 0, keluar: 0 };
+                        }
+                        if (t.type === 'masuk') monthlySummary[monthYear].masuk += t.amount;
+                        else monthlySummary[monthYear].keluar += t.amount;
+                    });
+                    
+                    Object.entries(monthlySummary).forEach(([month, totals]) => {
+                         const row = document.createElement('tr');
+                         row.innerHTML = `
+                            <td class="py-3 px-4 text-sm text-slate-500 uppercase">${month}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-slate-900 uppercase">RUMUSAN BULANAN</td>
+                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">+ ${totals.masuk.toFixed(2)}</td>
+                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">- ${totals.keluar.toFixed(2)}</td>
+                         `;
+                         tableBody.appendChild(row);
+                    });
 
-                let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
-                let balanceCalcArray = [...transactionsToRender].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
-                const balances = {};
-                balanceCalcArray.forEach(t => {
-                    runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
-                    balances[t.id] = runningBalance;
-                });
-                
-                if(!isKeseluruhan) {
-                     const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900 uppercase" colspan="4">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td></td></tr>`;
-                     if(currentPage === 1) tableBody.innerHTML += bakiRow;
+
+                } else {
+                     const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold uppercase">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900 uppercase" colspan="3">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td></td></tr>`;
+                     if(contentEl.querySelector('[data-action="prev-page"]').disabled) tableBody.innerHTML += bakiRow;
+
+                    let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
+                    let balanceCalcArray = [...transactionsToRender].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
+                    const balances = {};
+                    balanceCalcArray.forEach(t => {
+                        runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
+                        balances[t.id] = runningBalance;
+                    });
+
+                    transactionsToRender.forEach(t => {
+                        const row = document.createElement('tr');
+                        const isIncome = t.type === 'masuk';
+                        row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
+
+                        row.innerHTML = `
+                            <td class="py-3 px-4 text-sm text-slate-500 uppercase">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-slate-900 uppercase">${t.description}</td>
+                            <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
+                            <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(balances[t.id] || 0).toFixed(2)}</td>
+                            <td class="py-3 px-4 text-center"><button data-action="edit" data-id="${t.id}" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
                 }
-
-
-                pageItems.forEach(t => {
-                    const row = document.createElement('tr');
-                    const isIncome = t.type === 'masuk';
-                    row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
-                    const accountNameMap = { 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai', 'koperasi_mini': 'Koperasi' };
-
-                    let rowHTML = `
-                        <td class="py-3 px-4 text-sm text-slate-500 uppercase">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        ${isKeseluruhan ? `<td class="py-3 px-4 text-sm font-medium text-slate-700 uppercase">${accountNameMap[t.account] || t.account}</td>` : ''}
-                        <td class="py-3 px-4 text-sm font-medium text-slate-900 uppercase">${t.description}</td>
-                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
-                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
-                        ${!isKeseluruhan ? `<td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(balances[t.id] || 0).toFixed(2)}</td>` : ''}
-                         ${!isKeseluruhan ? `<td class="py-3 px-4 text-center"><button data-action="edit" data-id="${t.id}" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button></td>` : ''}
-                    `;
-                    row.innerHTML = rowHTML;
-                    tableBody.appendChild(row);
-                });
-
                 if(!isKeseluruhan) updatePaginationControls(accountId, transactionsToRender);
             };
             
@@ -572,23 +578,24 @@
                 
                 renderTable(activeTab, filtered);
             };
-
+            
             const populateYearFilters = () => {
                 const years = [...new Set(allTransactions.map(app => app.timestamp?.toDate().getFullYear()).filter(y => y))];
-                if (years.length === 0) years.push(new Date().getFullYear());
+                if (years.length === 0) {
+                    years.push(new Date().getFullYear());
+                }
                 years.sort((a, b) => b - a);
 
                 document.querySelectorAll('[name="year-filter"]').forEach(select => {
-                    while(select.options.length > 1) { select.remove(1); }
+                     while(select.options.length > 1) { select.remove(1); }
                     years.forEach(year => {
                         const option = new Option(year, year);
                         select.add(option);
                     });
                 });
-                
-                const currentYear = new Date().getFullYear().toString();
-                if(reportStartDateInput) reportStartDateInput.value = `${currentYear}-01-01`;
-                if(reportEndDateInput) reportEndDateInput.value = `${currentYear}-12-31`;
+                if(reportYearInput) {
+                    reportYearInput.value = new Date().getFullYear();
+                }
             };
 
             // --- Annual Report Logic ---
@@ -610,15 +617,6 @@
 
                 const tableCellClasses = "py-2 px-4 border border-slate-300";
                 const totalRowClasses = "font-bold border-t-2 border-slate-800";
-
-                let groupedIncome = { ...BAKI_AWAL_TAHUN };
-                Object.keys(groupedIncome).forEach(k => groupedIncome[k] = {'Baki Awal Tahun': BAKI_AWAL_TAHUN[k]});
-
-                rangeTransactions.filter(t => t.type === 'masuk').forEach(t => {
-                    const desc = t.description.toUpperCase();
-                    if(!groupedIncome[t.account]) groupedIncome[t.account] = {};
-                    groupedIncome[t.account][desc] = (groupedIncome[t.account][desc] || 0) + t.amount;
-                });
 
                 let totalIncome = Object.values(BAKI_AWAL_TAHUN).reduce((a,b) => a + b, 0);
                 incomeTable.innerHTML = `<tr><td class="${tableCellClasses} uppercase">Baki Awal Tahun</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
@@ -667,7 +665,7 @@
                     <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
             };
 
-             // --- Event Listeners and Initial Load ---
+            // --- Authentication & Initial Load ---
             (async () => {
                 try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -709,10 +707,11 @@
                 }
             })();
             
+            // --- Event Listeners ---
             document.querySelectorAll('.tab-button').forEach(btn => btn.addEventListener('click', () => switchTabs(btn.dataset.tab)));
             
             tabContainer.addEventListener('click', e => {
-                const target = e.target.closest('button');
+                const target = e.target.closest('button, select');
                 if(!target) return;
 
                 const action = target.dataset.action;
@@ -728,7 +727,7 @@
                     transactionForm.dataset.type = 'keluar';
                     document.getElementById('modal-title').textContent = 'Tambah Duit Keluar';
                     openModal(transactionModal);
-                } else if (e.target.closest('[name="month-filter"]') || e.target.closest('[name="year-filter"]')) {
+                } else if (target.name === 'month-filter' || target.name === 'year-filter') {
                      applyFiltersAndRender();
                 } else if (action === 'print') {
                     handlePrint();
