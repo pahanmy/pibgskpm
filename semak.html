@@ -82,7 +82,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-slate-500">Jumlah Permohonan</p>
-                                        <p id="total-apps" class="text-xl font-bold text-slate-900">4</p>
+                                        <p id="total-apps" class="text-xl font-bold text-slate-900">0</p>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-slate-500">Dalam Proses</p>
-                                        <p id="total-pending" class="text-xl font-bold text-slate-900">4</p>
+                                        <p id="total-pending" class="text-xl font-bold text-slate-900">0</p>
                                     </div>
                                 </div>
                             </div>
@@ -450,25 +450,7 @@
             const fetchApplications = () => {
                  analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
                 onSnapshot(query(applicationsCol), (snapshot) => {
-                    allApps = snapshot.docs.map((doc, index) => {
-                        // --- MOCK DATA FOR DEMONSTRATION ---
-                        // In a real system, `votes` and `createdAt` would come from Firestore.
-                        const data = doc.data();
-                        
-                        // Mock `createdAt` to test the 48-hour rule
-                        const hoursAgo = (index * 15) + 10; // 10h, 25h, 40h, 55h ago...
-                        const mockTimestamp = new Date();
-                        mockTimestamp.setHours(mockTimestamp.getHours() - hoursAgo);
-                        data.createdAt = { seconds: Math.floor(mockTimestamp.getTime() / 1000) };
-
-                        // Mock `votes` array
-                        const mockVoteCount = Math.floor(Math.random() * 15) + 1;
-                        data.votes = Array.from({ length: mockVoteCount }, () => ({ vote: 'approve' }));
-                        
-                        return { id: doc.id, ...data };
-                        // --- END OF MOCK DATA ---
-                    });
-                    
+                    allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                     
                     populateYearFilter();
@@ -547,26 +529,23 @@
                     // --- Logic for Keputusan Button ---
                     const totalMembers = 15;
                     const approvalThreshold = 10; // 2/3 of 15
-                    const approvalVotes = app.votes.filter(v => v.vote === 'approve').length;
+                    const approvalVotes = app.votes ? app.votes.filter(v => v.vote === 'approve').length : 0;
                     
-                    const timeElapsed = (new Date().getTime() / 1000) - app.createdAt.seconds;
+                    const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
                     const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
 
-                    let finalStatus = 'Dalam Proses';
+                    let finalStatus = app.status; // Default to original status
                     let showKeputusanBtn = false;
 
                     if (approvalVotes >= approvalThreshold) {
                         finalStatus = 'Diluluskan';
                         showKeputusanBtn = true;
                     } else if (votingPeriodEnded) {
-                        finalStatus = 'Ditolak';
+                        finalStatus = (approvalVotes >= approvalThreshold) ? 'Diluluskan' : 'Ditolak';
                         showKeputusanBtn = true;
                     }
-
-                    // For this demo, we override the original status with our calculated one.
-                    app.status = finalStatus; 
                     
-                    const votePercentage = Math.round((approvalVotes / totalMembers) * 100);
+                    const votePercentage = app.votes ? Math.round((approvalVotes / totalMembers) * 100) : 0;
                     const progressColorClass = getProgressColor(votePercentage);
 
                     const row = document.createElement('tr');
@@ -620,7 +599,7 @@
                         <p>Assalamualaikum dan salam sejahtera,</p>
                         <p>
                             Merujuk kepada keputusan yang telah dibuat melalui undian 2/3 ahli Exco PIBG pada <strong>${decisionDate}</strong> berhubung 
-                            <strong>Permohonan ${app.id.substring(0, 5)} : ${app.purpose.toUpperCase()}</strong>, dengan ini dimaklumkan bahawa Exco PIBG telah 
+                            <strong>Permohonan ${app.id.substring(0, 5).toUpperCase()} : ${app.purpose.toUpperCase()}</strong>, dengan ini dimaklumkan bahawa Exco PIBG telah 
                             bersetuju untuk <strong>MELULUSKAN</strong> pengeluaran dana berjumlah 
                             <strong class="text-green-700">RM ${parseFloat(app.amount).toFixed(2)}</strong>.
                         </p>
