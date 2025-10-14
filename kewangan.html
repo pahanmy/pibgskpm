@@ -31,6 +31,22 @@
         .tab-content.active {
             display: block;
         }
+        /* Make table text uppercase */
+        table th, table td {
+            text-transform: uppercase;
+        }
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.3rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+            margin: 0 0.125rem;
+        }
+        .action-btn:hover {
+            opacity: 0.8;
+        }
         @media print {
             body * {
                 visibility: hidden;
@@ -48,7 +64,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
-    <!-- Header -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
@@ -61,7 +76,6 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-6 py-12">
         <div class="flex justify-between items-start mb-8">
             <div>
@@ -76,7 +90,6 @@
             </button>
         </div>
 
-        <!-- Tabs -->
         <div class="mb-6 border-b border-slate-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                 <button data-tab="keseluruhan" class="tab-button active-tab whitespace-nowrap py-4 px-1 font-medium text-sm">Penyata Induk</button>
@@ -87,59 +100,60 @@
             </nav>
         </div>
 
-        <!-- Tab Content -->
         <div id="tab-container">
-            <!-- All Accounts Tab -->
             <div id="keseluruhan-content" class="tab-content active">
-                <!-- Summary Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                        <p class="text-sm text-slate-500">Baki Awal Tahun</p>
+                        <p class="text-sm text-slate-500">BAKI AWAL TAHUN</p>
                         <p id="keseluruhan-baki-awal" class="text-2xl font-bold text-slate-900 mt-1">RM 0.00</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                        <p class="text-sm text-slate-500">Jumlah Kutipan</p>
+                        <p class="text-sm text-slate-500">JUMLAH KUTIPAN</p>
                         <p id="keseluruhan-kutipan" class="text-2xl font-bold text-green-600 mt-1">RM 0.00</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                        <p class="text-sm text-slate-500">Jumlah Perbelanjaan</p>
+                        <p class="text-sm text-slate-500">JUMLAH PERBELANJAAN</p>
                         <p id="keseluruhan-perbelanjaan" class="text-2xl font-bold text-red-600 mt-1">RM 0.00</p>
                     </div>
                     <div class="bg-indigo-600 text-white p-6 rounded-lg shadow-lg">
-                        <p class="text-sm text-indigo-200">Baki Akhir Semasa</p>
+                        <p class="text-sm text-indigo-200">BAKI AKHIR SEMASA</p>
                         <p id="keseluruhan-baki-akhir" class="text-2xl font-bold mt-1">RM 0.00</p>
                     </div>
                 </div>
-                 <!-- Transactions Table -->
-                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
+                 <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
                      <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
-                        <h2 class="text-2xl font-bold text-slate-800">Butiran Transaksi (Keseluruhan)</h2>
+                        <h2 class="text-2xl font-bold text-slate-800">RINGKASAN TRANSAKSI (KESELURUHAN)</h2>
                         <div class="flex items-center space-x-4">
                             <div>
-                                <label for="keseluruhan-month-filter" class="text-sm font-medium text-slate-700">Bulan:</label>
-                                <select data-filter-for="keseluruhan" name="month-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                     <option value="all">Semua</option><option value="0">Januari</option><option value="1">Februari</option><option value="2">Mac</option><option value="3">April</option><option value="4">Mei</option><option value="5">Jun</option><option value="6">Julai</option><option value="7">Ogos</option><option value="8">September</option><option value="9">Oktober</option><option value="10">November</option><option value="11">Disember</option>
+                                <label class="text-sm font-medium text-slate-700">PAPAR:</label>
+                                <select name="limit-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                     <option value="15">15</option>
+                                     <option value="30">30</option>
+                                     <option value="all">SEMUA</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-slate-700">BULAN:</label>
+                                <select name="month-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                     <option value="all">SEMUA</option><option value="0">JANUARI</option><option value="1">FEBRUARI</option><option value="2">MAC</option><option value="3">APRIL</option><option value="4">MEI</option><option value="5">JUN</option><option value="6">JULAI</option><option value="7">OGOS</option><option value="8">SEPTEMBER</option><option value="9">OKTOBER</option><option value="10">NOVEMBER</option><option value="11">DISEMBER</option>
                                 </select>
                             </div>
                              <div>
-                                <label for="keseluruhan-year-filter" class="text-sm font-medium text-slate-700">Tahun:</label>
-                                <select data-filter-for="keseluruhan" name="year-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="all">Semua</option>
+                                <label class="text-sm font-medium text-slate-700">TAHUN:</label>
+                                <select name="year-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="all">SEMUA</option>
                                 </select>
                             </div>
-                            <button data-action="print" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"></path></svg></button>
-                            <button data-action="export" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg></button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full w-full bg-white">
                             <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Akaun</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Butiran</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Masuk (RM)</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Keluar (RM)</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BULAN</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BUTIRAN</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">JUMLAH MASUK (RM)</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">JUMLAH KELUAR (RM)</th>
                                 </tr>
                             </thead>
                             <tbody id="keseluruhan-table" class="divide-y divide-slate-200"></tbody>
@@ -148,49 +162,54 @@
                 </div>
             </div>
 
-            <!-- Other Accounts Tabs (template) -->
             <div id="account-tab-template" class="hidden">
                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                        <p class="text-sm text-slate-500">Baki Awal Akaun</p>
+                        <p class="text-sm text-slate-500">BAKI AWAL AKAUN</p>
                         <p data-id="baki-awal" class="text-2xl font-bold text-slate-900 mt-1">RM 0.00</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                        <p class="text-sm text-slate-500">Jumlah Kutipan</p>
+                        <p class="text-sm text-slate-500">JUMLAH KUTIPAN</p>
                         <p data-id="kutipan" class="text-2xl font-bold text-green-600 mt-1">RM 0.00</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                        <p class="text-sm text-slate-500">Jumlah Perbelanjaan</p>
+                        <p class="text-sm text-slate-500">JUMLAH PERBELANJAAN</p>
                         <p data-id="perbelanjaan" class="text-2xl font-bold text-red-600 mt-1">RM 0.00</p>
                     </div>
                     <div class="bg-indigo-600 text-white p-6 rounded-lg shadow-lg">
-                        <p class="text-sm text-indigo-200">Baki Akhir Akaun</p>
+                        <p class="text-sm text-indigo-200">BAKI AKHIR AKAUN</p>
                         <p data-id="baki-akhir" class="text-2xl font-bold mt-1">RM 0.00</p>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
                      <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
-                        <h2 data-id="table-title" class="text-2xl font-bold text-slate-800">Butiran Transaksi</h2>
+                        <h2 data-id="table-title" class="text-2xl font-bold text-slate-800">BUTIRAN TRANSAKSI</h2>
                         <div class="flex items-center space-x-3">
+                            <div>
+                                <label class="text-sm font-medium text-slate-700">PAPAR:</label>
+                                <select name="limit-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                     <option value="15">15</option>
+                                     <option value="30">30</option>
+                                     <option value="all">SEMUA</option>
+                                </select>
+                            </div>
                              <div>
-                                <label class="text-sm font-medium text-slate-700">Bulan:</label>
+                                <label class="text-sm font-medium text-slate-700">BULAN:</label>
                                 <select name="month-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                     <option value="all">Semua</option><option value="0">Januari</option><option value="1">Februari</option><option value="2">Mac</option><option value="3">April</option><option value="4">Mei</option><option value="5">Jun</option><option value="6">Julai</option><option value="7">Ogos</option><option value="8">September</option><option value="9">Oktober</option><option value="10">November</option><option value="11">Disember</option>
+                                     <option value="all">SEMUA</option><option value="0">JANUARI</option><option value="1">FEBRUARI</option><option value="2">MAC</option><option value="3">APRIL</option><option value="4">MEI</option><option value="5">JUN</option><option value="6">JULAI</option><option value="7">OGOS</option><option value="8">SEPTEMBER</option><option value="9">OKTOBER</option><option value="10">NOVEMBER</option><option value="11">DISEMBER</option>
                                 </select>
                             </div>
                              <div>
-                                <label class="text-sm font-medium text-slate-700">Tahun:</label>
+                                <label class="text-sm font-medium text-slate-700">TAHUN:</label>
                                 <select name="year-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="all">Semua</option>
+                                    <option value="all">SEMUA</option>
                                 </select>
                             </div>
-                            <button data-action="print" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"></path></svg></button>
-                            <button data-action="export" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg></button>
-                            <button data-action="paste-excel" class="p-2 mt-6 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
-                            <button data-action="add-income" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200">
+                            <button data-action="paste-excel" title="TAMPAL DARI EXCEL" class="p-2 mt-6 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
+                            <button data-action="add-income" title="TAMBAH DUIT MASUK" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
                             </button>
-                             <button data-action="add-expense" class="p-2 mt-6 rounded-md bg-red-100 text-red-600 hover:bg-red-200">
+                             <button data-action="add-expense" title="TAMBAH DUIT KELUAR" class="p-2 mt-6 rounded-md bg-red-100 text-red-600 hover:bg-red-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
                             </button>
                         </div>
@@ -199,11 +218,12 @@
                         <table class="min-w-full w-full bg-white">
                             <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Butiran</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Masuk (RM)</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Keluar (RM)</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Baki (RM)</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">TARIKH</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BUTIRAN</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">MASUK (RM)</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">KELUAR (RM)</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">BAKI (RM)</th>
+                                    <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">TINDAKAN</th>
                                 </tr>
                             </thead>
                             <tbody data-id="table-body" class="divide-y divide-slate-200"></tbody>
@@ -212,17 +232,16 @@
                 </div>
             </div>
             
-            <!-- Annual Report Tab -->
             <div id="laporan-content" class="tab-content p-6 md:p-8">
                 <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Pelaporan Tahunan</h2>
+                    <h2 class="text-2xl font-bold text-slate-800">PELAPORAN TAHUNAN</h2>
                      <div class="flex items-center space-x-4">
                         <div>
-                            <label for="report-start-date" class="text-sm font-medium text-slate-700">Dari:</label>
+                            <label for="report-start-date" class="text-sm font-medium text-slate-700">DARI:</label>
                             <input type="date" id="report-start-date" class="mt-1 block w-full pl-3 pr-2 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         </div>
                         <div>
-                            <label for="report-end-date" class="text-sm font-medium text-slate-700">Hingga:</label>
+                            <label for="report-end-date" class="text-sm font-medium text-slate-700">HINGGA:</label>
                             <input type="date" id="report-end-date" class="mt-1 block w-full pl-3 pr-2 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         </div>
                         <button id="print-report-btn" title="Cetak Penyata" class="p-2 mt-6 rounded-md bg-indigo-100 text-indigo-600 hover:bg-indigo-200">
@@ -232,52 +251,60 @@
                 </div>
                 <div id="print-area" class="bg-white p-8 rounded-lg shadow-md border border-slate-200">
                     <div class="text-center mb-8">
-                        <h3 id="report-title" class="text-xl font-bold text-slate-900 uppercase">Penyata Kewangan PIBG SK Pulau Melayu</h3>
+                        <h3 id="report-title" class="text-xl font-bold text-slate-900 uppercase">PENYATA KEWANGAN PIBG SK PULAU MELAYU</h3>
                         <p id="report-date-range" class="text-slate-600"></p>
                     </div>
 
-                    <!-- Pendapatan -->
                     <div class="mb-8">
-                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Pendapatan</h4>
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">PENDAPATAN</h4>
                         <table class="w-full text-sm border-collapse border border-slate-400">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border border-slate-300 text-left">BUTIRAN</th>
+                                    <th class="py-2 px-4 border border-slate-300 text-right">JUMLAH (RM)</th>
+                                </tr>
+                            </thead>
                             <tbody id="income-report-table"></tbody>
                         </table>
                     </div>
 
-                    <!-- Perbelanjaan -->
                     <div class="mb-8">
-                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Perbelanjaan</h4>
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">PERBELANJAAN</h4>
                         <table class="w-full text-sm border-collapse border border-slate-400">
+                             <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border border-slate-300 text-left">BUTIRAN</th>
+                                    <th class="py-2 px-4 border border-slate-300 text-right">JUMLAH (RM)</th>
+                                </tr>
+                            </thead>
                             <tbody id="expense-report-table"></tbody>
                         </table>
                     </div>
 
-                    <!-- Ringkasan Baki -->
                     <div class="mb-12">
-                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Ringkasan Baki</h4>
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">RINGKASAN BAKI</h4>
                         <table class="w-full text-sm border-collapse border border-slate-400">
                             <tbody id="balance-summary-table"></tbody>
                         </table>
                     </div>
                     
-                    <!-- Signatures -->
                     <div class="flex justify-end pt-12">
                         <div class="grid grid-cols-2 gap-x-16 gap-y-12 text-sm text-center">
                             <div class="border-t border-slate-300 pt-2">
                                 <p class="uppercase">(EN. TAIB ANAK BROWN)</p>
-                                <p class="font-semibold">Disediakan oleh, Bendahari</p>
+                                <p class="font-semibold">DISEDIAKAN OLEH, BENDAHARI</p>
                             </div>
                             <div class="border-t border-slate-300 pt-2">
                                 <p class="uppercase">(EN. MUHD. FARHAN BIN SARKAWI)</p>
-                                <p class="font-semibold">Disemak oleh, YDP PIBG</p>
+                                <p class="font-semibold">DISEMAK OLEH, YDP PIBG</p>
                             </div>
                              <div class="border-t border-slate-300 pt-2">
                                 <p>(.................................................)</p>
-                                <p class="font-semibold">Disahkan oleh, Juruaudit 1</p>
+                                <p class="font-semibold">DISAHKAN OLEH, JURUAUDIT 1</p>
                             </div>
                              <div class="border-t border-slate-300 pt-2">
                                 <p>(.................................................)</p>
-                                <p class="font-semibold">Disahkan oleh, Juruaudit 2</p>
+                                <p class="font-semibold">DISAHKAN OLEH, JURUAUDIT 2</p>
                             </div>
                         </div>
                     </div>
@@ -286,77 +313,74 @@
         </div>
     </main>
 
-    <!-- Transaction Modal -->
     <div id="transactionModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col" onclick="event.stopPropagation()">
             <form id="transactionForm">
                 <div class="p-6 border-b">
-                    <h3 id="modal-title" class="text-xl font-bold text-slate-800">Tambah Transaksi</h3>
+                    <h3 id="modal-title" class="text-xl font-bold text-slate-800">TAMBAH TRANSAKSI</h3>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label for="trans-date" class="block text-sm font-medium text-slate-700 mb-1">Tarikh</label>
+                        <label for="trans-date" class="block text-sm font-medium text-slate-700 mb-1">TARIKH</label>
                         <input type="date" id="trans-date" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
                     </div>
                     <div>
-                        <label for="trans-desc" class="block text-sm font-medium text-slate-700 mb-1">Butiran</label>
+                        <label for="trans-desc" class="block text-sm font-medium text-slate-700 mb-1">BUTIRAN</label>
                         <input type="text" id="trans-desc" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
                     </div>
                      <div>
-                        <label for="trans-amount" class="block text-sm font-medium text-slate-700 mb-1">Jumlah (RM)</label>
+                        <label for="trans-amount" class="block text-sm font-medium text-slate-700 mb-1">JUMLAH (RM)</label>
                         <input type="number" step="0.01" id="trans-amount" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
                     </div>
                 </div>
                 <div class="p-4 border-t flex justify-end items-center bg-slate-50 rounded-b-xl space-x-3">
-                    <button type="button" id="cancel-trans-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
-                    <button type="submit" id="save-trans-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Simpan</button>
+                    <button type="button" id="cancel-trans-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">BATAL</button>
+                    <button type="submit" id="save-trans-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">SIMPAN</button>
                 </div>
             </form>
         </div>
     </div>
 
-     <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+     <div id="settingsModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col" onclick="event.stopPropagation()">
             <form id="settingsForm">
                 <div class="p-6 border-b">
-                    <h3 class="text-xl font-bold text-slate-800">Tetapan Baki Awal Tahun</h3>
+                    <h3 class="text-xl font-bold text-slate-800">TETAPAN BAKI AWAL TAHUN</h3>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label for="baki-bank_islam" class="block text-sm font-medium text-slate-700 mb-1">Bank Islam (RM)</label>
+                        <label for="baki-bank_islam" class="block text-sm font-medium text-slate-700 mb-1">BANK ISLAM (RM)</label>
                         <input type="number" step="0.01" id="baki-bank_islam" class="w-full px-3 py-2 border border-slate-300 rounded-md" value="0" required>
                     </div>
                     <div>
-                        <label for="baki-petty_cash" class="block text-sm font-medium text-slate-700 mb-1">Tunai (Petty Cash) (RM)</label>
+                        <label for="baki-petty_cash" class="block text-sm font-medium text-slate-700 mb-1">TUNAI (DOMPET TUNAI) (RM)</label>
                         <input type="number" step="0.01" id="baki-petty_cash" class="w-full px-3 py-2 border border-slate-300 rounded-md" value="0" required>
                     </div>
                      <div>
-                        <label for="baki-koperasi_mini" class="block text-sm font-medium text-slate-700 mb-1">Koperasi Mini (RM)</label>
+                        <label for="baki-koperasi_mini" class="block text-sm font-medium text-slate-700 mb-1">KOPERASI MINI (RM)</label>
                         <input type="number" step="0.01" id="baki-koperasi_mini" class="w-full px-3 py-2 border border-slate-300 rounded-md" value="0" required>
                     </div>
                 </div>
                 <div class="p-4 border-t flex justify-end items-center bg-slate-50 rounded-b-xl space-x-3">
-                    <button type="button" id="cancel-settings-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
-                    <button type="submit" id="save-settings-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Simpan Tetapan</button>
+                    <button type="button" id="cancel-settings-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">BATAL</button>
+                    <button type="submit" id="save-settings-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">SIMPAN TETAPAN</button>
                 </div>
             </form>
         </div>
     </div>
     
-    <!-- Paste from Excel Modal -->
     <div id="pasteModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col" onclick="event.stopPropagation()">
             <div class="p-6 border-b">
-                <h3 class="text-xl font-bold text-slate-800">Tampal Data dari Excel</h3>
-                <p class="text-sm text-slate-500 mt-1">Pastikan data anda mempunyai 4 lajur: Tarikh, Butiran, Masuk, Keluar</p>
+                <h3 class="text-xl font-bold text-slate-800">TAMPAL DATA DARI EXCEL</h3>
+                <p class="text-sm text-slate-500 mt-1">PASTIKAN DATA ANDA MEMPUNYAI 4 LAJUR: TARIKH, BUTIRAN, MASUK, KELUAR</p>
             </div>
             <div class="p-6">
                 <textarea id="paste-area" class="w-full h-64 p-2 border border-slate-300 rounded-md" placeholder="Tampal data dari Excel di sini..."></textarea>
             </div>
             <div class="p-4 border-t flex justify-end items-center bg-slate-50 rounded-b-xl space-x-3">
-                <button type="button" id="cancel-paste-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
-                <button type="button" id="process-paste-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Simpan Data</button>
+                <button type="button" id="cancel-paste-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">BATAL</button>
+                <button type="button" id="process-paste-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">SIMPAN DATA</button>
             </div>
         </div>
     </div>
@@ -364,7 +388,7 @@
 
     <footer class="bg-white border-t mt-12">
         <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
-            &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
+            &copy; 2025 PERSATUAN IBU BAPA & GURU (PIBG) SK PULAU MELAYU. HAK CIPTA TERPELIHARA.
         </div>
     </footer>
 
@@ -375,7 +399,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -412,9 +436,7 @@
             const toastMessage = document.getElementById('toast-message');
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
-            const allYearFilters = document.querySelectorAll('[name="year-filter"]');
-            const reportYearInput = document.getElementById('laporan-year-filter');
-
+            
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
                 toastMessage.textContent = message;
@@ -424,6 +446,15 @@
             };
             const openModal = (modal) => modal.classList.replace('hidden', 'flex');
             const closeModal = (modal) => modal.classList.replace('flex', 'hidden');
+            const formatDateForInput = (date) => {
+                const d = new Date(date);
+                let month = '' + (d.getMonth() + 1);
+                let day = '' + d.getDate();
+                const year = d.getFullYear();
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+                return [year, month, day].join('-');
+            };
 
             // --- Tab & UI Setup ---
             const setupTabs = () => {
@@ -435,8 +466,6 @@
                     clone.id = `${key}-content`;
                     clone.classList.add('tab-content');
                     clone.querySelector('[data-id="table-title"]').textContent = `Butiran Transaksi (${accountNames[key]})`;
-                    clone.querySelector('[name="month-filter"]').dataset.filterFor = key;
-                    clone.querySelector('[name="year-filter"]').dataset.filterFor = key;
                     tabContainer.appendChild(clone);
                 });
             };
@@ -462,8 +491,8 @@
                     ? Object.values(BAKI_AWAL_TAHUN).reduce((a, b) => a + b, 0)
                     : BAKI_AWAL_TAHUN[accountId] || 0;
 
-                let totalIn = transactionsToProcess.filter(t => t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
-                let totalOut = transactionsToProcess.filter(t => t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
+                let totalIn = transactionsToProcess.reduce((sum, t) => sum + (t.type === 'masuk' ? t.amount : 0), 0);
+                let totalOut = transactionsToProcess.reduce((sum, t) => sum + (t.type === 'keluar' ? t.amount : 0), 0);
                 let bakiAkhir = bakiAwal + totalIn - totalOut;
                 
                 const formatCurrency = (num) => `RM ${num.toFixed(2)}`;
@@ -475,53 +504,97 @@
                     document.getElementById('keseluruhan-baki-akhir').textContent = formatCurrency(bakiAkhir);
                 } else {
                     const contentEl = document.getElementById(`${accountId}-content`);
-                    contentEl.querySelector('[data-id="baki-awal"]').textContent = formatCurrency(bakiAwal);
-                    contentEl.querySelector('[data-id="kutipan"]').textContent = formatCurrency(totalIn);
-                    contentEl.querySelector('[data-id="perbelanjaan"]').textContent = formatCurrency(totalOut);
-                    contentEl.querySelector('[data-id="baki-akhir"]').textContent = formatCurrency(bakiAkhir);
+                    if(contentEl) {
+                        contentEl.querySelector('[data-id="baki-awal"]').textContent = formatCurrency(bakiAwal);
+                        contentEl.querySelector('[data-id="kutipan"]').textContent = formatCurrency(totalIn);
+                        contentEl.querySelector('[data-id="perbelanjaan"]').textContent = formatCurrency(totalOut);
+                        contentEl.querySelector('[data-id="baki-akhir"]').textContent = formatCurrency(bakiAkhir);
+                    }
                 }
+            };
+            
+            const renderKeseluruhanTable = (transactions) => {
+                 const tableBody = document.getElementById('keseluruhan-table');
+                 tableBody.innerHTML = '';
+
+                if (transactions.length === 0) {
+                     tableBody.innerHTML = `<tr><td colspan="4" class="py-10 text-center text-slate-500">TIADA TRANSAKSI.</td></tr>`;
+                     return;
+                }
+                 
+                 const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+
+                 const grouped = transactions.reduce((acc, t) => {
+                     const date = t.timestamp.toDate();
+                     const monthYear = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+                     const key = `${t.description.toLowerCase().trim()}::${monthYear}`;
+
+                     if (!acc[key]) {
+                         acc[key] = {
+                             month: monthYear,
+                             description: t.description,
+                             masuk: 0,
+                             keluar: 0
+                         };
+                     }
+                     if (t.type === 'masuk') {
+                         acc[key].masuk += t.amount;
+                     } else {
+                         acc[key].keluar += t.amount;
+                     }
+                     return acc;
+                 }, {});
+
+                 Object.values(grouped).forEach(g => {
+                     const row = document.createElement('tr');
+                     row.innerHTML = `
+                        <td class="py-3 px-4 text-sm text-slate-500">${g.month}</td>
+                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${g.description}</td>
+                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${g.masuk > 0 ? `+ ${g.masuk.toFixed(2)}` : '-'}</td>
+                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${g.keluar > 0 ? `- ${g.keluar.toFixed(2)}` : '-'}</td>
+                     `;
+                     tableBody.appendChild(row);
+                 });
             };
 
             const renderTable = (accountId, transactionsToRender) => {
-                const isKeseluruhan = accountId === 'keseluruhan';
-                const tableBody = isKeseluruhan ? document.getElementById('keseluruhan-table') : document.getElementById(`${accountId}-content`).querySelector('[data-id="table-body"]');
-                
+                 if(accountId === 'keseluruhan') {
+                     renderKeseluruhanTable(transactionsToRender);
+                     return;
+                 }
+                const tableBody = document.getElementById(`${accountId}-content`).querySelector('[data-id="table-body"]');
                 tableBody.innerHTML = '';
                 
-                if (transactionsToRender.length === 0 && !isKeseluruhan) {
-                     tableBody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-500">Tiada transaksi direkodkan.</td></tr>`;
+                if (transactionsToRender.length === 0) {
+                     tableBody.innerHTML = `<tr><td colspan="6" class="py-10 text-center text-slate-500">TIADA TRANSAKSI DIREKODKAN.</td></tr>`;
                      return;
                 }
-
-                if (!isKeseluruhan) {
-                     const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900" colspan="3">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td></tr>`;
-                     tableBody.innerHTML += bakiRow;
-                }
+                const year = new Date().getFullYear();
+                const bakiRow = `<tr class="bg-slate-50 font-semibold"><td class="py-3 px-4">01/01/${year}</td><td class="py-3 px-4" colspan="3">BAKI AWAL</td><td class="py-3 px-4 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td class="px-4"></td></tr>`;
+                tableBody.innerHTML += bakiRow;
 
                 let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
-                let balanceCalcArray = [...transactionsToRender].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
-                const balances = {};
-                balanceCalcArray.forEach(t => {
+                transactionsToRender.sort((a,b) => a.timestamp.seconds - b.timestamp.seconds).forEach(t => {
                     runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
-                    balances[t.id] = runningBalance;
-                });
-
-                transactionsToRender.forEach(t => {
                     const row = document.createElement('tr');
                     const isIncome = t.type === 'masuk';
                     row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
 
-                    const accountNameMap = { 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai', 'koperasi_mini': 'Koperasi' };
-
-                    let rowHTML = `
+                    row.innerHTML = `
                         <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        ${isKeseluruhan ? `<td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNameMap[t.account] || t.account}</td>` : ''}
                         <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
                         <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
                         <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
-                        ${!isKeseluruhan ? `<td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(balances[t.id] || 0).toFixed(2)}</td>` : ''}
+                        <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${runningBalance.toFixed(2)}</td>
+                        <td class="py-3 px-4 text-center">
+                            <button data-action="edit" data-id="${t.id}" class="action-btn bg-yellow-100 text-yellow-700" title="KEMASKINI">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                            </button>
+                            <button data-action="delete" data-id="${t.id}" class="action-btn bg-red-100 text-red-700" title="PADAM">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
+                            </button>
+                        </td>
                     `;
-                    row.innerHTML = rowHTML;
                     tableBody.appendChild(row);
                 });
             };
@@ -530,27 +603,28 @@
                 const contentEl = document.getElementById(`${activeTab}-content`);
                 const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
+                const selectedLimit = contentEl.querySelector('[name="limit-filter"]').value;
 
                 let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
-
+                
                 const filtered = transactions.filter(t => {
                     const appDate = t.timestamp.toDate();
                     const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
                     const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
                     return monthMatch && yearMatch;
-                });
+                }).sort((a,b) => b.timestamp.seconds - a.timestamp.seconds);
+                
+                const limited = selectedLimit === 'all' ? filtered : filtered.slice(0, parseInt(selectedLimit, 10));
                 
                 calculateAndDisplayStats('keseluruhan', allTransactions);
                 if (activeTab !== 'keseluruhan') calculateAndDisplayStats(activeTab, transactions);
                 
-                renderTable(activeTab, filtered);
+                renderTable(activeTab, limited);
             };
             
             const populateYearFilters = () => {
                 const years = [...new Set(allTransactions.map(app => app.timestamp?.toDate().getFullYear()).filter(y => y))];
-                if (years.length === 0) {
-                    years.push(new Date().getFullYear());
-                }
+                if (years.length === 0) years.push(new Date().getFullYear());
                 years.sort((a, b) => b - a);
 
                 document.querySelectorAll('[name="year-filter"]').forEach(select => {
@@ -562,19 +636,15 @@
                         select.appendChild(option);
                     });
                 });
-                if(reportYearInput) {
-                    reportYearInput.value = new Date().getFullYear();
-                }
             };
 
             // --- Annual Report Logic ---
             const renderAnnualReport = () => {
                 const startDate = new Date(reportStartDateInput.value);
                 const endDate = new Date(reportEndDateInput.value);
-
                 if (!reportStartDateInput.value || !reportEndDateInput.value) return;
 
-                document.getElementById('report-date-range').textContent = `Bermula ${startDate.toLocaleDateString('ms-MY')} hingga ${endDate.toLocaleDateString('ms-MY')}`;
+                document.getElementById('report-date-range').textContent = `BERMULA ${startDate.toLocaleDateString('ms-MY')} HINGGA ${endDate.toLocaleDateString('ms-MY')}`;
                 
                 const rangeTransactions = allTransactions.filter(t => {
                     const transDate = t.timestamp.toDate();
@@ -584,40 +654,47 @@
                 const incomeTable = document.getElementById('income-report-table');
                 const expenseTable = document.getElementById('expense-report-table');
                 const balanceTable = document.getElementById('balance-summary-table');
-
                 const tableCellClasses = "py-2 px-4 border border-slate-300";
                 const totalRowClasses = "font-bold border-t-2 border-slate-800";
+                
+                const groupTransactions = (transactions) => {
+                    return transactions.reduce((acc, t) => {
+                        const key = t.description.toLowerCase().trim();
+                        if (!acc[key]) {
+                            acc[key] = { description: t.description, total: 0 };
+                        }
+                        acc[key].total += t.amount;
+                        return acc;
+                    }, {});
+                };
 
                 // Populate Income
                 let totalIncome = Object.values(BAKI_AWAL_TAHUN).reduce((a,b) => a + b, 0);
-                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">Baki Awal Tahun</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
-                const incomeTransactions = rangeTransactions.filter(t => t.type === 'masuk');
-                incomeTransactions.forEach(t => {
-                    totalIncome += t.amount;
-                    incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${t.description}</td><td class="${tableCellClasses} text-right">${t.amount.toFixed(2)}</td></tr>`;
+                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">BAKI AWAL TAHUN</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
+                const groupedIncome = groupTransactions(rangeTransactions.filter(t => t.type === 'masuk'));
+                Object.values(groupedIncome).forEach(g => {
+                    totalIncome += g.total;
+                    incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="${tableCellClasses} text-right">${g.total.toFixed(2)}</td></tr>`;
                 });
                 incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PENDAPATAN</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
 
                 // Populate Expenses
                 let totalExpense = 0;
                 expenseTable.innerHTML = '';
-                const expenseTransactions = rangeTransactions.filter(t => t.type === 'keluar');
-                expenseTransactions.forEach(t => {
-                    totalExpense += t.amount;
-                    expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${t.description}</td><td class="${tableCellClasses} text-right">${t.amount.toFixed(2)}</td></tr>`;
+                const groupedExpense = groupTransactions(rangeTransactions.filter(t => t.type === 'keluar'));
+                Object.values(groupedExpense).forEach(g => {
+                    totalExpense += g.total;
+                    expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="${tableCellClasses} text-right">${g.total.toFixed(2)}</td></tr>`;
                 });
                 expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PERBELANJAAN</td><td class="${tableCellClasses} text-right">${totalExpense.toFixed(2)}</td></tr>`;
                 
                 // Populate Balance Summary
-                balanceTable.innerHTML = '';
                 const bankIn = rangeTransactions.filter(t => t.account === 'bank_islam' && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
                 const bankOut = rangeTransactions.filter(t => t.account === 'bank_islam' && t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
                 const bakiBank = (BAKI_AWAL_TAHUN['bank_islam'] || 0) + bankIn - bankOut;
-
                 const tanganIn = rangeTransactions.filter(t => (t.account === 'petty_cash' || t.account === 'koperasi_mini') && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
                 const tanganOut = rangeTransactions.filter(t => (t.account === 'petty_cash' || t.account === 'koperasi_mini') && t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
                 const bakiTangan = (BAKI_AWAL_TAHUN['petty_cash'] || 0) + (BAKI_AWAL_TAHUN['koperasi_mini'] || 0) + tanganIn - tanganOut;
-
                 const jumlahBaki = bakiBank + bakiTangan;
 
                 balanceTable.innerHTML = `
@@ -629,16 +706,11 @@
             // --- Authentication & Initial Load ---
             (async () => {
                 try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
+                    else await signInAnonymously(auth);
                     
                     const settingsSnap = await getDoc(settingsDoc);
-                    if (settingsSnap.exists()) {
-                        BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
-                    }
+                    if (settingsSnap.exists()) BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
                     
                     setupTabs();
 
@@ -648,11 +720,9 @@
                         
                         const currentYear = new Date().getFullYear();
                         document.querySelectorAll('[name="year-filter"]').forEach(filter => {
-                             if (filter.tagName === 'SELECT') {
-                                const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
-                                if(yearExists) filter.value = currentYear;
-                                else if (filter.options.length > 1) filter.value = filter.options[1].value;
-                            }
+                             const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
+                             if(yearExists) filter.value = currentYear;
+                             else if (filter.options.length > 1) filter.value = filter.options[1].value;
                         });
                         
                         const year = new Date().getFullYear();
@@ -661,7 +731,6 @@
                         
                         updateUI();
                     });
-
                 } catch (error) {
                     console.error("Firebase authentication failed:", error);
                     showToast("Gagal menyambung ke pangkalan data.", 'error');
@@ -671,23 +740,61 @@
             // --- Event Listeners ---
             document.querySelectorAll('.tab-button').forEach(btn => btn.addEventListener('click', () => switchTabs(btn.dataset.tab)));
             
-            tabContainer.addEventListener('click', e => {
-                if (e.target.closest('[data-action="add-income"]')) {
-                    transactionForm.dataset.type = 'masuk';
-                    document.getElementById('modal-title').textContent = 'Tambah Duit Masuk';
-                    openModal(transactionModal);
-                } else if (e.target.closest('[data-action="add-expense"]')) {
-                    transactionForm.dataset.type = 'keluar';
-                    document.getElementById('modal-title').textContent = 'Tambah Duit Keluar';
-                    openModal(transactionModal);
-                } else if (e.target.closest('[name="month-filter"]') || e.target.closest('[name="year-filter"]')) {
-                     applyFiltersAndRender();
-                } else if (e.target.closest('[data-action="print"]')) {
-                    handlePrint();
-                } else if (e.target.closest('[data-action="export"]')) {
-                    handleExport();
-                } else if (e.target.closest('[data-action="paste-excel"]')) {
-                    openModal(pasteModal);
+            tabContainer.addEventListener('click', async (e) => {
+                const actionBtn = e.target.closest('[data-action]');
+                if (!actionBtn) {
+                     if (e.target.closest('[name="month-filter"], [name="year-filter"], [name="limit-filter"]')) {
+                        applyFiltersAndRender();
+                     }
+                     return;
+                }
+                const action = actionBtn.dataset.action;
+                const id = actionBtn.dataset.id;
+                
+                switch(action) {
+                    case 'add-income':
+                        transactionForm.reset();
+                        delete transactionForm.dataset.docId;
+                        transactionForm.dataset.type = 'masuk';
+                        document.getElementById('modal-title').textContent = 'TAMBAH DUIT MASUK';
+                        document.getElementById('trans-date').value = formatDateForInput(new Date());
+                        openModal(transactionModal);
+                        break;
+                    case 'add-expense':
+                        transactionForm.reset();
+                        delete transactionForm.dataset.docId;
+                        transactionForm.dataset.type = 'keluar';
+                        document.getElementById('modal-title').textContent = 'TAMBAH DUIT KELUAR';
+                        document.getElementById('trans-date').value = formatDateForInput(new Date());
+                        openModal(transactionModal);
+                        break;
+                    case 'paste-excel':
+                        openModal(pasteModal);
+                        break;
+                    case 'edit': {
+                        const trans = allTransactions.find(t => t.id === id);
+                        if (trans) {
+                            transactionForm.dataset.docId = id;
+                            transactionForm.dataset.type = trans.type;
+                            document.getElementById('modal-title').textContent = 'KEMASKINI TRANSAKSI';
+                            document.getElementById('trans-date').value = formatDateForInput(trans.timestamp.toDate());
+                            document.getElementById('trans-desc').value = trans.description;
+                            document.getElementById('trans-amount').value = trans.amount;
+                            openModal(transactionModal);
+                        }
+                        break;
+                    }
+                    case 'delete':
+                        if (confirm(`ANDA PASTI MAHU PADAM TRANSAKSI INI?\n\TINDAKAN INI TIDAK BOLEH DIBATALKAN.`)) {
+                            try {
+                                await deleteDoc(doc(db, transactionsCol.path, id));
+                                showToast("Transaksi berjaya dipadam!");
+                            } catch (error) {
+                                console.error("Error deleting transaction: ", error);
+                                showToast("Gagal memadam transaksi.", "error");
+                            }
+                        }
+                        break;
                 }
             });
 
@@ -696,22 +803,27 @@
 
             transactionForm.addEventListener('submit', async e => {
                 e.preventDefault();
-                const type = transactionForm.dataset.type;
-                const newTransaction = {
+                const docId = transactionForm.dataset.docId;
+                const formData = {
                     account: activeTab,
-                    type: type,
+                    type: transactionForm.dataset.type,
                     description: document.getElementById('trans-desc').value,
                     amount: parseFloat(document.getElementById('trans-amount').value),
                     timestamp: Timestamp.fromDate(new Date(document.getElementById('trans-date').value))
                 };
                 
                 try {
-                    await addDoc(transactionsCol, newTransaction);
-                    showToast("Transaksi berjaya disimpan!");
+                    if (docId) {
+                        await updateDoc(doc(db, transactionsCol.path, docId), formData);
+                        showToast("Transaksi berjaya dikemaskini!");
+                    } else {
+                        await addDoc(transactionsCol, formData);
+                        showToast("Transaksi berjaya disimpan!");
+                    }
                     transactionForm.reset();
                     closeModal(transactionModal);
                 } catch(error) {
-                    console.error("Error adding transaction:", error);
+                    console.error("Error saving transaction:", error);
                     showToast("Gagal menyimpan transaksi.", "error");
                 }
             });
@@ -724,6 +836,7 @@
             });
 
             document.getElementById('cancel-settings-btn').addEventListener('click', () => closeModal(settingsModal));
+            settingsModal.addEventListener('click', (e) => { if(e.target === settingsModal) closeModal(settingsModal); });
             settingsForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const newBalances = {
@@ -746,27 +859,19 @@
             reportStartDateInput.addEventListener('change', renderAnnualReport);
             reportEndDateInput.addEventListener('change', renderAnnualReport);
             document.getElementById('print-report-btn').addEventListener('click', () => {
-                 const printContent = document.getElementById('print-area').innerHTML;
-                 const originalContent = document.body.innerHTML;
-                 
-                 const tailwindLink = '<link href="https://cdn.tailwindcss.com" rel="stylesheet">';
                  const style = `<style>
-                    body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; }
+                    body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; text-transform: uppercase;}
                     table { width: 100%; border-collapse: collapse; }
-                    td, th { border: 1px solid #9ca3af; padding: 8px; font-size: 12px; }
+                    td, th { border: 1px solid #9ca3af; padding: 8px; font-size: 11px; }
                     h3, h4, p { margin-bottom: 1rem; text-align: center; }
-                    h3 { font-size: 1.25rem; font-weight: bold; text-transform: uppercase; }
-                    h4 { text-align: left; border-bottom: 1px solid #333; padding-bottom: 4px; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; }
-                    .text-right { text-align: right; }
-                    .font-bold { font-weight: bold; }
-                    .border-t-2 { border-top-width: 2px; }
-                    .border-slate-800 { border-color: #1e293b; }
+                    h3 { font-size: 1.25rem; font-weight: bold; }
+                    h4 { text-align: left; border-bottom: 1px solid #333; padding-bottom: 4px; font-size: 1rem; font-weight: 600; margin-top: 2rem;}
+                    .text-right { text-align: right; } .text-left { text-align: left; } .font-bold { font-weight: bold; }
+                    .border-t-2 { border-top-width: 2px; } .border-slate-800 { border-color: #1e293b; }
                     .grid { display: grid; } .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-                    .gap-x-16 { column-gap: 4rem; } .gap-y-12 { row-gap: 3rem; }
-                    .pt-12 { padding-top: 3rem; } .pt-2 { padding-top: 0.5rem; }
-                    .border-t { border-top-width: 1px; } .border-slate-300 { border-color: #d1d5db; }
-                    .justify-end { justify-content: flex-end; } .flex { display: flex; }
-                    .text-center { text-align: center; }
+                    .gap-x-16 { column-gap: 4rem; } .gap-y-12 { row-gap: 3rem; } .pt-12 { padding-top: 3rem; }
+                    .pt-2 { padding-top: 0.5rem; } .border-t { border-top-width: 1px; } .border-slate-300 { border-color: #d1d5db; }
+                    .justify-end { justify-content: flex-end; } .flex { display: flex; } .text-center { text-align: center; }
                  </style>`;
 
                  const printWindow = window.open('', '', 'height=800,width=800');
@@ -779,19 +884,23 @@
             });
 
             document.getElementById('cancel-paste-btn').addEventListener('click', () => closeModal(pasteModal));
+            pasteModal.addEventListener('click', (e) => { if(e.target === pasteModal) closeModal(pasteModal); });
             document.getElementById('process-paste-btn').addEventListener('click', async () => {
                 const pasteArea = document.getElementById('paste-area');
                 const rows = pasteArea.value.split('\n').filter(row => row.trim() !== '');
                 let successCount = 0;
                 for (const row of rows) {
                     const [dateStr, desc, incomeStr, expenseStr] = row.split('\t');
-                    const amount = parseFloat(incomeStr) || parseFloat(expenseStr) || 0;
-                    if (amount > 0) {
+                    const income = parseFloat(incomeStr) || 0;
+                    const expense = parseFloat(expenseStr) || 0;
+                    const amount = income > 0 ? income : expense;
+                    
+                    if (amount > 0 && desc && dateStr) {
                         try {
                              await addDoc(transactionsCol, {
                                 account: activeTab,
-                                type: parseFloat(incomeStr) > 0 ? 'masuk' : 'keluar',
-                                description: desc,
+                                type: income > 0 ? 'masuk' : 'keluar',
+                                description: desc.trim(),
                                 amount: amount,
                                 timestamp: Timestamp.fromDate(new Date(dateStr))
                             });
@@ -803,29 +912,6 @@
                 pasteArea.value = '';
                 closeModal(pasteModal);
             });
-
-
-            // --- Print & Export ---
-            const handlePrint = () => {
-                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
-
-                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
-                doc.autoTable({
-                    html: table,
-                    startY: 20,
-                    headStyles: { fillColor: [79, 70, 229] }
-                });
-                doc.text(`Penyata Kewangan - ${accountNameMap[activeTab]}`, 14, 15);
-                doc.save(`penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.pdf`);
-            };
-            const handleExport = () => {
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
-                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
-                const wb = XLSX.utils.table_to_book(table, {sheet: accountNameMap[activeTab]});
-                XLSX.writeFile(wb, `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.xlsx`);
-            };
         });
     </script>
 </body>
