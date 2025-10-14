@@ -390,217 +390,215 @@
 
         const applicationsCol = collection(db, `/artifacts/${appId}/public/data/applications`);
         const excoMembersCol = collection(db, `/artifacts/${appId}/public/data/exco_members`);
-
-        // --- State Variables ---
-        let allApps = [];
-        let filteredApps = [];
-        let currentPage = 1;
-
-        // --- UI Elements ---
-        const monthFilter = document.getElementById('month-filter');
-        const yearFilter = document.getElementById('year-filter');
-        const itemsPerPageSelect = document.getElementById('items-per-page');
-        const analysisTableBody = document.getElementById('analysis-table-body');
-        const prevPageBtn = document.getElementById('prev-page-btn');
-        const nextPageBtn = document.getElementById('next-page-btn');
-        const applicationForm = document.getElementById('applicationForm');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-        const newApplicationBtnInAnalysis = document.getElementById('newApplicationBtnInAnalysis');
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
         
-        // --- General Functions ---
-        const showToast = (message, type = 'success') => {
-            toastMessage.textContent = message;
-            toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
-        };
-
-        // --- Tab Management ---
-        const switchTab = (targetTabId) => {
-            tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
-            tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
-        };
-
-        // --- Data Fetching, Processing, and Rendering ---
-        const fetchApplications = () => {
-             analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Memuatkan data...</td></tr>`;
-            onSnapshot(applicationsCol, (snapshot) => {
-                allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                
-                calculateStats();
-                populateYearFilter();
-                applyFiltersAndRender();
-            });
-        };
-
-        const calculateStats = () => {
-            document.getElementById('total-apps').textContent = allApps.length;
-            const approvedApps = allApps.filter(app => app.status === 'Diluluskan');
-            const pendingApps = allApps.filter(app => app.status === 'Dalam Proses');
-            const rejectedApps = allApps.filter(app => app.status === 'Ditolak');
-            document.getElementById('total-approved').textContent = approvedApps.length;
-            document.getElementById('total-pending').textContent = pendingApps.length;
-            document.getElementById('total-rejected').textContent = rejectedApps.length;
-            const totalAmount = approvedApps.reduce((sum, app) => sum + app.amount, 0);
-            document.getElementById('total-amount').textContent = `RM ${totalAmount.toFixed(2)}`;
-        };
-
-        const populateYearFilter = () => {
-            const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
-            years.sort((a, b) => b - a);
-            
-            while(yearFilter.options.length > 1) { yearFilter.remove(1); }
-            years.forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                yearFilter.appendChild(option);
-            });
-        };
-
-        const applyFiltersAndRender = () => {
-            const selectedMonth = monthFilter.value;
-            const selectedYear = yearFilter.value;
-
-            filteredApps = allApps.filter(app => {
-                const appDate = app.createdAt?.toDate();
-                if (!appDate) return false;
-                const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
-                const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
-                return monthMatch && yearMatch;
-            });
-            currentPage = 1;
-            renderTable();
-        };
-
-        const getStatusBadge = (status) => {
-            const colors = { 'Diluluskan': 'bg-green-100 text-green-800', 'Dalam Proses': 'bg-yellow-100 text-yellow-800', 'Ditolak': 'bg-red-100 text-red-800' };
-            return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[status] || 'bg-slate-100 text-slate-800'}">${status}</span>`;
-        };
-
-        const renderTable = () => {
-            analysisTableBody.innerHTML = '';
-            if (filteredApps.length === 0) {
-                analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
-                updatePaginationControls();
-                return;
-            }
-            
-            const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageItems = filteredApps.slice(startIndex, endIndex);
-
-            pageItems.forEach((app, index) => {
-                const formattedDate = app.createdAt ? new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY') : 'N/A';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-3 px-4 text-sm text-slate-500">${startIndex + index + 1}</td>
-                    <td class="py-3 px-4 text-sm font-medium text-slate-900">${app.applicant}</td>
-                    <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
-                    <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
-                    <td class="py-3 px-4 text-sm text-slate-500">${app.amount.toFixed(2)}</td>
-                    <td class="py-3 px-4 text-sm text-slate-500">${getStatusBadge(app.status)}</td>
-                `;
-                analysisTableBody.appendChild(row);
-            });
-            updatePaginationControls();
-        };
-
-        const updatePaginationControls = () => {
-            const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
-            const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
-
-            prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
-
-            const start = filteredApps.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
-            const end = Math.min(currentPage * itemsPerPage, filteredApps.length);
-            
-            document.getElementById('page-info-start').textContent = start;
-            document.getElementById('page-info-end').textContent = end;
-            document.getElementById('page-info-total').textContent = filteredApps.length;
-        };
-        
-        // --- Application Form Logic ---
-        const formSteps = document.querySelectorAll('.form-step');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const stepIndicators = document.querySelectorAll('.step-indicator');
-        const successMessage = document.getElementById('success-message');
-        const icInput = document.getElementById('no_ic_pemohon');
-        const icFeedback = document.getElementById('ic-feedback');
-        const applicantDetailsFieldset = document.getElementById('applicant-details-fieldset');
-        const applicantNameInput = document.getElementById('nama_pemohon');
-        const applicantPositionInput = document.getElementById('jawatan');
-        const teacherRegOption = document.getElementById('teacher-reg-option');
-        const registerTeacherBtn = document.getElementById('register-teacher-btn');
-
-        let formCurrentStep = 1;
-
-        const updateFormSteps = () => {
-            formSteps.forEach(step => step.classList.remove('active'));
-            document.getElementById(`form-step-${formCurrentStep}`).classList.add('active');
-        };
-
-        const updateProgressBar = () => {
-            stepIndicators.forEach((indicator, index) => {
-                const step = index + 1;
-                indicator.classList.remove('active', 'completed');
-                if (step < formCurrentStep) indicator.classList.add('completed');
-                else if (step === formCurrentStep) indicator.classList.add('active');
-            });
-        };
-
-        const updateButtons = () => {
-            prevBtn.disabled = formCurrentStep === 1;
-            prevBtn.classList.toggle('opacity-50', formCurrentStep === 1);
-            prevBtn.classList.toggle('cursor-not-allowed', formCurrentStep === 1);
-            nextBtn.classList.toggle('hidden', formCurrentStep === formSteps.length);
-            submitBtn.classList.toggle('hidden', formCurrentStep !== formSteps.length);
-        };
-
-        const validateStep = (step) => {
-            const currentFormStep = document.getElementById(`form-step-${step}`);
-            const inputs = currentFormStep.querySelectorAll('input[required], textarea[required]');
-            let isValid = true;
-            inputs.forEach(input => {
-                let isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
-                if (input.closest('fieldset')?.disabled) return;
-                input.classList.toggle('border-red-500', !isInputValid);
-                if (!isInputValid) isValid = false;
-            });
-             if (step === 1 && applicantDetailsFieldset.disabled) isValid = false;
-            return isValid;
-        };
-        
-        const resetApplicationForm = () => {
-            applicationForm.reset();
-            formCurrentStep = 1;
-            updateFormSteps();
-            updateProgressBar();
-            updateButtons();
-            icFeedback.textContent = '';
-            icFeedback.className = 'text-sm mt-2 h-5';
-            applicantDetailsFieldset.disabled = true;
-            nextBtn.disabled = true;
-            successMessage.classList.add('hidden');
-            document.getElementById('form-steps-container').style.display = 'block';
-
-            teacherRegOption.classList.add('hidden');
-            applicantNameInput.readOnly = true;
-            applicantNameInput.classList.add('bg-slate-100');
-            applicantPositionInput.readOnly = true;
-            applicantPositionInput.classList.add('bg-slate-100');
-        };
-
-        // --- Event Listeners and Initial Load ---
         document.addEventListener('DOMContentLoaded', () => {
+            // --- State Variables ---
+            let allApps = [];
+            let filteredApps = [];
+            let currentPage = 1;
+            let formCurrentStep = 1;
+
+            // --- UI Elements ---
+            const monthFilter = document.getElementById('month-filter');
+            const yearFilter = document.getElementById('year-filter');
+            const itemsPerPageSelect = document.getElementById('items-per-page');
+            const analysisTableBody = document.getElementById('analysis-table-body');
+            const prevPageBtn = document.getElementById('prev-page-btn');
+            const nextPageBtn = document.getElementById('next-page-btn');
+            const applicationForm = document.getElementById('applicationForm');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const newApplicationBtnInAnalysis = document.getElementById('newApplicationBtnInAnalysis');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const formSteps = document.querySelectorAll('.form-step');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const stepIndicators = document.querySelectorAll('.step-indicator');
+            const successMessage = document.getElementById('success-message');
+            const icInput = document.getElementById('no_ic_pemohon');
+            const icFeedback = document.getElementById('ic-feedback');
+            const applicantDetailsFieldset = document.getElementById('applicant-details-fieldset');
+            const applicantNameInput = document.getElementById('nama_pemohon');
+            const applicantPositionInput = document.getElementById('jawatan');
+            const teacherRegOption = document.getElementById('teacher-reg-option');
+            const registerTeacherBtn = document.getElementById('register-teacher-btn');
+
+            // --- General Functions ---
+            const showToast = (message, type = 'success') => {
+                toastMessage.textContent = message;
+                toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
+            };
+
+            // --- Tab Management ---
+            const switchTab = (targetTabId) => {
+                tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
+                tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
+            };
+            
+            // --- Data Fetching and Processing ---
+            const fetchApplications = () => {
+                 analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Memuatkan data...</td></tr>`;
+                onSnapshot(applicationsCol, (snapshot) => {
+                    allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                    
+                    calculateStats();
+                    populateYearFilter();
+                    applyFiltersAndRender();
+                });
+            };
+            
+            const calculateStats = () => {
+                document.getElementById('total-apps').textContent = allApps.length;
+                const approvedApps = allApps.filter(app => app.status === 'Diluluskan');
+                const pendingApps = allApps.filter(app => app.status === 'Dalam Proses');
+                const rejectedApps = allApps.filter(app => app.status === 'Ditolak');
+                document.getElementById('total-approved').textContent = approvedApps.length;
+                document.getElementById('total-pending').textContent = pendingApps.length;
+                document.getElementById('total-rejected').textContent = rejectedApps.length;
+                const totalAmount = approvedApps.reduce((sum, app) => sum + app.amount, 0);
+                document.getElementById('total-amount').textContent = `RM ${totalAmount.toFixed(2)}`;
+            };
+
+            const populateYearFilter = () => {
+                const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
+                years.sort((a, b) => b - a);
+                
+                while(yearFilter.options.length > 1) { yearFilter.remove(1); }
+                years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearFilter.appendChild(option);
+                });
+            };
+
+            const applyFiltersAndRender = () => {
+                const selectedMonth = monthFilter.value;
+                const selectedYear = yearFilter.value;
+
+                filteredApps = allApps.filter(app => {
+                    const appDate = app.createdAt?.toDate();
+                    if (!appDate) return false;
+                    const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
+                    const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
+                    return monthMatch && yearMatch;
+                });
+                currentPage = 1;
+                renderTable();
+            };
+
+            const getStatusBadge = (status) => {
+                const colors = { 'Diluluskan': 'bg-green-100 text-green-800', 'Dalam Proses': 'bg-yellow-100 text-yellow-800', 'Ditolak': 'bg-red-100 text-red-800' };
+                return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[status] || 'bg-slate-100 text-slate-800'}">${status}</span>`;
+            };
+
+            const renderTable = () => {
+                analysisTableBody.innerHTML = '';
+                if (filteredApps.length === 0) {
+                    analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
+                    updatePaginationControls();
+                    return;
+                }
+                
+                const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const pageItems = filteredApps.slice(startIndex, endIndex);
+
+                pageItems.forEach((app, index) => {
+                    const formattedDate = app.createdAt ? new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY') : 'N/A';
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-3 px-4 text-sm text-slate-500">${startIndex + index + 1}</td>
+                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${app.applicant}</td>
+                        <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
+                        <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
+                        <td class="py-3 px-4 text-sm text-slate-500">${app.amount.toFixed(2)}</td>
+                        <td class="py-3 px-4 text-sm text-slate-500">${getStatusBadge(app.status)}</td>
+                    `;
+                    analysisTableBody.appendChild(row);
+                });
+                updatePaginationControls();
+            };
+
+            const updatePaginationControls = () => {
+                const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
+                const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
+
+                prevPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+                const start = filteredApps.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+                const end = Math.min(currentPage * itemsPerPage, filteredApps.length);
+                
+                document.getElementById('page-info-start').textContent = start;
+                document.getElementById('page-info-end').textContent = end;
+                document.getElementById('page-info-total').textContent = filteredApps.length;
+            };
+            
+            // --- Application Form Logic ---
+            const updateFormSteps = () => {
+                formSteps.forEach(step => step.classList.remove('active'));
+                document.getElementById(`form-step-${formCurrentStep}`).classList.add('active');
+            };
+
+            const updateProgressBar = () => {
+                stepIndicators.forEach((indicator, index) => {
+                    const step = index + 1;
+                    indicator.classList.remove('active', 'completed');
+                    if (step < formCurrentStep) indicator.classList.add('completed');
+                    else if (step === formCurrentStep) indicator.classList.add('active');
+                });
+            };
+
+            const updateButtons = () => {
+                prevBtn.disabled = formCurrentStep === 1;
+                prevBtn.classList.toggle('opacity-50', formCurrentStep === 1);
+                prevBtn.classList.toggle('cursor-not-allowed', formCurrentStep === 1);
+                nextBtn.classList.toggle('hidden', formCurrentStep === formSteps.length);
+                submitBtn.classList.toggle('hidden', formCurrentStep !== formSteps.length);
+            };
+
+            const validateStep = (step) => {
+                const currentFormStep = document.getElementById(`form-step-${step}`);
+                const inputs = currentFormStep.querySelectorAll('input[required], textarea[required]');
+                let isValid = true;
+                inputs.forEach(input => {
+                    let isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
+                    if (input.closest('fieldset')?.disabled) return;
+                    input.classList.toggle('border-red-500', !isInputValid);
+                    if (!isInputValid) isValid = false;
+                });
+                 if (step === 1 && applicantDetailsFieldset.disabled) isValid = false;
+                return isValid;
+            };
+            
+            const resetApplicationForm = () => {
+                applicationForm.reset();
+                formCurrentStep = 1;
+                updateFormSteps();
+                updateProgressBar();
+                updateButtons();
+                icFeedback.textContent = '';
+                icFeedback.className = 'text-sm mt-2 h-5';
+                applicantDetailsFieldset.disabled = true;
+                nextBtn.disabled = true;
+                successMessage.classList.add('hidden');
+                document.getElementById('form-steps-container').style.display = 'block';
+
+                teacherRegOption.classList.add('hidden');
+                applicantNameInput.readOnly = true;
+                applicantNameInput.classList.add('bg-slate-100');
+                applicantPositionInput.readOnly = true;
+                applicantPositionInput.classList.add('bg-slate-100');
+            };
+            
+            // --- Initial Load & Event Listeners ---
             (async () => {
                 try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -619,11 +617,13 @@
             resetApplicationForm();
             
             tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
-            
-            newApplicationBtnInAnalysis.addEventListener('click', () => {
-                switchTab('tab-form-btn');
-                resetApplicationForm();
-            });
+        
+            if(newApplicationBtnInAnalysis) {
+                newApplicationBtnInAnalysis.addEventListener('click', () => {
+                    switchTab('tab-form-btn');
+                    resetApplicationForm();
+                });
+            }
 
             monthFilter.addEventListener('change', applyFiltersAndRender);
             yearFilter.addEventListener('change', applyFiltersAndRender);
@@ -673,28 +673,34 @@
                 }
             });
 
-            registerTeacherBtn.addEventListener('click', () => {
-                icFeedback.textContent = 'Mod Guru: Sila masukkan nama anda di bawah.';
-                icFeedback.className = 'text-sm mt-2 h-5 text-blue-600';
-                applicantNameInput.readOnly = false; applicantNameInput.classList.remove('bg-slate-100');
-                applicantNameInput.value = ''; applicantNameInput.focus();
-                applicantPositionInput.value = 'Guru'; applicantPositionInput.readOnly = true;
-                applicantPositionInput.classList.add('bg-slate-100');
-                applicantDetailsFieldset.disabled = false;
-                nextBtn.disabled = false;
-                teacherRegOption.classList.add('hidden');
-            });
+            if(registerTeacherBtn) {
+                registerTeacherBtn.addEventListener('click', () => {
+                    icFeedback.textContent = 'Mod Guru: Sila masukkan nama anda di bawah.';
+                    icFeedback.className = 'text-sm mt-2 h-5 text-blue-600';
+                    applicantNameInput.readOnly = false; applicantNameInput.classList.remove('bg-slate-100');
+                    applicantNameInput.value = ''; applicantNameInput.focus();
+                    applicantPositionInput.value = 'Guru'; applicantPositionInput.readOnly = true;
+                    applicantPositionInput.classList.add('bg-slate-100');
+                    applicantDetailsFieldset.disabled = false;
+                    nextBtn.disabled = false;
+                    teacherRegOption.classList.add('hidden');
+                });
+            }
             
-            nextBtn.addEventListener('click', () => {
-                if (validateStep(formCurrentStep) && formCurrentStep < formSteps.length) {
-                    formCurrentStep++; updateFormSteps(); updateProgressBar(); updateButtons();
-                }
-            });
-            prevBtn.addEventListener('click', () => {
-                if (formCurrentStep > 1) {
-                    formCurrentStep--; updateFormSteps(); updateProgressBar(); updateButtons();
-                }
-            });
+            if(nextBtn){
+                nextBtn.addEventListener('click', () => {
+                    if (validateStep(formCurrentStep) && formCurrentStep < formSteps.length) {
+                        formCurrentStep++; updateFormSteps(); updateProgressBar(); updateButtons();
+                    }
+                });
+            }
+            if(prevBtn){
+                prevBtn.addEventListener('click', () => {
+                    if (formCurrentStep > 1) {
+                        formCurrentStep--; updateFormSteps(); updateProgressBar(); updateButtons();
+                    }
+                });
+            }
             
             const costInputs = document.querySelectorAll('.cost-input');
             const totalCostInput = document.getElementById('jumlah_keseluruhan');
