@@ -620,18 +620,15 @@
                     years.push(new Date().getFullYear());
                 }
                 years.sort((a, b) => b - a);
-                
-                const allYearFilterElements = document.querySelectorAll('[name="year-filter"]');
-                allYearFilterElements.forEach(select => {
-                    if (select.tagName === 'SELECT') {
-                        while(select.options.length > 1) { select.remove(1); }
-                        years.forEach(year => {
-                            const option = new Option(year, year);
-                            select.add(option);
-                        });
-                    }
-                });
 
+                document.querySelectorAll('[name="year-filter"]').forEach(select => {
+                     while(select.options.length > 1) { select.remove(1); }
+                    years.forEach(year => {
+                        const option = new Option(year, year);
+                        select.add(option);
+                    });
+                });
+                const reportYearInput = document.getElementById('laporan-year-filter');
                 if(reportYearInput) {
                     reportYearInput.value = new Date().getFullYear();
                 }
