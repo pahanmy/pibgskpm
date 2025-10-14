@@ -187,6 +187,7 @@
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh Mohon</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jumlah (RM)</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Peratus Kelulusan</th>
                                             <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
                                         </tr>
                                     </thead>
@@ -346,9 +347,10 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t mt-12">
-        <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
-            &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
+    <footer class="bg-gray-800 text-gray-300">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center text-xs font-medium">
+            <p class="mb-2 sm:mb-0">© 2025 PIBG SK PULAU MELAYU. HAK CIPTA TERPELIHARA.</p>
+            <p>DIREKA OLEH KOMUNITI SK PULAU MELAYU</p>
         </div>
     </footer>
 
@@ -447,13 +449,11 @@
             
             // --- Data Fetching and Processing ---
             const fetchApplications = () => {
-                 analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
+                 analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10">Memuatkan data...</td></tr>`;
                 onSnapshot(query(applicationsCol), (snapshot) => {
                     allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                     
-                    // Keep user-defined values on first load, then update with real data
-                    // calculateStats(); 
                     populateYearFilter();
                     applyFiltersAndRender();
                 });
@@ -497,7 +497,7 @@
                 });
                 currentPage = 1;
                 renderTable();
-                calculateStats(); // Update stats after filtering
+                calculateStats(); 
             };
 
             const getStatusBadge = (status) => {
@@ -505,10 +505,16 @@
                 return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colors[status] || 'bg-slate-100 text-slate-800'}">${status}</span>`;
             };
 
+            const getProgressColor = (percentage) => {
+                if (percentage < 50) return 'bg-red-500';
+                if (percentage < 75) return 'bg-yellow-500';
+                return 'bg-green-500';
+            };
+
             const renderTable = () => {
                 analysisTableBody.innerHTML = '';
                 if (filteredApps.length === 0) {
-                    analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
+                    analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
                     updatePaginationControls();
                     return;
                 }
@@ -520,6 +526,11 @@
 
                 pageItems.forEach((app, index) => {
                     const formattedDate = app.createdAt ? new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY') : 'N/A';
+                    
+                    // Mock percentage for demonstration. Replace with actual data from `app.votes`.
+                    const mockPercentage = Math.floor(Math.random() * 101);
+                    const progressColorClass = getProgressColor(mockPercentage);
+
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="py-3 px-4 text-sm text-slate-500">${startIndex + index + 1}</td>
@@ -533,15 +544,24 @@
                                 <button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>
                             </div>
                         </td>
+                         <td class="py-3 px-4 text-sm text-slate-500">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-full bg-slate-200 rounded-full h-2.5">
+                                    <div class="${progressColorClass} h-2.5 rounded-full" style="width: ${mockPercentage}%"></div>
+                                </div>
+                                <span class="font-medium text-slate-700 text-xs w-10 text-right">${mockPercentage}%</span>
+                            </div>
+                        </td>
                         <td class="py-3 px-4 text-sm text-slate-500">
-                            <div class="flex items-center justify-center space-x-3">
-                                <a href="undi.html?id=${app.id}" title="Undi Permohonan" class="text-indigo-600 hover:text-indigo-800">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                            <div class="flex items-center justify-center space-x-2">
+                                <a href="undi.html?id=${app.id}" title="Undi Permohonan" class="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                                    <span>Undi</span>
                                 </a>
-                                <button data-id="${app.id}" data-purpose="${app.purpose}" title="Kongsi" class="share-btn text-green-600 hover:text-green-800">
+                                <button data-id="${app.id}" data-purpose="${app.purpose}" title="Kongsi" class="share-btn text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" /></svg>
                                 </button>
-                                <button data-id="${app.id}" title="Padam" class="delete-btn text-red-600 hover:text-red-800">
+                                <button data-id="${app.id}" title="Padam" class="delete-btn text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
                                 </button>
                             </div>
@@ -611,7 +631,6 @@
                     const appDocRef = doc(db, `/artifacts/${appId}/public/data/applications`, id);
                     await deleteDoc(appDocRef);
                     showToast('Permohonan berjaya dipadam.');
-                    // Data will refresh automatically via onSnapshot
                 } catch (error) {
                     console.error("Error deleting document:", error);
                     showToast('Gagal memadam permohonan.', 'error');
@@ -686,7 +705,7 @@
                     fetchApplications();
                 } catch (error) {
                     console.error("Firebase authentication failed:", error);
-                    analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
+                    analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
                 }
             })();
 
@@ -716,7 +735,7 @@
              // Modal Listeners
             closeModalBtn.addEventListener('click', closeModal);
             keputusanModal.addEventListener('click', (e) => {
-                if(e.target === keputusanModal) { // only close if clicking the background
+                if(e.target === keputusanModal) {
                     closeModal();
                 }
             });
