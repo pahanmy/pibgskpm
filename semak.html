@@ -353,16 +353,15 @@
         </div>
     </footer>
 
-    <div id="keputusan-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="modal-panel">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="text-xl font-bold text-slate-800">Keputusan Undian</h3>
+    <div id="keputusan-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0" id="modal-panel">
+            <div class="p-4 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
+                <h3 class="text-lg font-bold text-slate-800">Notis Keputusan Permohonan Dana PIBG</h3>
                 <button id="close-modal-btn" class="text-slate-500 hover:text-slate-800">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div class="p-6">
-                <p class="text-slate-600">Keputusan undian akan dipaparkan di sini.</p>
+            <div id="modal-content" class="p-6 md:p-8 max-h-[70vh] overflow-y-auto">
                 </div>
         </div>
     </div>
@@ -431,6 +430,7 @@
             const keputusanModal = document.getElementById('keputusan-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
             const modalPanel = document.getElementById('modal-panel');
+            const modalContent = document.getElementById('modal-content');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -450,7 +450,25 @@
             const fetchApplications = () => {
                  analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
                 onSnapshot(query(applicationsCol), (snapshot) => {
-                    allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    allApps = snapshot.docs.map((doc, index) => {
+                        // --- MOCK DATA FOR DEMONSTRATION ---
+                        // In a real system, `votes` and `createdAt` would come from Firestore.
+                        const data = doc.data();
+                        
+                        // Mock `createdAt` to test the 48-hour rule
+                        const hoursAgo = (index * 15) + 10; // 10h, 25h, 40h, 55h ago...
+                        const mockTimestamp = new Date();
+                        mockTimestamp.setHours(mockTimestamp.getHours() - hoursAgo);
+                        data.createdAt = { seconds: Math.floor(mockTimestamp.getTime() / 1000) };
+
+                        // Mock `votes` array
+                        const mockVoteCount = Math.floor(Math.random() * 15) + 1;
+                        data.votes = Array.from({ length: mockVoteCount }, () => ({ vote: 'approve' }));
+                        
+                        return { id: doc.id, ...data };
+                        // --- END OF MOCK DATA ---
+                    });
+                    
                     allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                     
                     populateYearFilter();
@@ -488,7 +506,7 @@
                 const selectedYear = yearFilter.value;
 
                 filteredApps = allApps.filter(app => {
-                    const appDate = app.createdAt?.toDate();
+                    const appDate = app.createdAt ? new Date(app.createdAt.seconds * 1000) : null;
                     if (!appDate) return false;
                     const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
                     const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
@@ -526,9 +544,30 @@
                 pageItems.forEach((app, index) => {
                     const programDateFormatted = app.programDate ? new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Tidak Dinyatakan';
 
-                    // Mock percentage for demonstration. Replace with actual data from `app.votes`.
-                    const mockPercentage = Math.floor(Math.random() * 101);
-                    const progressColorClass = getProgressColor(mockPercentage);
+                    // --- Logic for Keputusan Button ---
+                    const totalMembers = 15;
+                    const approvalThreshold = 10; // 2/3 of 15
+                    const approvalVotes = app.votes.filter(v => v.vote === 'approve').length;
+                    
+                    const timeElapsed = (new Date().getTime() / 1000) - app.createdAt.seconds;
+                    const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
+
+                    let finalStatus = 'Dalam Proses';
+                    let showKeputusanBtn = false;
+
+                    if (approvalVotes >= approvalThreshold) {
+                        finalStatus = 'Diluluskan';
+                        showKeputusanBtn = true;
+                    } else if (votingPeriodEnded) {
+                        finalStatus = 'Ditolak';
+                        showKeputusanBtn = true;
+                    }
+
+                    // For this demo, we override the original status with our calculated one.
+                    app.status = finalStatus; 
+                    
+                    const votePercentage = Math.round((approvalVotes / totalMembers) * 100);
+                    const progressColorClass = getProgressColor(votePercentage);
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -541,16 +580,16 @@
                         <td class="py-3 px-4 text-xs text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
                         <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center space-x-2">
-                                ${getStatusBadge(app.status)}
-                                <button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>
+                                ${getStatusBadge(finalStatus)}
+                                ${showKeputusanBtn ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>` : ''}
                             </div>
                         </td>
                          <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center space-x-2">
                                 <div class="w-full bg-slate-200 rounded-full h-2">
-                                    <div class="${progressColorClass} h-2 rounded-full" style="width: ${mockPercentage}%"></div>
+                                    <div class="${progressColorClass} h-2 rounded-full" style="width: ${votePercentage}%"></div>
                                 </div>
-                                <span class="font-medium text-slate-700 text-xs w-10 text-right">${mockPercentage}%</span>
+                                <span class="font-medium text-slate-700 text-xs w-10 text-right">${votePercentage}%</span>
                             </div>
                         </td>
                         <td class="py-3 px-4 text-xs text-slate-500">
@@ -572,6 +611,56 @@
                 });
                 updatePaginationControls();
             };
+            
+            // --- Modal Management ---
+            const populateAndOpenModal = (app) => {
+                const decisionDate = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+                const contentHtml = `
+                    <div class="text-sm text-slate-700 space-y-4 leading-relaxed">
+                        <p>Assalamualaikum dan salam sejahtera,</p>
+                        <p>
+                            Merujuk kepada keputusan yang telah dibuat melalui undian 2/3 ahli Exco PIBG pada <strong>${decisionDate}</strong> berhubung 
+                            <strong>Permohonan ${app.id.substring(0, 5)} : ${app.purpose.toUpperCase()}</strong>, dengan ini dimaklumkan bahawa Exco PIBG telah 
+                            bersetuju untuk <strong>MELULUSKAN</strong> pengeluaran dana berjumlah 
+                            <strong class="text-green-700">RM ${parseFloat(app.amount).toFixed(2)}</strong>.
+                        </p>
+                        <p class="font-semibold text-slate-800">Sehubungan itu, berikut adalah tindakan yang perlu diambil oleh pihak berkaitan:</p>
+                        
+                        <div class="space-y-4">
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <h4 class="font-bold text-slate-800">1. Bendahari</h4>
+                                <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600">
+                                    <li>Menguruskan pengeluaran dana sebanyak <strong class="font-semibold">RM ${parseFloat(app.amount).toFixed(2)}</strong> daripada bank Islam PIBG dalam tempoh 14 hari dari tarikh keputusan ini.</li>
+                                    <li>Memastikan semua dokumen sokongan berkaitan pengeluaran, termasuk resit rasmi, disimpan dengan teliti untuk tujuan rekod dan rujukan pada masa hadapan.</li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <h4 class="font-bold text-slate-800">2. Pemohon (${app.applicant})</h4>
+                                <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600">
+                                    <li>Berhubung dengan bendahari bagi urusan penerimaan dana.</li>
+                                    <li>Setelah menerima dana, sila:
+                                        <ul class="list-[circle] list-inside ml-4 mt-1">
+                                            <li>Menandatangani Akuan Penerimaan Dana sebagai bukti rasmi penerimaan.</li>
+                                            <li>Menyerahkan resit perbelanjaan kepada bendahari dan timbalan bendahari selepas pembelanjaan selesai.</li>
+                                            <li>Menyediakan laporan aktiviti dan menyerahkannya kepada setiausaha PIBG untuk tujuan dokumentasi rasmi.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg">
+                            <h5 class="font-bold">Peringatan Penting</h5>
+                            <p class="mt-1">Semua pihak yang terlibat dimohon untuk melaksanakan tanggungjawab masing-masing dengan telus dan teratur bagi memastikan kelancaran proses ini. Kerjasama dan perhatian semua pihak amat dihargai.</p>
+                        </div>
+                        
+                        <p class="pt-4">Sekian, terima kasih.</p>
+                    </div>
+                `;
+                modalContent.innerHTML = contentHtml;
+                openModal();
+            };
 
             const updatePaginationControls = () => {
                 const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
@@ -588,7 +677,6 @@
                 document.getElementById('page-info-total').textContent = filteredApps.length;
             };
 
-             // --- Modal Management ---
             const openModal = () => {
                 keputusanModal.classList.remove('hidden');
                 setTimeout(() => { 
@@ -748,8 +836,10 @@
 
                 if (targetBtn.matches('.keputusan-btn')) {
                     const appId = targetBtn.dataset.id;
-                    console.log("Opening results for application ID:", appId);
-                    openModal();
+                    const appData = filteredApps.find(app => app.id === appId);
+                    if (appData) {
+                        populateAndOpenModal(appData);
+                    }
                 } else if (targetBtn.matches('.share-btn')) {
                     const appId = targetBtn.dataset.id;
                     const appPurpose = targetBtn.dataset.purpose;
