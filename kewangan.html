@@ -182,8 +182,12 @@
                      <div data-id="pagination-controls" class="pagination-controls flex justify-between items-center mt-4"></div>
                 </div>
             </div>
+            
+            <div id="bank_islam-content" class="tab-content"></div>
+            <div id="petty_cash-content" class="tab-content"></div>
+            <div id="koperasi_mini-content" class="tab-content"></div>
 
-            <div id="account-tab-template" class="hidden">
+            <template id="account-tab-template">
                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
                         <p class="text-sm text-slate-500">BAKI AWAL AKAUN</p>
@@ -260,7 +264,7 @@
                     </div>
                     <div data-id="pagination-controls" class="pagination-controls flex justify-between items-center mt-4"></div>
                 </div>
-            </div>
+            </template>
             
             <div id="laporan-content" class="tab-content p-6 md:p-8">
                 <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
@@ -563,6 +567,17 @@
             };
 
             // --- Tab & UI Setup ---
+            const setupTabs = () => {
+                const template = document.getElementById('account-tab-template').innerHTML;
+                Object.keys(accountNames).forEach(key => {
+                    const contentDiv = document.getElementById(`${key}-content`);
+                    if (contentDiv) {
+                        contentDiv.innerHTML = template;
+                        contentDiv.querySelector('[data-id="table-title"]').textContent = `Butiran Transaksi (${accountNames[key]})`;
+                    }
+                });
+            };
+            
             const switchTabs = (tabId) => {
                 activeTab = tabId;
                 document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active-tab', btn.dataset.tab === tabId));
@@ -762,6 +777,7 @@
                 const expenseTableBank = document.getElementById('expense-report-table-bank');
                 const expenseTablePetty = document.getElementById('expense-report-table-petty');
                 const balanceTable = document.getElementById('balance-summary-table');
+                
                 const tableCellClasses = "py-2 px-4 border border-slate-300";
                 const totalRowClasses = "font-bold border-t-2 border-slate-800";
 
@@ -822,13 +838,15 @@
                     const settingsSnap = await getDoc(settingsDoc);
                     if (settingsSnap.exists()) BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
                     
+                    setupTabs();
+
                     onSnapshot(transactionsCol, (snapshot) => {
                         allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         populateYearFilters();
                         
                         const currentMonth = new Date().getMonth();
                         document.querySelectorAll('#bank_islam-content [name="month-filter"], #petty_cash-content [name="month-filter"], #koperasi_mini-content [name="month-filter"]').forEach(sel => {
-                            sel.value = currentMonth;
+                            if (sel) sel.value = currentMonth;
                         });
 
                         const currentYear = new Date().getFullYear();
@@ -912,28 +930,27 @@
                             transactionForm.dataset.docId = id;
                             transactionForm.dataset.type = trans.type;
                             document.getElementById('modal-title').textContent = 'KEMASKINI TRANSAKSI';
-                             // Show/hide category sections
                             document.getElementById('income-category-section').classList.toggle('hidden', trans.type !== 'masuk');
                             document.getElementById('expense-category-section').classList.toggle('hidden', trans.type !== 'keluar');
-                            
-                            // Populate common fields
                             document.getElementById('trans-date').value = formatDateForInput(trans.timestamp.toDate());
                             document.getElementById('trans-desc').value = trans.description;
                             document.getElementById('trans-amount').value = trans.amount;
 
-                            // Populate category
                             const category_section = trans.type === 'masuk' ? 'income' : 'expense';
                             const catSelect = document.getElementById(`trans-category-${category_section}`);
                             const catCustom = document.getElementById(`trans-category-${category_section}-custom`);
                             const optionValues = [...catSelect.options].map(opt => opt.value);
                             
-                            if (optionValues.includes(trans.category)) {
+                            if (trans.category && optionValues.includes(trans.category)) {
                                 catSelect.value = trans.category;
                                 catCustom.classList.add('hidden');
                             } else if(trans.category) {
                                 catSelect.value = 'lain-lain';
                                 catCustom.value = trans.category;
                                 catCustom.classList.remove('hidden');
+                            } else {
+                                catSelect.value = '';
+                                catCustom.classList.add('hidden');
                             }
                             openModal(transactionModal);
                         }
@@ -944,9 +961,7 @@
                             try {
                                 await deleteDoc(doc(db, transactionsCol.path, id));
                                 showToast("Transaksi berjaya dipadam!");
-                            } catch (error) {
-                                showToast("Gagal memadam transaksi.", "error");
-                            }
+                            } catch (error) { showToast("Gagal memadam transaksi.", "error"); }
                         }
                         break;
                     case 'delete-selected': {
@@ -954,16 +969,13 @@
                         const selectedCheckboxes = contentEl.querySelectorAll('[data-action="select-row"]:checked');
                         const idsToDelete = Array.from(selectedCheckboxes).map(cb => cb.dataset.id);
                         if (idsToDelete.length === 0) return;
-
                         if (confirm(`ANDA PASTI MAHU PADAM ${idsToDelete.length} TRANSAKSI YANG DIPILIH?\nTINDAKAN INI TIDAK BOLEH DIBATALKAN.`)) {
                             try {
                                 const batch = writeBatch(db);
                                 idsToDelete.forEach(docId => batch.delete(doc(db, transactionsCol.path, docId)));
                                 await batch.commit();
                                 showToast(`${idsToDelete.length} transaksi berjaya dipadam!`);
-                            } catch(error) {
-                                showToast("Gagal memadam transaksi terpilih.", "error");
-                            }
+                            } catch(error) { showToast("Gagal memadam transaksi terpilih.", "error"); }
                         }
                         break;
                     }
@@ -974,14 +986,12 @@
                 }
             });
             
-            // Handle category 'Lain-lain' selection
             document.getElementById('trans-category-income').addEventListener('change', e => document.getElementById('trans-category-income-custom').classList.toggle('hidden', e.target.value !== 'lain-lain'));
             document.getElementById('trans-category-expense').addEventListener('change', e => document.getElementById('trans-category-expense-custom').classList.toggle('hidden', e.target.value !== 'lain-lain'));
             
             const handleExport = (type) => {
                 const contentEl = document.getElementById(`${activeTab}-content`);
                 if (!contentEl) return;
-                
                 const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
 
@@ -1037,7 +1047,6 @@
                 e.preventDefault();
                 const docId = transactionForm.dataset.docId;
                 const type = transactionForm.dataset.type;
-                
                 let category = '';
                 if(type === 'masuk') {
                     const catSelect = document.getElementById('trans-category-income');
@@ -1054,11 +1063,9 @@
                 }
 
                 const formData = {
-                    account: activeTab,
-                    type: type,
+                    account: activeTab, type: type, category: category,
                     description: document.getElementById('trans-desc').value,
                     amount: parseFloat(document.getElementById('trans-amount').value),
-                    category: category,
                     timestamp: Timestamp.fromDate(new Date(document.getElementById('trans-date').value))
                 };
                 
