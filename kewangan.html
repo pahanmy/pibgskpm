@@ -384,7 +384,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, Timestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, Timestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -409,6 +409,7 @@
             let allTransactions = [];
             let activeTab = 'keseluruhan';
             let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
+            let currentPages = { bank_islam: 1, petty_cash: 1, koperasi_mini: 1 };
             
             // --- UI Elements ---
             const tabContainer = document.getElementById('tab-container');
@@ -421,8 +422,6 @@
             const toastMessage = document.getElementById('toast-message');
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
-            const allYearFilters = document.querySelectorAll('[name="year-filter"]');
-            const reportYearInput = document.getElementById('laporan-year-filter');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -446,6 +445,9 @@
                     clone.querySelector('[data-id="table-title"]').textContent = `Butiran Transaksi (${accountNames[key]})`;
                     clone.querySelector('[name="month-filter"]').dataset.filterFor = key;
                     clone.querySelector('[name="year-filter"]').dataset.filterFor = key;
+                    clone.querySelector('[name="items-per-page-select"]').dataset.accountId = key;
+                    clone.querySelector('[data-action="prev-page"]').dataset.accountId = key;
+                    clone.querySelector('[data-action="next-page"]').dataset.accountId = key;
                     tabContainer.appendChild(clone);
                 });
             };
@@ -490,6 +492,25 @@
                     contentEl.querySelector('[data-id="baki-akhir"]').textContent = formatCurrency(bakiAkhir);
                 }
             };
+            
+            const updatePaginationControls = (accountId, items) => {
+                const contentEl = document.getElementById(`${accountId}-content`);
+                if (!contentEl) return;
+                
+                const itemsPerPage = parseInt(contentEl.querySelector('[name="items-per-page-select"]').value, 10);
+                const currentPage = currentPages[accountId] || 1;
+                const totalPages = Math.ceil(items.length / itemsPerPage);
+
+                contentEl.querySelector('[data-action="prev-page"]').disabled = currentPage === 1;
+                contentEl.querySelector('[data-action="next-page"]').disabled = currentPage === totalPages || totalPages === 0;
+
+                const start = items.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+                const end = Math.min(currentPage * itemsPerPage, items.length);
+                
+                contentEl.querySelector('[data-id="page-info-start"]').textContent = start;
+                contentEl.querySelector('[data-id="page-info-end"]').textContent = end;
+                contentEl.querySelector('[data-id="page-info-total"]').textContent = items.length;
+            };
 
             const renderTable = (accountId, transactionsToRender) => {
                 const isKeseluruhan = accountId === 'keseluruhan';
@@ -529,18 +550,32 @@
 
 
                 } else {
-                     const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold uppercase">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900 uppercase" colspan="3">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td></td></tr>`;
-                     if(contentEl.querySelector('[data-action="prev-page"]').disabled) tableBody.innerHTML += bakiRow;
+                     const itemsPerPage = parseInt(contentEl.querySelector('[name="items-per-page-select"]').value, 10);
+                    const currentPage = currentPages[accountId] || 1;
+                    const startIndex = (currentPage - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+                    const pageItems = transactionsToRender.slice(startIndex, endIndex);
+
+                    if (pageItems.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="6" class="py-10 text-center text-slate-500">Tiada transaksi pada halaman ini.</td></tr>`;
+                        updatePaginationControls(accountId, transactionsToRender);
+                        return;
+                    }
+
+                    if(currentPage === 1) {
+                        const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold uppercase">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900 uppercase" colspan="3">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td><td></td></tr>`;
+                        tableBody.innerHTML += bakiRow;
+                    }
 
                     let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
-                    let balanceCalcArray = [...transactionsToRender].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
+                    let balanceCalcArray = [...allTransactions.filter(t => t.account === accountId)].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
                     const balances = {};
                     balanceCalcArray.forEach(t => {
                         runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
                         balances[t.id] = runningBalance;
                     });
 
-                    transactionsToRender.forEach(t => {
+                    pageItems.forEach(t => {
                         const row = document.createElement('tr');
                         const isIncome = t.type === 'masuk';
                         row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
@@ -585,14 +620,18 @@
                     years.push(new Date().getFullYear());
                 }
                 years.sort((a, b) => b - a);
-
-                document.querySelectorAll('[name="year-filter"]').forEach(select => {
-                     while(select.options.length > 1) { select.remove(1); }
-                    years.forEach(year => {
-                        const option = new Option(year, year);
-                        select.add(option);
-                    });
+                
+                const allYearFilterElements = document.querySelectorAll('[name="year-filter"]');
+                allYearFilterElements.forEach(select => {
+                    if (select.tagName === 'SELECT') {
+                        while(select.options.length > 1) { select.remove(1); }
+                        years.forEach(year => {
+                            const option = new Option(year, year);
+                            select.add(option);
+                        });
+                    }
                 });
+
                 if(reportYearInput) {
                     reportYearInput.value = new Date().getFullYear();
                 }
@@ -664,7 +703,7 @@
                     <tr><td class="${tableCellClasses} uppercase">Baki di Tangan</td><td class="${tableCellClasses} text-right">${bakiTangan.toFixed(2)}</td></tr>
                     <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
             };
-
+            
             // --- Authentication & Initial Load ---
             (async () => {
                 try {
