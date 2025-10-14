@@ -36,6 +36,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-baru { background-color: #e0e7ff; color: #3730a3; } /* indigo */
+        .status-lulus { background-color: #d1fae5; color: #065f46; } /* green */
+        .status-tolak { background-color: #fee2e2; color: #991b1b; } /* red */
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -68,14 +79,11 @@
     </header>
 
     <main class="container mx-auto px-6 py-16">
-        <div class="flex justify-between items-center mb-10">
+        <div class="mb-10">
             <h1 class="text-3xl md:text-4xl font-bold gradient-text">Takwim & Program PIBG</h1>
-            <button id="addProgramBtn" class="flex items-center space-x-2 px-5 py-2.5 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-900 transition-colors duration-300 shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-                <span>Tambah Program</span>
-            </button>
+            <p class="mt-3 text-lg text-slate-600 max-w-3xl">
+                Senarai ini memaparkan semua program dan aktiviti yang mendapat tajaan atau melibatkan PIBG. Senarai ini dijana secara automatik daripada <a href="semak.html" class="font-semibold text-indigo-600 hover:underline">Sistem Peruntukan PIBG</a>.
+            </p>
         </div>
         
         <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
@@ -87,7 +95,7 @@
                             <th class="py-3 px-5 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Nama Program / Aktiviti</th>
                             <th class="py-3 px-5 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Jenis</th>
                             <th class="py-3 px-5 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Tarikh</th>
-                            <th class="py-3 px-5 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Sasaran Kehadiran</th>
+                            <th class="py-3 px-5 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Status Peruntukan</th>
                         </tr>
                     </thead>
                     <tbody id="programsListBody" class="divide-y divide-slate-200">
@@ -104,64 +112,6 @@
         </div>
     </main>
     
-    <div id="programModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-60 px-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
-                <h3 class="text-2xl font-bold text-slate-800">Daftar Program / Aktiviti Baharu</h3>
-                <button id="closeProgramModalBtn" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
-            </div>
-            <div class="overflow-y-auto p-6 md:p-8">
-                 <div id="program-feedback-message" class="hidden text-center p-4 mb-6 rounded-lg"></div>
-                <form id="programForm" class="space-y-6">
-                    <div>
-                        <label for="prog-nama" class="block text-sm font-medium text-slate-700 mb-1">Nama Program <span class="text-red-600">*</span></label>
-                        <input type="text" id="prog-nama" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    </div>
-                    <div>
-                       <label for="prog-jenis" class="block text-sm font-medium text-slate-700 mb-1">Jenis Program <span class="text-red-600">*</span></label>
-                       <select id="prog-jenis" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                           <option value="">-- Sila Pilih --</option>
-                           <option value="Program Khas">Program Khas</option>
-                           <option value="Mesyuarat EXCO">Mesyuarat EXCO</option>
-                           <option value="Mesyuarat Agung Tahunan">Mesyuarat Agung Tahunan</option>
-                           <option value="Lawatan">Lawatan</option>
-                           <option value="Gotong-Royong">Gotong-Royong</option>
-                           <option value="Sumbangan/Derma">Sumbangan/Derma</option>
-                           <option value="Lain-lain">Lain-lain</option>
-                       </select>
-                   </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="prog-tarikh-mula" class="block text-sm font-medium text-slate-700 mb-1">Tarikh Mula <span class="text-red-600">*</span></label>
-                            <input type="date" id="prog-tarikh-mula" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                        </div>
-                        <div>
-                            <div class="flex items-center mb-1 h-6">
-                               <input type="checkbox" id="enable-tarikh-akhir" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                               <label for="enable-tarikh-akhir" class="ml-2 block text-sm font-medium text-slate-700">Program Lebih Sehari?</label>
-                            </div>
-                            <input type="date" id="prog-tarikh-akhir" class="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100" disabled>
-                        </div>
-                    </div>
-                     <div>
-                        <label for="prog-sasaran" class="block text-sm font-medium text-slate-700 mb-1">Sasaran Kehadiran (Orang) <span class="text-red-600">*</span></label>
-                        <input type="number" id="prog-sasaran" placeholder="cth: 50" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    </div>
-                    <div>
-                        <label for="prog-objektif" class="block text-sm font-medium text-slate-700 mb-1">Objektif Program</label>
-                        <textarea id="prog-objektif" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                    </div>
-
-                     <div class="pt-8 flex justify-end items-center space-x-4">
-                        <button type="button" id="cancelProgramBtn" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
-                        <button type="submit" class="px-6 py-2 bg-slate-700 text-white font-semibold rounded-md hover:bg-slate-800 shadow-sm">Simpan Program</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
     <footer class="bg-white border-t mt-16">
         <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
             &copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.
@@ -176,7 +126,7 @@
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, collection, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -193,20 +143,13 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Define collection for programs
-        const programsCol = collection(db, `/artifacts/${appId}/public/data/pibg_programs`);
+        // DIUBAHSUAI: Nama koleksi ditukar untuk selaraskan dengan sistem peruntukan
+        const programsCol = collection(db, `/artifacts/${appId}/public/data/pibg_allocations`);
 
         // --- UI Elements ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        const addProgramBtn = document.getElementById('addProgramBtn');
-        const programModal = document.getElementById('programModal');
-        const closeProgramModalBtn = document.getElementById('closeProgramModalBtn');
-        const cancelProgramBtn = document.getElementById('cancelProgramBtn');
-        const programForm = document.getElementById('programForm');
         const programsListBody = document.getElementById('programsListBody');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
 
         // Authenticate user
         (async () => {
@@ -220,116 +163,53 @@
                 listenForPrograms(); // Start listening for programs data
             } catch (error) {
                 console.error("Firebase authentication failed:", error);
-                showToast("Gagal menyambung ke pangkalan data.", 'error');
+                alert("Gagal menyambung ke pangkalan data.");
             }
         })();
-
-        // --- General Functions ---
-        const showToast = (message, type = 'success') => {
-            toastMessage.textContent = message;
-            toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-10');
-            }, 3000);
-        };
-
-        const closeModal = (modalElement) => {
-            modalElement.classList.replace('flex', 'hidden');
-            document.body.style.overflow = 'auto';
-        };
-
-        const openModal = (modalElement) => {
-            programForm.reset(); // Reset form every time it opens
-            document.getElementById('prog-tarikh-akhir').disabled = true;
-            document.getElementById('prog-tarikh-akhir').classList.add('bg-slate-100');
-            document.getElementById('program-feedback-message').classList.add('hidden');
-            modalElement.classList.replace('hidden', 'flex');
-            document.body.style.overflow = 'hidden';
-        };
 
         // --- Mobile Menu ---
         mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-        // --- Program Modal & Form Logic ---
-        addProgramBtn.addEventListener('click', () => openModal(programModal));
-        closeProgramModalBtn.addEventListener('click', () => closeModal(programModal));
-        cancelProgramBtn.addEventListener('click', () => closeModal(programModal));
-        programModal.addEventListener('click', (e) => { if (e.target === programModal) closeModal(programModal); });
-
-        // Logic for enabling/disabling end date field
-        const enableEndDateCheckbox = document.getElementById('enable-tarikh-akhir');
-        const endDateInput = document.getElementById('prog-tarikh-akhir');
-        enableEndDateCheckbox.addEventListener('change', () => {
-            if (enableEndDateCheckbox.checked) {
-                endDateInput.disabled = false;
-                endDateInput.classList.remove('bg-slate-100');
-            } else {
-                endDateInput.disabled = true;
-                endDateInput.value = '';
-                endDateInput.classList.add('bg-slate-100');
-            }
-        });
-        
-        // Form submission logic
-        programForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const feedbackEl = document.getElementById('program-feedback-message');
-            
-            try {
-                const newProgram = {
-                    name: document.getElementById('prog-nama').value,
-                    type: document.getElementById('prog-jenis').value,
-                    startDate: document.getElementById('prog-tarikh-mula').value,
-                    endDate: document.getElementById('prog-tarikh-akhir').value || null, // Store as null if empty
-                    targetAttendees: parseInt(document.getElementById('prog-sasaran').value, 10),
-                    objective: document.getElementById('prog-objektif').value,
-                    createdAt: serverTimestamp()
-                };
-
-                await addDoc(programsCol, newProgram);
-                
-                showToast('Program baharu berjaya disimpan!', 'success');
-                closeModal(programModal);
-
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-red-100 text-red-800';
-                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Gagal Menyimpan</h3><p>${error.message}</p>`;
-                feedbackEl.classList.remove('hidden');
-            }
-        });
-
-
         // --- Firestore Data Listener ---
         const listenForPrograms = () => {
-            // Query to get programs and order them by start date
-            const q = query(programsCol, orderBy("startDate", "desc"));
+            // Query untuk mendapatkan data, diisih mengikut tarikh program
+            const q = query(programsCol, orderBy("programDate", "desc"));
 
             onSnapshot(q, (snapshot) => {
-                programsListBody.innerHTML = ''; // Clear previous data
+                programsListBody.innerHTML = ''; // Kosongkan data lama
                 if (snapshot.empty) {
-                    programsListBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">Tiada program yang telah didaftarkan.</td></tr>`;
+                    programsListBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">Tiada program yang telah memohon peruntukan buat masa ini.</td></tr>`;
                     return;
                 }
 
                 snapshot.docs.forEach((doc, index) => {
                     const program = doc.data();
                     
-                    // Format date
-                    let dateDisplay = new Date(program.startDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
-                    if (program.endDate) {
-                         dateDisplay += ` - ${new Date(program.endDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+                    // Format tarikh
+                    let dateDisplay = new Date(program.programDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+                    if (program.programEndDate) {
+                         dateDisplay += ` - ${new Date(program.programEndDate).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}`;
                     }
 
+                    // Tentukan kelas CSS dan teks untuk status
+                    let statusClass = 'status-baru';
+                    let statusText = program.status || 'BARU'; // Default kepada 'BARU' jika tiada
+                    if (statusText.toLowerCase() === 'diluluskan') {
+                        statusClass = 'status-lulus';
+                    } else if (statusText.toLowerCase() === 'ditolak') {
+                        statusClass = 'status-tolak';
+                    }
+                    
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 transition-colors';
                     row.innerHTML = `
                         <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${index + 1}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm font-medium text-slate-900">${program.name}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${program.type}</td>
+                        <td class="py-4 px-5 whitespace-nowrap text-sm font-medium text-slate-900">${program.programName}</td>
+                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${program.programType}</td>
                         <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${dateDisplay}</td>
-                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600">${program.targetAttendees} orang</td>
+                        <td class="py-4 px-5 whitespace-nowrap text-sm text-slate-600 text-center">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </td>
                     `;
                     programsListBody.appendChild(row);
                 });
