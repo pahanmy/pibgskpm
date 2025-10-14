@@ -64,70 +64,76 @@
                     <h2 id="vote-title" class="text-2xl font-bold text-slate-900">Borang Undian Permohonan</h2>
                     <p id="voter-info" class="mt-1 text-slate-500">Mengundi sebagai: <span class="font-semibold">Nama Pengundi (Jawatan)</span></p>
                 </div>
-                <form id="voteForm" class="p-8">
-                    <div class="mb-6 pb-6 border-b">
-                        <h3 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h3>
-                        <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
-                         <div class="mt-4 bg-gray-50 p-4 rounded-lg border">
-                            <h5 class="font-semibold mb-2">Perincian Bajet:</h5>
-                            <div class="text-sm space-y-1">
-                               <div class="flex justify-between"><span>Makan Minum:</span> <span id="vote-budget-makan">RM 0.00</span></div>
-                               <div class="flex justify-between"><span>Pengangkutan:</span> <span id="vote-budget-angkut">RM 0.00</span></div>
-                               <div class="flex justify-between"><span>Lain-lain:</span> <span id="vote-budget-lain">RM 0.00</span></div>
-                               <div class="flex justify-between border-t mt-2 pt-2 font-bold"><span>Jumlah Keseluruhan:</span> <span id="vote-budget-total">RM 0.00</span></div>
-                            </div>
-                        </div>
+                <div class="p-8">
+                    <div id="vote-countdown-container" class="hidden mb-6 p-4 text-center bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-sm font-semibold text-red-700">Tempoh Undian Akan Tamat Dalam:</p>
+                        <p id="vote-countdown-timer" class="text-2xl font-bold text-red-800 mt-1"></p>
                     </div>
-                    
-                    <div class="mb-6">
-                        <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
-                        <div class="flex items-center">
-                            <div class="w-full bg-gray-200 rounded-full h-4">
-                                <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4"></div>
-                            </div>
-                            <span id="vote-progress-text" class="ml-3 font-medium text-sm">0/0 (0%)</span>
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-4 pt-6 border-t">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
-                             <div class="flex flex-col md:flex-row gap-4">
-                                <div class="flex-1">
-                                    <input type="radio" name="vote_option" value="sokong" id="vote-sokong" class="hidden" required>
-                                    <label for="vote-sokong" class="vote-label flex flex-col items-center justify-center p-4 border-slate-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400">
-                                        <svg class="h-8 w-8 text-green-500 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                          <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.865 2.4z" />
-                                        </svg>
-                                        <span class="text-green-700 font-semibold">Menyokong</span>
-                                    </label>
-                                </div>
-                                <div class="flex-1">
-                                    <input type="radio" name="vote_option" value="tolak" id="vote-tolak" class="hidden">
-                                     <label for="vote-tolak" class="vote-label flex flex-col items-center justify-center p-4 border-slate-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400">
-                                        <svg class="h-8 w-8 text-red-500 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                          <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l2.2-2.867a4 4 0 00.865-2.4z" />
-                                        </svg>
-                                        <span class="text-red-700 font-semibold">Tidak Menyokong</span>
-                                    </label>
+                    <form id="voteForm">
+                        <div class="mb-6 pb-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h3>
+                            <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
+                             <div class="mt-4 bg-gray-50 p-4 rounded-lg border">
+                                <h5 class="font-semibold mb-2">Perincian Bajet:</h5>
+                                <div class="text-sm space-y-1">
+                                   <div class="flex justify-between"><span>Makan Minum:</span> <span id="vote-budget-makan">RM 0.00</span></div>
+                                   <div class="flex justify-between"><span>Pengangkutan:</span> <span id="vote-budget-angkut">RM 0.00</span></div>
+                                   <div class="flex justify-between"><span>Lain-lain:</span> <span id="vote-budget-lain">RM 0.00</span></div>
+                                   <div class="flex justify-between border-t mt-2 pt-2 font-bold"><span>Jumlah Keseluruhan:</span> <span id="vote-budget-total">RM 0.00</span></div>
                                 </div>
                             </div>
                         </div>
-                        <div id="reason-container" class="hidden">
-                            <label for="vote-reason" class="block text-sm font-medium text-gray-700 mb-1">Sebab Tidak Menyokong <span class="text-red-600">*</span></label>
-                            <textarea id="vote-reason" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                        </div>
-                         <div class="pt-4">
+                        
+                        <div class="mb-6">
+                            <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
                             <div class="flex items-center">
-                                <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
-                                <label for="vote-agreement" class="ml-2 block text-sm text-gray-800">Saya mengesahkan undian saya dan bersetuju dengan keputusan ini.</label>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4"></div>
+                                </div>
+                                <span id="vote-progress-text" class="ml-3 font-medium text-sm">0/0 (0%)</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
-                        <button type="submit" id="submitVoteBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Hantar Undian</button>
-                    </div>
-                </form>
+                        
+                        <div class="space-y-4 pt-6 border-t">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
+                                 <div class="flex flex-col md:flex-row gap-4">
+                                    <div class="flex-1">
+                                        <input type="radio" name="vote_option" value="sokong" id="vote-sokong" class="hidden" required>
+                                        <label for="vote-sokong" class="vote-label flex flex-col items-center justify-center p-4 border-slate-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400">
+                                            <svg class="h-8 w-8 text-green-500 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.865 2.4z" />
+                                            </svg>
+                                            <span class="text-green-700 font-semibold">Menyokong</span>
+                                        </label>
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="radio" name="vote_option" value="tolak" id="vote-tolak" class="hidden">
+                                         <label for="vote-tolak" class="vote-label flex flex-col items-center justify-center p-4 border-slate-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400">
+                                            <svg class="h-8 w-8 text-red-500 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                              <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.641a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l2.2-2.867a4 4 0 00.865-2.4z" />
+                                            </svg>
+                                            <span class="text-red-700 font-semibold">Tidak Menyokong</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="reason-container" class="hidden">
+                                <label for="vote-reason" class="block text-sm font-medium text-gray-700 mb-1">Sebab Tidak Menyokong <span class="text-red-600">*</span></label>
+                                <textarea id="vote-reason" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                            </div>
+                             <div class="pt-4">
+                                <div class="flex items-center">
+                                    <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
+                                    <label for="vote-agreement" class="ml-2 block text-sm text-gray-800">Saya mengesahkan undian saya dan bersetuju dengan keputusan ini.</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
+                            <button type="submit" id="submitVoteBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Hantar Undian</button>
+                        </div>
+                    </form>
+                </div>
                  <div id="vote-feedback-message" class="hidden text-center p-8"></div>
             </div>
         </div>
@@ -146,7 +152,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, arrayUnion, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -181,6 +187,7 @@
 
         let currentApplicationId = null;
         let currentVoterData = null;
+        let countdownInterval = null;
 
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
@@ -194,6 +201,37 @@
             element.textContent = message;
             element.className = `text-sm mt-4 text-center h-5 ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
         };
+
+        const startVoteCountdown = (createdAtSeconds) => {
+            const container = document.getElementById('vote-countdown-container');
+            const timerEl = document.getElementById('vote-countdown-timer');
+            const endTime = createdAtSeconds + (48 * 60 * 60);
+
+            container.classList.remove('hidden');
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            const updateTimer = () => {
+                const now = Math.floor(new Date().getTime() / 1000);
+                const remainingSeconds = endTime - now;
+
+                if (remainingSeconds > 0) {
+                    const hours = Math.floor(remainingSeconds / 3600);
+                    const minutes = Math.floor((remainingSeconds % 3600) / 60);
+                    const seconds = remainingSeconds % 60;
+                    timerEl.textContent = `${hours}j ${minutes}m ${seconds}s`;
+                } else {
+                    timerEl.textContent = "Tempoh Tamat";
+                    const submitBtn = document.getElementById('submitVoteBtn');
+                    if(submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = "Tempoh Undian Tamat";
+                    }
+                    clearInterval(countdownInterval);
+                }
+            };
+            updateTimer(); 
+            countdownInterval = setInterval(updateTimer, 1000);
+        }
         
         // --- Page Load Logic ---
         document.addEventListener('DOMContentLoaded', async () => {
@@ -250,6 +288,9 @@
                 }
                 const appData = appSnap.data();
 
+                // Start the countdown timer as soon as we have the app data
+                startVoteCountdown(appData.createdAt.seconds);
+
                 // 3. Check if already voted
                 if (appData.votes?.some(vote => vote.voterIc === icValue)) {
                     throw new Error("Anda telah mengundi untuk permohonan ini.");
@@ -269,6 +310,9 @@
 
             } catch (error) {
                 showFeedback(icVerifyFeedback, error.message, 'error');
+                if (countdownInterval) clearInterval(countdownInterval); // Stop timer on error
+                const container = document.getElementById('vote-countdown-container');
+                if(container) container.classList.add('hidden');
             } finally {
                 verifyIcBtn.disabled = false;
                 verifyIcBtn.textContent = "Sahkan";
@@ -320,16 +364,15 @@
                 if(voteOptionValue === 'tolak' && !voteReason) {
                     throw new Error("Sila nyatakan sebab anda tidak menyokong.");
                 }
-
-                // FIX: Standardize the vote value to 'approve' or 'reject'
+                
                 const voteValue = voteOptionValue === 'sokong' ? 'approve' : 'reject';
 
                 const voteData = {
                     voterIc: icVerifyInput.value.trim(),
                     voterName: currentVoterData.name,
-                    vote: voteValue, // FIX: Use 'vote' instead of 'choice'
+                    vote: voteValue, 
                     reason: voteReason || "",
-                    votedAt: new Date() // FIX: Use client timestamp as serverTimestamp is not allowed in arrayUnion
+                    votedAt: new Date()
                 };
 
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
