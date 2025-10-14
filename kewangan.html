@@ -60,30 +60,6 @@
         .pagination-controls button:hover:not(:disabled) {
             background-color: #cbd5e1; /* slate-300 */
         }
-        .master-row {
-            cursor: pointer;
-            font-weight: 600;
-            background-color: #f8fafc; /* slate-50 */
-        }
-        .master-row:hover {
-            background-color: #f1f5f9; /* slate-100 */
-        }
-        .detail-row {
-            background-color: #ffffff;
-        }
-        .detail-row.hidden {
-            display: none;
-        }
-        .detail-row td:first-child {
-            padding-left: 2rem;
-        }
-        .icon-toggle {
-            transition: transform 0.2s;
-        }
-        .master-row.expanded .icon-toggle {
-            transform: rotate(90deg);
-        }
-
         @media print {
             body * {
                 visibility: hidden;
@@ -191,12 +167,13 @@
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full w-full bg-white">
-                            <thead class="bg-slate-200">
+                            <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="py-3 px-4 w-12"></th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">BUTIRAN</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">JUMLAH MASUK (RM)</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">JUMLAH KELUAR (RM)</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">TARIKH</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">AKAUN</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BUTIRAN</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">MASUK (RM)</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">KELUAR (RM)</th>
                                 </tr>
                             </thead>
                             <tbody id="keseluruhan-table" class="divide-y divide-slate-200"></tbody>
@@ -561,61 +538,31 @@
                 }
             };
             
-            const renderKeseluruhanTable = (groupedData) => {
-                const tableBody = document.getElementById('keseluruhan-table');
-                tableBody.innerHTML = '';
-                if (Object.keys(groupedData).length === 0) {
-                     tableBody.innerHTML = `<tr><td colspan="4" class="py-10 text-center text-slate-500">TIADA TRANSAKSI.</td></tr>`;
+            const renderKeseluruhanTable = (transactions) => {
+                 const tableBody = document.getElementById('keseluruhan-table');
+                 tableBody.innerHTML = '';
+                 if (transactions.length === 0) {
+                     tableBody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-500">TIADA TRANSAKSI.</td></tr>`;
                      return;
-                }
-
-                let groupIndex = 0;
-                for (const [key, data] of Object.entries(groupedData)) {
-                    const groupId = `group-${groupIndex++}`;
-                    const masterRow = document.createElement('tr');
-                    masterRow.className = 'master-row';
-                    masterRow.dataset.groupId = groupId;
-                    masterRow.innerHTML = `
-                        <td class="py-3 px-4 text-center">
-                            <svg class="w-4 h-4 text-slate-500 icon-toggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </td>
-                        <td class="py-3 px-4">${key} (${data.transactions.length} REKOD)</td>
-                        <td class="py-3 px-4 text-right text-green-600">${data.totalMasuk > 0 ? `+ ${data.totalMasuk.toFixed(2)}` : '-'}</td>
-                        <td class="py-3 px-4 text-right text-red-600">${data.totalKeluar > 0 ? `- ${data.totalKeluar.toFixed(2)}` : '-'}</td>
-                    `;
-                    tableBody.appendChild(masterRow);
-
-                    // Add sub-header for details
-                    const subHeaderRow = document.createElement('tr');
-                    subHeaderRow.className = 'detail-row hidden bg-slate-100 font-semibold';
-                    subHeaderRow.dataset.groupId = groupId;
-                    subHeaderRow.innerHTML = `
-                        <td class="py-2 px-4 text-xs text-slate-500">TARIKH</td>
-                        <td class="py-2 px-4 text-xs text-slate-500">AKAUN</td>
-                        <td class="py-2 px-4 text-xs text-slate-500 text-right">MASUK (RM)</td>
-                        <td class="py-2 px-4 text-xs text-slate-500 text-right">KELUAR (RM)</td>
-                    `;
-                    tableBody.appendChild(subHeaderRow);
-
-                    data.transactions.forEach(t => {
-                        const detailRow = document.createElement('tr');
-                        detailRow.className = 'detail-row hidden';
-                        detailRow.dataset.groupId = groupId;
-                        detailRow.innerHTML = `
-                            <td class="py-2 px-4">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                            <td class="py-2 px-4">${accountNames[t.account] || t.account}</td>
-                            <td class="py-2 px-4 text-right">${t.type === 'masuk' ? t.amount.toFixed(2) : '-'}</td>
-                            <td class="py-2 px-4 text-right">${t.type === 'keluar' ? t.amount.toFixed(2) : '-'}</td>
-                        `;
-                        tableBody.appendChild(detailRow);
-                    });
-                }
+                 }
+                 transactions.forEach(t => {
+                     const row = document.createElement('tr');
+                     const isIncome = t.type === 'masuk';
+                     row.className = isIncome ? 'bg-green-50/5' : 'bg-red-50/5';
+                     row.innerHTML = `
+                        <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                        <td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNames[t.account] || t.account}</td>
+                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
+                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
+                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
+                     `;
+                     tableBody.appendChild(row);
+                 })
             };
-
 
             const renderTable = (accountId, transactionsToRender) => {
                  if(accountId === 'keseluruhan') {
-                     // The main render function now handles grouped data directly
+                     renderKeseluruhanTable(transactionsToRender);
                      return;
                  }
                 const contentEl = document.getElementById(`${accountId}-content`);
@@ -663,7 +610,9 @@
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
                 const selectedLimit = parseInt(contentEl.querySelector('[name="limit-filter"]').value, 10);
                 
-                const filtered = allTransactions.filter(t => {
+                const transactionsForTab = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
+
+                const filtered = transactionsForTab.filter(t => {
                     const appDate = t.timestamp.toDate();
                     const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
                     const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
@@ -671,43 +620,17 @@
                 }).sort((a,b) => b.timestamp.seconds - a.timestamp.seconds);
                 
                 calculateAndDisplayStats('keseluruhan', allTransactions);
+                 if (activeTab !== 'keseluruhan') calculateAndDisplayStats(activeTab, transactionsForTab);
 
-                if (activeTab === 'keseluruhan') {
-                    const grouped = filtered.reduce((acc, t) => {
-                        const key = t.description.toLowerCase().trim();
-                        if (!acc[key]) acc[key] = { transactions: [], totalMasuk: 0, totalKeluar: 0 };
-                        acc[key].transactions.push(t);
-                        if (t.type === 'masuk') acc[key].totalMasuk += t.amount;
-                        else acc[key].totalKeluar += t.amount;
-                        return acc;
-                    }, {});
-
-                    const currentPage = paginationState[activeTab] || 1;
-                    const totalItems = Object.keys(grouped).length;
-                    const totalPages = Math.ceil(totalItems / selectedLimit);
-                    const startIndex = (currentPage - 1) * selectedLimit;
-                    const paginatedGroupKeys = Object.keys(grouped).slice(startIndex, startIndex + selectedLimit);
-                    const paginatedGroupedData = paginatedGroupKeys.reduce((acc, key) => {
-                        acc[key] = grouped[key];
-                        return acc;
-                    }, {});
-                    
-                    renderKeseluruhanTable(paginatedGroupedData);
-                    renderPaginationControls(currentPage, totalPages);
-                } else {
-                    const accountTransactions = filtered.filter(t => t.account === activeTab);
-                    calculateAndDisplayStats(activeTab, accountTransactions);
-                    
-                    const currentPage = paginationState[activeTab] || 1;
-                    const totalItems = accountTransactions.length;
-                    const totalPages = Math.ceil(totalItems / selectedLimit);
-                    const startIndex = (currentPage - 1) * selectedLimit;
-                    const paginated = accountTransactions.slice(startIndex, startIndex + selectedLimit);
-
-                    renderTable(activeTab, paginated);
-                    renderPaginationControls(currentPage, totalPages);
-                    updateBulkDeleteButtonState();
-                }
+                const currentPage = paginationState[activeTab] || 1;
+                const totalItems = filtered.length;
+                const totalPages = Math.ceil(totalItems / selectedLimit);
+                const startIndex = (currentPage - 1) * selectedLimit;
+                const paginated = filtered.slice(startIndex, startIndex + selectedLimit);
+                
+                renderTable(activeTab, paginated);
+                renderPaginationControls(currentPage, totalPages);
+                updateBulkDeleteButtonState();
             };
 
             const renderPaginationControls = (currentPage, totalPages) => {
@@ -842,6 +765,12 @@
                         allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         populateYearFilters();
                         
+                        // Set default month for individual account tabs
+                        const currentMonth = new Date().getMonth();
+                        document.querySelectorAll('#bank_islam-content [name="month-filter"], #petty_cash-content [name="month-filter"], #koperasi_mini-content [name="month-filter"]').forEach(sel => {
+                            sel.value = currentMonth;
+                        });
+
                         const currentYear = new Date().getFullYear();
                         document.querySelectorAll('[name="year-filter"]').forEach(filter => {
                              const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
@@ -873,17 +802,6 @@
 
             tabContainer.addEventListener('click', async (e) => {
                 const target = e.target;
-
-                // Handle master row expand/collapse
-                const masterRow = target.closest('.master-row');
-                if(masterRow) {
-                    const groupId = masterRow.dataset.groupId;
-                    const detailRows = tabContainer.querySelectorAll(`.detail-row[data-group-id="${groupId}"]`);
-                    masterRow.classList.toggle('expanded');
-                    detailRows.forEach(row => row.classList.toggle('hidden'));
-                    return;
-                }
-
                 if (target.matches('[data-action="select-all"]')) {
                     const contentEl = document.getElementById(`${activeTab}-content`);
                     const allCheckboxes = contentEl.querySelectorAll('[data-action="select-row"]');
@@ -995,11 +913,11 @@
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
                     doc.text(title, 14, 15);
-                    const head = activeTab === 'keseluruhan' ? [['TARIKH', 'BUTIRAN', 'AKAUN', 'MASUK (RM)', 'KELUAR (RM)']] : [['TARIKH', 'BUTIRAN', 'MASUK (RM)', 'KELUAR (RM)', 'BAKI (RM)']];
+                    const head = activeTab === 'keseluruhan' ? [['TARIKH', 'AKAUN', 'BUTIRAN', 'MASUK (RM)', 'KELUAR (RM)']] : [['TARIKH', 'BUTIRAN', 'MASUK (RM)', 'KELUAR (RM)', 'BAKI (RM)']];
                     let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
                     const body = filteredData.map(t => {
                         if (activeTab === 'keseluruhan') {
-                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, accountNames[t.account] || t.account, t.type === 'masuk' ? t.amount.toFixed(2): '', t.type==='keluar' ? t.amount.toFixed(2):''];
+                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), accountNames[t.account] || t.account, t.description, t.type === 'masuk' ? t.amount.toFixed(2): '', t.type==='keluar' ? t.amount.toFixed(2):''];
                         } else {
                             baki += (t.type === 'masuk' ? t.amount : -t.amount);
                             return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, t.type === 'masuk' ? t.amount.toFixed(2) : '', t.type === 'keluar' ? t.amount.toFixed(2) : '', baki.toFixed(2)];
@@ -1012,7 +930,7 @@
                     let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
                     const dataForExport = filteredData.map(t => {
                          if (activeTab === 'keseluruhan') {
-                             return { TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'), BUTIRAN: t.description, AKAUN: accountNames[t.account] || t.account, 'MASUK (RM)': t.type === 'masuk' ? t.amount : '', 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '' };
+                             return { TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'), AKAUN: accountNames[t.account] || t.account, BUTIRAN: t.description, 'MASUK (RM)': t.type === 'masuk' ? t.amount : '', 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '' };
                          } else {
                              baki += (t.type === 'masuk' ? t.amount : -t.amount);
                              return { TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'), BUTIRAN: t.description, 'MASUK (RM)': t.type === 'masuk' ? t.amount : '', 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '', 'BAKI (RM)': baki };
