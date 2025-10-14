@@ -81,7 +81,7 @@
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                 <button data-tab="keseluruhan" class="tab-button active-tab whitespace-nowrap py-4 px-1 font-medium text-sm">Penyata Induk</button>
                 <button data-tab="bank_islam" class="tab-button whitespace-nowrap py-4 px-1 font-medium text-sm text-slate-500 hover:text-slate-700">Bank Islam</button>
-                <button data-tab="petty_cash" class="tab-button whitespace-nowrap py-4 px-1 font-medium text-sm text-slate-500 hover:text-slate-700">Tunai (Petty Cash)</button>
+                <button data-tab="petty_cash" class="tab-button whitespace-nowrap py-4 px-1 font-medium text-sm text-slate-500 hover:text-slate-700">Dompet Tunai PIBG</button>
                 <button data-tab="koperasi_mini" class="tab-button whitespace-nowrap py-4 px-1 font-medium text-sm text-slate-500 hover:text-slate-700">Koperasi Mini</button>
                 <button data-tab="laporan" class="tab-button whitespace-nowrap py-4 px-1 font-medium text-sm text-slate-500 hover:text-slate-700">Pelaporan Tahunan</button>
             </nav>
@@ -186,6 +186,7 @@
                             </div>
                             <button data-action="print" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"></path></svg></button>
                             <button data-action="export" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg></button>
+                            <button data-action="paste-excel" class="p-2 mt-6 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
                             <button data-action="add-income" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
                             </button>
@@ -210,15 +211,19 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- Annual Report Tab -->
             <div id="laporan-content" class="tab-content p-6 md:p-8">
                 <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
                     <h2 class="text-2xl font-bold text-slate-800">Pelaporan Tahunan</h2>
-                    <div class="flex items-center space-x-4">
+                     <div class="flex items-center space-x-4">
                         <div>
-                            <label for="laporan-year-filter" class="text-sm font-medium text-slate-700">Pilih Tahun:</label>
-                            <input type="number" id="laporan-year-filter" class="mt-1 block w-32 pl-3 pr-2 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <label for="report-start-date" class="text-sm font-medium text-slate-700">Dari:</label>
+                            <input type="date" id="report-start-date" class="mt-1 block w-full pl-3 pr-2 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        </div>
+                        <div>
+                            <label for="report-end-date" class="text-sm font-medium text-slate-700">Hingga:</label>
+                            <input type="date" id="report-end-date" class="mt-1 block w-full pl-3 pr-2 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         </div>
                         <button id="print-report-btn" title="Cetak Penyata" class="p-2 mt-6 rounded-md bg-indigo-100 text-indigo-600 hover:bg-indigo-200">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"></path></svg>
@@ -228,7 +233,7 @@
                 <div id="print-area" class="bg-white p-8 rounded-lg shadow-md border border-slate-200">
                     <div class="text-center mb-8">
                         <h3 id="report-title" class="text-xl font-bold text-slate-900 uppercase">Penyata Kewangan PIBG SK Pulau Melayu</h3>
-                        <p id="report-date-range" class="text-slate-600">Bermula 1 Januari 2025 hingga 31 Disember 2025</p>
+                        <p id="report-date-range" class="text-slate-600"></p>
                     </div>
 
                     <!-- Pendapatan -->
@@ -338,6 +343,23 @@
             </form>
         </div>
     </div>
+    
+    <!-- Paste from Excel Modal -->
+    <div id="pasteModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-6 border-b">
+                <h3 class="text-xl font-bold text-slate-800">Tampal Data dari Excel</h3>
+                <p class="text-sm text-slate-500 mt-1">Pastikan data anda mempunyai 4 lajur: Tarikh, Butiran, Masuk, Keluar</p>
+            </div>
+            <div class="p-6">
+                <textarea id="paste-area" class="w-full h-64 p-2 border border-slate-300 rounded-md" placeholder="Tampal data dari Excel di sini..."></textarea>
+            </div>
+            <div class="p-4 border-t flex justify-end items-center bg-slate-50 rounded-b-xl space-x-3">
+                <button type="button" id="cancel-paste-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
+                <button type="button" id="process-paste-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Simpan Data</button>
+            </div>
+        </div>
+    </div>
 
 
     <footer class="bg-white border-t mt-12">
@@ -377,266 +399,232 @@
         let allTransactions = [];
         let activeTab = 'keseluruhan';
         let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
-
-        // --- UI Elements ---
-        const tabContainer = document.getElementById('tab-container');
-        const transactionModal = document.getElementById('transactionModal');
-        const transactionForm = document.getElementById('transactionForm');
-        const settingsModal = document.getElementById('settingsModal');
-        const settingsForm = document.getElementById('settingsForm');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-        const allYearFilters = document.querySelectorAll('[name="year-filter"]');
-        const reportYearInput = document.getElementById('laporan-year-filter');
-
-        // --- General Functions ---
-        const showToast = (message, type = 'success') => {
-            toastMessage.textContent = message;
-            toast.className = `fixed bottom-5 right-5 py-3 px-5 rounded-lg shadow-lg transition-all duration-300 ${type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-900 text-white'}`;
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
-        };
-        const openModal = (modal) => modal.classList.replace('hidden', 'flex');
-        const closeModal = (modal) => modal.classList.replace('flex', 'hidden');
-
-        // --- Tab & UI Setup ---
-        const setupTabs = () => {
-            const template = document.getElementById('account-tab-template');
-            const accountNames = { bank_islam: "Bank Islam", petty_cash: "Tunai (Petty Cash)", koperasi_mini: "Koperasi Mini" };
-            
-            Object.keys(BAKI_AWAL_TAHUN).forEach(key => {
-                const clone = template.cloneNode(true);
-                clone.id = `${key}-content`;
-                clone.classList.add('tab-content');
-                clone.querySelector('[data-id="table-title"]').textContent = `Butiran Transaksi (${accountNames[key]})`;
-                clone.querySelector('[name="month-filter"]').dataset.filterFor = key;
-                clone.querySelector('[name="year-filter"]').dataset.filterFor = key;
-                tabContainer.appendChild(clone);
-            });
-        };
         
-        const switchTabs = (tabId) => {
-            activeTab = tabId;
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active-tab', btn.dataset.tab === tabId));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`));
-            updateUI();
-        };
+        // --- Code that runs after DOM is loaded ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabContainer = document.getElementById('tab-container');
+            const transactionModal = document.getElementById('transactionModal');
+            const transactionForm = document.getElementById('transactionForm');
+            const settingsModal = document.getElementById('settingsModal');
+            const settingsForm = document.getElementById('settingsForm');
+            const pasteModal = document.getElementById('pasteModal');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const reportStartDateInput = document.getElementById('report-start-date');
+            const reportEndDateInput = document.getElementById('report-end-date');
 
-        // --- Data & Calculation Logic ---
-        const updateUI = () => {
-            if(activeTab === 'laporan'){
-                renderAnnualReport();
-            } else {
-                applyFiltersAndRender();
-            }
-        };
+            // --- General Functions ---
+            const showToast = (message, type = 'success') => {
+                toastMessage.textContent = message;
+                toast.className = `fixed bottom-5 right-5 py-3 px-5 rounded-lg shadow-lg transition-all duration-300 ${type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-900 text-white'}`;
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
+            };
+            const openModal = (modal) => modal.classList.replace('hidden', 'flex');
+            const closeModal = (modal) => modal.classList.replace('flex', 'hidden');
 
-        const calculateAndDisplayStats = (accountId, transactionsToProcess) => {
-            let bakiAwal = (accountId === 'keseluruhan') 
-                ? Object.values(BAKI_AWAL_TAHUN).reduce((a, b) => a + b, 0)
-                : BAKI_AWAL_TAHUN[accountId] || 0;
-
-            let totalIn = transactionsToProcess.filter(t => t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
-            let totalOut = transactionsToProcess.filter(t => t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
-            let bakiAkhir = bakiAwal + totalIn - totalOut;
+            // --- Tab & UI Setup ---
+            const setupTabs = () => {
+                const template = document.getElementById('account-tab-template');
+                const accountNames = { bank_islam: "Bank Islam", petty_cash: "Dompet Tunai PIBG", koperasi_mini: "Koperasi Mini" };
+                
+                Object.keys(BAKI_AWAL_TAHUN).forEach(key => {
+                    const clone = template.cloneNode(true);
+                    clone.id = `${key}-content`;
+                    clone.classList.add('tab-content');
+                    clone.querySelector('[data-id="table-title"]').textContent = `Butiran Transaksi (${accountNames[key]})`;
+                    clone.querySelector('[name="month-filter"]').dataset.filterFor = key;
+                    clone.querySelector('[name="year-filter"]').dataset.filterFor = key;
+                    tabContainer.appendChild(clone);
+                });
+            };
             
-            const formatCurrency = (num) => `RM ${num.toFixed(2)}`;
+            const switchTabs = (tabId) => {
+                activeTab = tabId;
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active-tab', btn.dataset.tab === tabId));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`));
+                updateUI();
+            };
 
-            if (accountId === 'keseluruhan') {
-                document.getElementById('keseluruhan-baki-awal').textContent = formatCurrency(bakiAwal);
-                document.getElementById('keseluruhan-kutipan').textContent = formatCurrency(totalIn);
-                document.getElementById('keseluruhan-perbelanjaan').textContent = formatCurrency(totalOut);
-                document.getElementById('keseluruhan-baki-akhir').textContent = formatCurrency(bakiAkhir);
-            } else {
-                const contentEl = document.getElementById(`${accountId}-content`);
-                contentEl.querySelector('[data-id="baki-awal"]').textContent = formatCurrency(bakiAwal);
-                contentEl.querySelector('[data-id="kutipan"]').textContent = formatCurrency(totalIn);
-                contentEl.querySelector('[data-id="perbelanjaan"]').textContent = formatCurrency(totalOut);
-                contentEl.querySelector('[data-id="baki-akhir"]').textContent = formatCurrency(bakiAkhir);
-            }
-        };
+            // --- Data & Calculation Logic ---
+            const updateUI = () => {
+                if(activeTab === 'laporan'){
+                    renderAnnualReport();
+                } else {
+                    applyFiltersAndRender();
+                }
+            };
 
-        const renderTable = (accountId, transactionsToRender) => {
-            const isKeseluruhan = accountId === 'keseluruhan';
-            const tableBody = isKeseluruhan ? document.getElementById('keseluruhan-table') : document.getElementById(`${accountId}-content`).querySelector('[data-id="table-body"]');
+            const calculateAndDisplayStats = (accountId, transactionsToProcess) => {
+                let bakiAwal = (accountId === 'keseluruhan') 
+                    ? Object.values(BAKI_AWAL_TAHUN).reduce((a, b) => a + b, 0)
+                    : BAKI_AWAL_TAHUN[accountId] || 0;
+
+                let totalIn = transactionsToProcess.filter(t => t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
+                let totalOut = transactionsToProcess.filter(t => t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
+                let bakiAkhir = bakiAwal + totalIn - totalOut;
+                
+                const formatCurrency = (num) => `RM ${num.toFixed(2)}`;
+
+                if (accountId === 'keseluruhan') {
+                    document.getElementById('keseluruhan-baki-awal').textContent = formatCurrency(bakiAwal);
+                    document.getElementById('keseluruhan-kutipan').textContent = formatCurrency(totalIn);
+                    document.getElementById('keseluruhan-perbelanjaan').textContent = formatCurrency(totalOut);
+                    document.getElementById('keseluruhan-baki-akhir').textContent = formatCurrency(bakiAkhir);
+                } else {
+                    const contentEl = document.getElementById(`${accountId}-content`);
+                    contentEl.querySelector('[data-id="baki-awal"]').textContent = formatCurrency(bakiAwal);
+                    contentEl.querySelector('[data-id="kutipan"]').textContent = formatCurrency(totalIn);
+                    contentEl.querySelector('[data-id="perbelanjaan"]').textContent = formatCurrency(totalOut);
+                    contentEl.querySelector('[data-id="baki-akhir"]').textContent = formatCurrency(bakiAkhir);
+                }
+            };
+
+            const renderTable = (accountId, transactionsToRender) => {
+                const isKeseluruhan = accountId === 'keseluruhan';
+                const tableBody = isKeseluruhan ? document.getElementById('keseluruhan-table') : document.getElementById(`${accountId}-content`).querySelector('[data-id="table-body"]');
+                
+                tableBody.innerHTML = '';
+                
+                if (transactionsToRender.length === 0 && !isKeseluruhan) {
+                     tableBody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-500">Tiada transaksi direkodkan.</td></tr>`;
+                     return;
+                }
+
+                if (!isKeseluruhan) {
+                     const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900" colspan="3">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td></tr>`;
+                     tableBody.innerHTML += bakiRow;
+                }
+
+                let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
+                let balanceCalcArray = [...transactionsToRender].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
+                const balances = {};
+                balanceCalcArray.forEach(t => {
+                    runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
+                    balances[t.id] = runningBalance;
+                });
+
+                transactionsToRender.forEach(t => {
+                    const row = document.createElement('tr');
+                    const isIncome = t.type === 'masuk';
+                    row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
+
+                    const accountNameMap = { 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai', 'koperasi_mini': 'Koperasi' };
+
+                    let rowHTML = `
+                        <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                        ${isKeseluruhan ? `<td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNameMap[t.account] || t.account}</td>` : ''}
+                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
+                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
+                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
+                        ${!isKeseluruhan ? `<td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(balances[t.id] || 0).toFixed(2)}</td>` : ''}
+                    `;
+                    row.innerHTML = rowHTML;
+                    tableBody.appendChild(row);
+                });
+            };
             
-            tableBody.innerHTML = '';
+            const applyFiltersAndRender = () => {
+                const contentEl = document.getElementById(`${activeTab}-content`);
+                const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
+                const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
+
+                let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
+
+                const filtered = transactions.filter(t => {
+                    const appDate = t.timestamp.toDate();
+                    const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
+                    const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
+                    return monthMatch && yearMatch;
+                });
+                
+                calculateAndDisplayStats('keseluruhan', allTransactions);
+                if (activeTab !== 'keseluruhan') calculateAndDisplayStats(activeTab, transactions);
+                
+                renderTable(activeTab, filtered);
+            };
             
-            if (transactionsToRender.length === 0 && !isKeseluruhan) {
-                 tableBody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-500">Tiada transaksi direkodkan.</td></tr>`;
-                 return;
-            }
+            const populateYearFilters = () => {
+                const years = [...new Set(allTransactions.map(app => app.timestamp?.toDate().getFullYear()).filter(y => y))];
+                if (years.length === 0) {
+                    years.push(new Date().getFullYear());
+                }
+                years.sort((a, b) => b - a);
 
-            if (!isKeseluruhan) {
-                 const bakiRow = `<tr class="bg-slate-50"><td class="py-3 px-4 text-sm text-slate-500 font-semibold">01/01/${new Date().getFullYear()}</td><td class="py-3 px-4 text-sm font-semibold text-slate-900" colspan="3">Baki Awal</td><td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(BAKI_AWAL_TAHUN[accountId] || 0).toFixed(2)}</td></tr>`;
-                 tableBody.innerHTML += bakiRow;
-            }
-
-            let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
-            let balanceCalcArray = [...transactionsToRender].sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
-            const balances = {};
-            balanceCalcArray.forEach(t => {
-                runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
-                balances[t.id] = runningBalance;
-            });
-
-            transactionsToRender.forEach(t => {
-                const row = document.createElement('tr');
-                const isIncome = t.type === 'masuk';
-                row.className = isIncome ? 'bg-green-50/50' : 'bg-red-50/50';
-
-                const accountNameMap = { 'bank_islam': 'Bank Islam', 'petty_cash': 'Tunai', 'koperasi_mini': 'Koperasi' };
-
-                let rowHTML = `
-                    <td class="py-3 px-4 text-sm text-slate-500">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                    ${isKeseluruhan ? `<td class="py-3 px-4 text-sm font-medium text-slate-700">${accountNameMap[t.account] || t.account}</td>` : ''}
-                    <td class="py-3 px-4 text-sm font-medium text-slate-900">${t.description}</td>
-                    <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${isIncome ? `+ ${t.amount.toFixed(2)}` : '-'}</td>
-                    <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
-                    ${!isKeseluruhan ? `<td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${(balances[t.id] || 0).toFixed(2)}</td>` : ''}
-                `;
-                row.innerHTML = rowHTML;
-                tableBody.appendChild(row);
-            });
-        };
-        
-        const applyFiltersAndRender = () => {
-            const contentEl = document.getElementById(`${activeTab}-content`);
-            const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
-            const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
-
-            let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
-
-            const filtered = transactions.filter(t => {
-                const appDate = t.timestamp.toDate();
-                const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
-                const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
-                return monthMatch && yearMatch;
-            });
-            
-            calculateAndDisplayStats('keseluruhan', allTransactions);
-            if (activeTab !== 'keseluruhan') calculateAndDisplayStats(activeTab, transactions);
-            
-            renderTable(activeTab, filtered);
-        };
-        
-        const populateYearFilters = () => {
-            const years = [...new Set(allTransactions.map(app => app.timestamp?.toDate().getFullYear()).filter(y => y))];
-            if (years.length === 0) {
-                years.push(new Date().getFullYear());
-            }
-            years.sort((a, b) => b - a);
-
-            allYearFilters.forEach(select => {
-                if (select.tagName === 'SELECT') {
-                    while(select.options.length > 1) { select.remove(1); }
+                document.querySelectorAll('[name="year-filter"]').forEach(select => {
+                     while(select.options.length > 1) { select.remove(1); }
                     years.forEach(year => {
                         const option = document.createElement('option');
                         option.value = year;
                         option.textContent = year;
                         select.appendChild(option);
                     });
-                }
-            });
-            reportYearInput.value = new Date().getFullYear();
-        };
+                });
+                document.getElementById('laporan-year-filter').value = new Date().getFullYear();
+            };
 
-        // --- Annual Report Logic ---
-        const renderAnnualReport = () => {
-            const year = reportYearInput.value;
-            if (!year) return;
+            // --- Annual Report Logic ---
+            const renderAnnualReport = () => {
+                const startDate = new Date(reportStartDateInput.value);
+                const endDate = new Date(reportEndDateInput.value);
 
-            document.getElementById('report-date-range').textContent = `Bermula 1 Januari ${year} hingga 31 Disember ${year}`;
-            
-            const yearTransactions = allTransactions.filter(t => t.timestamp.toDate().getFullYear() == year);
-            
-            const incomeTable = document.getElementById('income-report-table');
-            const expenseTable = document.getElementById('expense-report-table');
-            const balanceTable = document.getElementById('balance-summary-table');
+                if (!reportStartDateInput.value || !reportEndDateInput.value) return;
 
-            const tableCellClasses = "py-2 px-4 border border-slate-300";
-            const totalRowClasses = "font-bold border-t-2 border-slate-800";
+                document.getElementById('report-date-range').textContent = `Bermula ${startDate.toLocaleDateString('ms-MY')} hingga ${endDate.toLocaleDateString('ms-MY')}`;
+                
+                const rangeTransactions = allTransactions.filter(t => {
+                    const transDate = t.timestamp.toDate();
+                    return transDate >= startDate && transDate <= endDate;
+                });
+                
+                const incomeTable = document.getElementById('income-report-table');
+                const expenseTable = document.getElementById('expense-report-table');
+                const balanceTable = document.getElementById('balance-summary-table');
 
-            // Populate Income
-            let totalIncome = Object.values(BAKI_AWAL_TAHUN).reduce((a,b) => a + b, 0);
-            incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">Baki Awal Tahun</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
-            const incomeTransactions = yearTransactions.filter(t => t.type === 'masuk');
-            incomeTransactions.forEach(t => {
-                totalIncome += t.amount;
-                incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${t.description}</td><td class="${tableCellClasses} text-right">${t.amount.toFixed(2)}</td></tr>`;
-            });
-            incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PENDAPATAN</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
+                const tableCellClasses = "py-2 px-4 border border-slate-300";
+                const totalRowClasses = "font-bold border-t-2 border-slate-800";
 
-            // Populate Expenses
-            let totalExpense = 0;
-            expenseTable.innerHTML = '';
-            const expenseTransactions = yearTransactions.filter(t => t.type === 'keluar');
-            expenseTransactions.forEach(t => {
-                totalExpense += t.amount;
-                expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${t.description}</td><td class="${tableCellClasses} text-right">${t.amount.toFixed(2)}</td></tr>`;
-            });
-            expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PERBELANJAAN</td><td class="${tableCellClasses} text-right">${totalExpense.toFixed(2)}</td></tr>`;
-            
-            // Populate Balance Summary
-            balanceTable.innerHTML = '';
-            const bankIn = yearTransactions.filter(t => t.account === 'bank_islam' && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
-            const bankOut = yearTransactions.filter(t => t.account === 'bank_islam' && t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
-            const bakiBank = (BAKI_AWAL_TAHUN['bank_islam'] || 0) + bankIn - bankOut;
+                // Populate Income
+                let totalIncome = Object.values(BAKI_AWAL_TAHUN).reduce((a,b) => a + b, 0);
+                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">Baki Awal Tahun</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
+                const incomeTransactions = rangeTransactions.filter(t => t.type === 'masuk');
+                incomeTransactions.forEach(t => {
+                    totalIncome += t.amount;
+                    incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${t.description}</td><td class="${tableCellClasses} text-right">${t.amount.toFixed(2)}</td></tr>`;
+                });
+                incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PENDAPATAN</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
 
-            const tanganIn = yearTransactions.filter(t => (t.account === 'petty_cash' || t.account === 'koperasi_mini') && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
-            const tanganOut = yearTransactions.filter(t => (t.account === 'petty_cash' || t.account === 'koperasi_mini') && t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
-            const bakiTangan = (BAKI_AWAL_TAHUN['petty_cash'] || 0) + (BAKI_AWAL_TAHUN['koperasi_mini'] || 0) + tanganIn - tanganOut;
+                // Populate Expenses
+                let totalExpense = 0;
+                expenseTable.innerHTML = '';
+                const expenseTransactions = rangeTransactions.filter(t => t.type === 'keluar');
+                expenseTransactions.forEach(t => {
+                    totalExpense += t.amount;
+                    expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${t.description}</td><td class="${tableCellClasses} text-right">${t.amount.toFixed(2)}</td></tr>`;
+                });
+                expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PERBELANJAAN</td><td class="${tableCellClasses} text-right">${totalExpense.toFixed(2)}</td></tr>`;
+                
+                // Populate Balance Summary
+                balanceTable.innerHTML = '';
+                const bankIn = rangeTransactions.filter(t => t.account === 'bank_islam' && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
+                const bankOut = rangeTransactions.filter(t => t.account === 'bank_islam' && t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
+                const bakiBank = (BAKI_AWAL_TAHUN['bank_islam'] || 0) + bankIn - bankOut;
 
-            const jumlahBaki = bakiBank + bakiTangan;
+                const tanganIn = rangeTransactions.filter(t => (t.account === 'petty_cash' || t.account === 'koperasi_mini') && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
+                const tanganOut = rangeTransactions.filter(t => (t.account === 'petty_cash' || t.account === 'koperasi_mini') && t.type === 'keluar').reduce((sum, t) => sum + t.amount, 0);
+                const bakiTangan = (BAKI_AWAL_TAHUN['petty_cash'] || 0) + (BAKI_AWAL_TAHUN['koperasi_mini'] || 0) + tanganIn - tanganOut;
 
-            balanceTable.innerHTML = `
-                <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="${tableCellClasses} text-right">${bakiBank.toFixed(2)}</td></tr>
-                <tr><td class="${tableCellClasses}">BAKI DI TANGAN</td><td class="${tableCellClasses} text-right">${bakiTangan.toFixed(2)}</td></tr>
-                <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
-        };
+                const jumlahBaki = bakiBank + bakiTangan;
 
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-             // Authentication & Initial Load
-            (async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    
-                    const settingsSnap = await getDoc(settingsDoc);
-                    if (settingsSnap.exists()) {
-                        BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
-                    }
-                    
-                    setupTabs();
+                balanceTable.innerHTML = `
+                    <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="${tableCellClasses} text-right">${bakiBank.toFixed(2)}</td></tr>
+                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN</td><td class="${tableCellClasses} text-right">${bakiTangan.toFixed(2)}</td></tr>
+                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
+            };
 
-                    onSnapshot(transactionsCol, (snapshot) => {
-                        allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        populateYearFilters();
-                        
-                        const currentYear = new Date().getFullYear();
-                        allYearFilters.forEach(filter => {
-                             if (filter.tagName === 'SELECT') {
-                                const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
-                                if(yearExists) filter.value = currentYear;
-                                else if (filter.options.length > 1) filter.value = filter.options[1].value;
-                            }
-                        });
-                        reportYearInput.value = currentYear;
-                        updateUI();
-                    });
-
-                } catch (error) {
-                    console.error("Firebase authentication failed:", error);
-                    showToast("Gagal menyambung ke pangkalan data.", 'error');
-                }
-            })();
-
+            // --- Event Listeners ---
             document.querySelectorAll('.tab-button').forEach(btn => btn.addEventListener('click', () => switchTabs(btn.dataset.tab)));
-        
+            
             tabContainer.addEventListener('click', e => {
                 if (e.target.closest('[data-action="add-income"]')) {
                     transactionForm.dataset.type = 'masuk';
@@ -652,6 +640,8 @@
                     handlePrint();
                 } else if (e.target.closest('[data-action="export"]')) {
                     handleExport();
+                } else if (e.target.closest('[data-action="paste-excel"]')) {
+                    openModal(pasteModal);
                 }
             });
 
@@ -707,7 +697,8 @@
                 }
             });
             
-            reportYearInput.addEventListener('input', renderAnnualReport);
+            reportStartDateInput.addEventListener('change', renderAnnualReport);
+            reportEndDateInput.addEventListener('change', renderAnnualReport);
             document.getElementById('print-report-btn').addEventListener('click', () => {
                  const printContent = document.getElementById('print-area').innerHTML;
                  const originalContent = document.body.innerHTML;
@@ -741,12 +732,38 @@
                  setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
             });
 
+            document.getElementById('cancel-paste-btn').addEventListener('click', () => closeModal(pasteModal));
+            document.getElementById('process-paste-btn').addEventListener('click', async () => {
+                const pasteArea = document.getElementById('paste-area');
+                const rows = pasteArea.value.split('\n').filter(row => row.trim() !== '');
+                let successCount = 0;
+                for (const row of rows) {
+                    const [dateStr, desc, incomeStr, expenseStr] = row.split('\t');
+                    const amount = parseFloat(incomeStr) || parseFloat(expenseStr) || 0;
+                    if (amount > 0) {
+                        try {
+                             await addDoc(transactionsCol, {
+                                account: activeTab,
+                                type: parseFloat(incomeStr) > 0 ? 'masuk' : 'keluar',
+                                description: desc,
+                                amount: amount,
+                                timestamp: Timestamp.fromDate(new Date(dateStr))
+                            });
+                            successCount++;
+                        } catch(e) { console.error("Error processing row: ", row, e); }
+                    }
+                }
+                showToast(`${successCount} transaksi berjaya diimport!`);
+                pasteArea.value = '';
+                closeModal(pasteModal);
+            });
+
 
             // --- Print & Export ---
             const handlePrint = () => {
                  const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Tunai', 'koperasi_mini': 'Koperasi' };
+                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
 
                 const table = document.getElementById(`${activeTab}-content`).querySelector('table');
                 doc.autoTable({
@@ -758,11 +775,53 @@
                 doc.save(`penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.pdf`);
             };
             const handleExport = () => {
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Tunai', 'koperasi_mini': 'Koperasi' };
+                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
                 const table = document.getElementById(`${activeTab}-content`).querySelector('table');
                 const wb = XLSX.utils.table_to_book(table, {sheet: accountNameMap[activeTab]});
                 XLSX.writeFile(wb, `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.xlsx`);
             };
+            
+            // --- Initial Load ---
+            (async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
+                    const settingsSnap = await getDoc(settingsDoc);
+                    if (settingsSnap.exists()) {
+                        BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
+                    }
+                    
+                    setupTabs();
+
+                    onSnapshot(transactionsCol, (snapshot) => {
+                        allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        populateYearFilters();
+                        
+                        const currentYear = new Date().getFullYear();
+                        document.querySelectorAll('[name="year-filter"]').forEach(filter => {
+                             if (filter.tagName === 'SELECT') {
+                                const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
+                                if(yearExists) filter.value = currentYear;
+                                else if (filter.options.length > 1) filter.value = filter.options[1].value;
+                            }
+                        });
+                        
+                        const year = new Date().getFullYear();
+                        reportStartDateInput.value = `${year}-01-01`;
+                        reportEndDateInput.value = `${year}-12-31`;
+                        
+                        updateUI();
+                    });
+
+                } catch (error) {
+                    console.error("Firebase authentication failed:", error);
+                    showToast("Gagal menyambung ke pangkalan data.", 'error');
+                }
+            })();
         });
     </script>
 </body>
