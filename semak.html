@@ -543,7 +543,7 @@
                         timer.innerHTML = `Tamat dalam: <strong>${hours}j ${minutes}m ${seconds}s</strong>`;
                     } else {
                         timer.innerHTML = `<span class="text-slate-500 font-normal">Tempoh Undian Tamat</span>`;
-                        timer.classList.remove('countdown-timer'); // Stop updating this timer
+                        timer.classList.remove('countdown-timer', 'text-red-500'); 
                     }
                 });
             };
@@ -564,15 +564,14 @@
                 pageItems.forEach((app, index) => {
                     const programDateFormatted = app.programDate ? new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Tidak Dinyatakan';
 
-                    // --- Logic for Keputusan Button ---
                     const totalMembers = 15;
-                    const approvalThreshold = 10; // 2/3 of 15
+                    const approvalThreshold = 10;
                     const approvalVotes = app.votes && Array.isArray(app.votes) ? app.votes.filter(v => v.vote === 'approve').length : 0;
                     
                     const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
                     const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
 
-                    let finalStatus = app.status; 
+                    let finalStatus = 'Dalam Proses'; 
                     let showKeputusanBtn = false;
 
                     if (approvalVotes >= approvalThreshold) {
@@ -589,10 +588,7 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="py-3 px-4 text-xs text-slate-500">${startIndex + index + 1}</td>
-                        <td class="py-3 px-4">
-                            <div class="text-xs font-medium text-slate-900">${app.applicant}</div>
-                            ${finalStatus === 'Dalam Proses' ? `<div class="countdown-timer text-red-500 font-normal text-xs mt-1" data-createdat="${app.createdAt?.seconds || 0}"></div>` : ''}
-                        </td>
+                        <td class="py-3 px-4 text-xs font-medium text-slate-900">${app.applicant}</td>
                         <td class="py-3 px-4">
                             <div class="font-medium text-xs text-slate-900">${app.purpose}</div>
                             <div class="text-xs text-slate-500 mt-1">${programDateFormatted}</div>
@@ -601,7 +597,8 @@
                         <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex flex-col items-start space-y-1">
                                 ${renderStatusDisplay(finalStatus)}
-                                ${showKeputusanBtn && finalStatus === 'Diluluskan' ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200 mt-1">Lihat Keputusan</button>` : ''}
+                                ${finalStatus === 'Dalam Proses' ? `<div class="countdown-timer text-red-500 font-normal text-xs" data-createdat="${app.createdAt?.seconds || 0}"></div>` : ''}
+                                ${showKeputusanBtn && finalStatus === 'Diluluskan' ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Lihat Keputusan</button>` : ''}
                             </div>
                         </td>
                          <td class="py-3 px-4 text-xs text-slate-500">
