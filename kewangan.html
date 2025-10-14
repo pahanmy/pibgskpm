@@ -395,7 +395,6 @@
         const transactionsCol = collection(db, `/artifacts/${appId}/public/data/transactions`);
         const settingsDoc = doc(db, `/artifacts/${appId}/public/data/settings/financials`);
         
-        // --- Code that runs after DOM is loaded ---
         document.addEventListener('DOMContentLoaded', () => {
             // --- State ---
             let allTransactions = [];
@@ -413,6 +412,8 @@
             const toastMessage = document.getElementById('toast-message');
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
+            const allYearFilters = document.querySelectorAll('[name="year-filter"]');
+            const reportYearInput = document.getElementById('laporan-year-filter');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -561,8 +562,7 @@
                         select.appendChild(option);
                     });
                 });
-                const reportYearInput = document.getElementById('laporan-year-filter');
-                if (reportYearInput) {
+                if(reportYearInput) {
                     reportYearInput.value = new Date().getFullYear();
                 }
             };
@@ -626,28 +626,6 @@
                     <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
             };
 
-            // --- Print & Export ---
-            const handlePrint = () => {
-                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
-
-                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
-                doc.autoTable({
-                    html: table,
-                    startY: 20,
-                    headStyles: { fillColor: [79, 70, 229] }
-                });
-                doc.text(`Penyata Kewangan - ${accountNameMap[activeTab]}`, 14, 15);
-                doc.save(`penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.pdf`);
-            };
-            const handleExport = () => {
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
-                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
-                const wb = XLSX.utils.table_to_book(table, {sheet: accountNameMap[activeTab]});
-                XLSX.writeFile(wb, `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.xlsx`);
-            };
-
             // --- Authentication & Initial Load ---
             (async () => {
                 try {
@@ -689,7 +667,7 @@
                     showToast("Gagal menyambung ke pangkalan data.", 'error');
                 }
             })();
-
+            
             // --- Event Listeners ---
             document.querySelectorAll('.tab-button').forEach(btn => btn.addEventListener('click', () => switchTabs(btn.dataset.tab)));
             
@@ -825,6 +803,29 @@
                 pasteArea.value = '';
                 closeModal(pasteModal);
             });
+
+
+            // --- Print & Export ---
+            const handlePrint = () => {
+                 const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
+
+                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
+                doc.autoTable({
+                    html: table,
+                    startY: 20,
+                    headStyles: { fillColor: [79, 70, 229] }
+                });
+                doc.text(`Penyata Kewangan - ${accountNameMap[activeTab]}`, 14, 15);
+                doc.save(`penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.pdf`);
+            };
+            const handleExport = () => {
+                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
+                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
+                const wb = XLSX.utils.table_to_book(table, {sheet: accountNameMap[activeTab]});
+                XLSX.writeFile(wb, `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.xlsx`);
+            };
         });
     </script>
 </body>
