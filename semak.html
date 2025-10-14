@@ -597,8 +597,8 @@
                 applicantPositionInput.readOnly = true;
                 applicantPositionInput.classList.add('bg-slate-100');
             };
-            
-            // --- Initial Load & Event Listeners ---
+
+            // --- Authentication & Initial Load ---
             (async () => {
                 try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -613,6 +613,7 @@
                 }
             })();
 
+            // --- Event Listeners ---
             switchTab('tab-analysis-btn');
             resetApplicationForm();
             
