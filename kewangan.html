@@ -394,14 +394,15 @@
 
         const transactionsCol = collection(db, `/artifacts/${appId}/public/data/transactions`);
         const settingsDoc = doc(db, `/artifacts/${appId}/public/data/settings/financials`);
-
-        // --- State ---
-        let allTransactions = [];
-        let activeTab = 'keseluruhan';
-        let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
         
         // --- Code that runs after DOM is loaded ---
         document.addEventListener('DOMContentLoaded', () => {
+            // --- State ---
+            let allTransactions = [];
+            let activeTab = 'keseluruhan';
+            let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
+            
+            // --- UI Elements ---
             const tabContainer = document.getElementById('tab-container');
             const transactionModal = document.getElementById('transactionModal');
             const transactionForm = document.getElementById('transactionForm');
@@ -560,7 +561,10 @@
                         select.appendChild(option);
                     });
                 });
-                document.getElementById('laporan-year-filter').value = new Date().getFullYear();
+                const reportYearInput = document.getElementById('laporan-year-filter');
+                if (reportYearInput) {
+                    reportYearInput.value = new Date().getFullYear();
+                }
             };
 
             // --- Annual Report Logic ---
@@ -621,6 +625,70 @@
                     <tr><td class="${tableCellClasses}">BAKI DI TANGAN</td><td class="${tableCellClasses} text-right">${bakiTangan.toFixed(2)}</td></tr>
                     <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
             };
+
+            // --- Print & Export ---
+            const handlePrint = () => {
+                 const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
+
+                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
+                doc.autoTable({
+                    html: table,
+                    startY: 20,
+                    headStyles: { fillColor: [79, 70, 229] }
+                });
+                doc.text(`Penyata Kewangan - ${accountNameMap[activeTab]}`, 14, 15);
+                doc.save(`penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.pdf`);
+            };
+            const handleExport = () => {
+                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
+                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
+                const wb = XLSX.utils.table_to_book(table, {sheet: accountNameMap[activeTab]});
+                XLSX.writeFile(wb, `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.xlsx`);
+            };
+
+            // --- Authentication & Initial Load ---
+            (async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
+                    const settingsSnap = await getDoc(settingsDoc);
+                    if (settingsSnap.exists()) {
+                        BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
+                    }
+                    
+                    setupTabs();
+
+                    onSnapshot(transactionsCol, (snapshot) => {
+                        allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        populateYearFilters();
+                        
+                        const currentYear = new Date().getFullYear();
+                        document.querySelectorAll('[name="year-filter"]').forEach(filter => {
+                             if (filter.tagName === 'SELECT') {
+                                const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
+                                if(yearExists) filter.value = currentYear;
+                                else if (filter.options.length > 1) filter.value = filter.options[1].value;
+                            }
+                        });
+                        
+                        const year = new Date().getFullYear();
+                        reportStartDateInput.value = `${year}-01-01`;
+                        reportEndDateInput.value = `${year}-12-31`;
+                        
+                        updateUI();
+                    });
+
+                } catch (error) {
+                    console.error("Firebase authentication failed:", error);
+                    showToast("Gagal menyambung ke pangkalan data.", 'error');
+                }
+            })();
 
             // --- Event Listeners ---
             document.querySelectorAll('.tab-button').forEach(btn => btn.addEventListener('click', () => switchTabs(btn.dataset.tab)));
@@ -757,71 +825,6 @@
                 pasteArea.value = '';
                 closeModal(pasteModal);
             });
-
-
-            // --- Print & Export ---
-            const handlePrint = () => {
-                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
-
-                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
-                doc.autoTable({
-                    html: table,
-                    startY: 20,
-                    headStyles: { fillColor: [79, 70, 229] }
-                });
-                doc.text(`Penyata Kewangan - ${accountNameMap[activeTab]}`, 14, 15);
-                doc.save(`penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.pdf`);
-            };
-            const handleExport = () => {
-                const accountNameMap = { 'keseluruhan': 'Keseluruhan', 'bank_islam': 'Bank Islam', 'petty_cash': 'Dompet Tunai PIBG', 'koperasi_mini': 'Koperasi' };
-                const table = document.getElementById(`${activeTab}-content`).querySelector('table');
-                const wb = XLSX.utils.table_to_book(table, {sheet: accountNameMap[activeTab]});
-                XLSX.writeFile(wb, `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}.xlsx`);
-            };
-            
-            // --- Initial Load ---
-            (async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    
-                    const settingsSnap = await getDoc(settingsDoc);
-                    if (settingsSnap.exists()) {
-                        BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
-                    }
-                    
-                    setupTabs();
-
-                    onSnapshot(transactionsCol, (snapshot) => {
-                        allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        populateYearFilters();
-                        
-                        const currentYear = new Date().getFullYear();
-                        document.querySelectorAll('[name="year-filter"]').forEach(filter => {
-                             if (filter.tagName === 'SELECT') {
-                                const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
-                                if(yearExists) filter.value = currentYear;
-                                else if (filter.options.length > 1) filter.value = filter.options[1].value;
-                            }
-                        });
-                        
-                        const year = new Date().getFullYear();
-                        reportStartDateInput.value = `${year}-01-01`;
-                        reportEndDateInput.value = `${year}-12-31`;
-                        
-                        updateUI();
-                    });
-
-                } catch (error) {
-                    console.error("Firebase authentication failed:", error);
-                    showToast("Gagal menyambung ke pangkalan data.", 'error');
-                }
-            })();
         });
     </script>
 </body>
