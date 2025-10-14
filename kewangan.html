@@ -351,8 +351,15 @@
                         </div>
                     </div>
 
+                    <div class="mb-8">
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Ringkasan Keseluruhan</h4>
+                        <table class="w-full text-sm border-collapse border border-slate-400">
+                            <tbody id="grand-summary-table"></tbody>
+                        </table>
+                    </div>
+
                     <div class="mb-12">
-                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">RINGKASAN BAKI</h4>
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Ringkasan Baki</h4>
                         <table class="w-full text-sm border-collapse border border-slate-400">
                             <tbody id="balance-summary-table"></tbody>
                         </table>
@@ -549,7 +556,6 @@
             const openModal = (modal) => modal.classList.replace('hidden', 'flex');
             const closeModal = (modal) => {
                 modal.classList.replace('flex', 'hidden');
-                // Reset category fields
                 document.getElementById('income-category-section').classList.add('hidden');
                 document.getElementById('expense-category-section').classList.add('hidden');
                 document.getElementById('trans-category-income-custom').classList.add('hidden');
@@ -613,7 +619,7 @@
                     document.getElementById('keseluruhan-baki-akhir').textContent = formatCurrency(bakiAkhir);
                 } else {
                     const contentEl = document.getElementById(`${accountId}-content`);
-                    if(contentEl) {
+                    if(contentEl && contentEl.innerHTML) { // Check if content is populated
                         contentEl.querySelector('[data-id="baki-awal"]').textContent = formatCurrency(bakiAwal);
                         contentEl.querySelector('[data-id="kutipan"]').textContent = formatCurrency(totalIn);
                         contentEl.querySelector('[data-id="perbelanjaan"]').textContent = formatCurrency(totalOut);
@@ -624,7 +630,7 @@
 
             const renderTable = (accountId, transactionsToRender) => {
                 const contentEl = document.getElementById(`${accountId}-content`);
-                if(!contentEl) return;
+                if(!contentEl || !contentEl.innerHTML) return;
 
                 const tableBody = contentEl.querySelector(accountId === 'keseluruhan' ? '#keseluruhan-table' : '[data-id="table-body"]');
                 tableBody.innerHTML = '';
@@ -676,7 +682,7 @@
             
             const applyFiltersAndRender = () => {
                 const contentEl = document.getElementById(`${activeTab}-content`);
-                if (!contentEl || activeTab === 'laporan') return;
+                if (!contentEl || !contentEl.innerHTML || activeTab === 'laporan') return;
                 
                 const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
@@ -707,7 +713,7 @@
 
             const renderPaginationControls = (currentPage, totalPages) => {
                 const contentEl = document.getElementById(`${activeTab}-content`);
-                if (!contentEl) return;
+                if (!contentEl || !contentEl.innerHTML) return;
                 const controlsContainer = contentEl.querySelector('[data-id="pagination-controls"]');
                 if (!controlsContainer) return;
                 
@@ -741,7 +747,7 @@
             const updateBulkDeleteButtonState = () => {
                  if(activeTab === 'keseluruhan' || activeTab === 'laporan') return;
                  const contentEl = document.getElementById(`${activeTab}-content`);
-                 if(!contentEl) return;
+                 if(!contentEl || !contentEl.innerHTML) return;
 
                  const deleteBtn = contentEl.querySelector('[data-action="delete-selected"]');
                  const selectedCheckboxes = contentEl.querySelectorAll('[data-action="select-row"]:checked');
@@ -777,6 +783,7 @@
                 const expenseTableBank = document.getElementById('expense-report-table-bank');
                 const expenseTablePetty = document.getElementById('expense-report-table-petty');
                 const balanceTable = document.getElementById('balance-summary-table');
+                const grandSummaryTable = document.getElementById('grand-summary-table');
                 
                 const tableCellClasses = "py-2 px-4 border border-slate-300";
                 const totalRowClasses = "font-bold border-t-2 border-slate-800";
@@ -787,20 +794,22 @@
                 const expensePetty = rangeTransactions.filter(t => t.type === 'keluar' && (t.account === 'petty_cash' || t.account === 'koperasi_mini')).sort((a,b)=>a.timestamp.seconds - b.timestamp.seconds);
                 
                 // --- RENDER INCOME ---
-                let totalIncomeBank = BAKI_AWAL_TAHUN.bank_islam || 0;
-                incomeTableBank.innerHTML = `<tr><td class="${tableCellClasses}" colspan="2">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${totalIncomeBank.toFixed(2)}</td></tr>`;
+                let bakiAwalBank = BAKI_AWAL_TAHUN.bank_islam || 0;
+                incomeTableBank.innerHTML = `<tr><td class="${tableCellClasses}" colspan="2">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${bakiAwalBank.toFixed(2)}</td></tr>`;
+                const periodIncomeBank = incomeBank.reduce((sum, t) => sum + t.amount, 0);
                 incomeBank.forEach(t => {
                     incomeTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
                 });
-                const finalTotalIncomeBank = totalIncomeBank + incomeBank.reduce((sum, t) => sum + t.amount, 0);
+                const finalTotalIncomeBank = bakiAwalBank + periodIncomeBank;
                 incomeTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${finalTotalIncomeBank.toFixed(2)}</td></tr>`;
 
-                let totalIncomePetty = (BAKI_AWAL_TAHUN.petty_cash || 0) + (BAKI_AWAL_TAHUN.koperasi_mini || 0);
-                incomeTablePetty.innerHTML = `<tr><td class="${tableCellClasses}" colspan="3">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${totalIncomePetty.toFixed(2)}</td></tr>`;
+                let bakiAwalPetty = (BAKI_AWAL_TAHUN.petty_cash || 0) + (BAKI_AWAL_TAHUN.koperasi_mini || 0);
+                incomeTablePetty.innerHTML = `<tr><td class="${tableCellClasses}" colspan="3">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${bakiAwalPetty.toFixed(2)}</td></tr>`;
+                const periodIncomePetty = incomePetty.reduce((sum, t) => sum + t.amount, 0);
                 incomePetty.forEach(t => {
                     incomeTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
                 });
-                const finalTotalIncomePetty = totalIncomePetty + incomePetty.reduce((sum, t) => sum + t.amount, 0);
+                const finalTotalIncomePetty = bakiAwalPetty + periodIncomePetty;
                 incomeTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${finalTotalIncomePetty.toFixed(2)}</td></tr>`;
 
                 // --- RENDER EXPENSES ---
@@ -818,7 +827,17 @@
                 const totalExpensePetty = expensePetty.reduce((sum, t) => sum + t.amount, 0);
                 expenseTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${totalExpensePetty.toFixed(2)}</td></tr>`;
                 
-                // Populate Balance Summary
+                // --- RENDER GRAND SUMMARY ---
+                const grandTotalIncome = periodIncomeBank + periodIncomePetty;
+                const grandTotalExpense = totalExpenseBank + totalExpensePetty;
+                const surplus = grandTotalIncome - grandTotalExpense;
+                grandSummaryTable.innerHTML = `
+                    <tr><td class="${tableCellClasses}">JUMLAH PENDAPATAN (DALAM TEMPOH)</td><td class="text-right ${tableCellClasses}">${grandTotalIncome.toFixed(2)}</td></tr>
+                    <tr><td class="${tableCellClasses}">JUMLAH PERBELANJAAN (DALAM TEMPOH)</td><td class="text-right ${tableCellClasses}">${grandTotalExpense.toFixed(2)}</td></tr>
+                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">LEBIHAN / (KURANGAN)</td><td class="text-right ${tableCellClasses}">${surplus.toFixed(2)}</td></tr>
+                `;
+
+                // --- RENDER BALANCE SUMMARY ---
                 const bakiBank = finalTotalIncomeBank - totalExpenseBank;
                 const bakiTangan = finalTotalIncomePetty - totalExpensePetty;
                 const jumlahBaki = bakiBank + bakiTangan;
