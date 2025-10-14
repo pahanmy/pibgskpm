@@ -135,8 +135,7 @@
                         <table class="min-w-full w-full bg-white">
                             <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Akaun</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Bulan/Tahun</th>
                                     <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Butiran</th>
                                     <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Masuk (RM)</th>
                                     <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Keluar (RM)</th>
@@ -184,13 +183,13 @@
                                     <option value="all">Semua</option>
                                 </select>
                             </div>
-                            <button data-action="print" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"></path></svg></button>
-                            <button data-action="export" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg></button>
-                            <button data-action="paste-excel" class="p-2 mt-6 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
-                            <button data-action="add-income" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200">
+                            <button data-action="print" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200" title="Cetak PDF"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v3a2 2 0 002 2h6a2 2 0 002-2v-3h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"></path></svg></button>
+                            <button data-action="export" class="p-2 mt-6 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200" title="Eksport Excel"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg></button>
+                            <button data-action="paste-excel" class="p-2 mt-6 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200" title="Tampal dari Excel"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
+                            <button data-action="add-income" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200" title="Tambah Duit Masuk">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
                             </button>
-                             <button data-action="add-expense" class="p-2 mt-6 rounded-md bg-red-100 text-red-600 hover:bg-red-200">
+                             <button data-action="add-expense" class="p-2 mt-6 rounded-md bg-red-100 text-red-600 hover:bg-red-200" title="Tambah Duit Keluar">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
                             </button>
                         </div>
@@ -204,10 +203,27 @@
                                     <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Masuk (RM)</th>
                                     <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Keluar (RM)</th>
                                     <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Baki (RM)</th>
+                                    <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody data-id="table-body" class="divide-y divide-slate-200"></tbody>
                         </table>
+                    </div>
+                     <div class="flex justify-between items-center mt-4">
+                        <div>
+                            <p class="text-sm text-slate-600">
+                                Memaparkan <span data-id="page-info-start">0</span> ke <span data-id="page-info-end">0</span> daripada <span data-id="page-info-total">0</span> keputusan
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                             <label for="items-per-page-select" class="text-sm font-medium text-slate-700">Papar:</label>
+                             <select name="items-per-page-select" class="block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option>15</option>
+                                <option>30</option>
+                            </select>
+                            <button data-action="prev-page" class="px-3 py-1 bg-white border border-slate-300 text-sm font-medium rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
+                            <button data-action="next-page" class="px-3 py-1 bg-white border border-slate-300 text-sm font-medium rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Seterusnya</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -412,7 +428,6 @@
             const toastMessage = document.getElementById('toast-message');
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
-            const allYearFilters = document.querySelectorAll('[name="year-filter"]');
             const reportYearInput = document.getElementById('laporan-year-filter');
 
             // --- General Functions ---
