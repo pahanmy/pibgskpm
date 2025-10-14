@@ -60,6 +60,30 @@
         .pagination-controls button:hover:not(:disabled) {
             background-color: #cbd5e1; /* slate-300 */
         }
+        .master-row {
+            cursor: pointer;
+            font-weight: 600;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .master-row:hover {
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .detail-row {
+            background-color: #ffffff;
+        }
+        .detail-row.hidden {
+            display: none;
+        }
+        .detail-row td:first-child {
+            padding-left: 2rem;
+        }
+        .icon-toggle {
+            transition: transform 0.2s;
+        }
+        .master-row.expanded .icon-toggle {
+            transform: rotate(90deg);
+        }
+
         @media print {
             body * {
                 visibility: hidden;
@@ -135,7 +159,7 @@
                 </div>
                  <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
                      <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
-                        <h2 class="text-2xl font-bold text-slate-800">RINGKASAN TRANSAKSI (KESELURUHAN)</h2>
+                        <h2 class="text-2xl font-bold text-slate-800">PENYATA INDUK (KESELURUHAN)</h2>
                         <div class="flex items-center space-x-4">
                             <div>
                                 <label class="text-sm font-medium text-slate-700">PAPAR:</label>
@@ -167,12 +191,12 @@
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full w-full bg-white">
-                            <thead class="bg-slate-50">
+                            <thead class="bg-slate-200">
                                 <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BULAN</th>
-                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">BUTIRAN</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">JUMLAH MASUK (RM)</th>
-                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">JUMLAH KELUAR (RM)</th>
+                                    <th class="py-3 px-4 w-12"></th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">BUTIRAN</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">JUMLAH MASUK (RM)</th>
+                                    <th class="py-3 px-4 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">JUMLAH KELUAR (RM)</th>
                                 </tr>
                             </thead>
                             <tbody id="keseluruhan-table" class="divide-y divide-slate-200"></tbody>
@@ -448,6 +472,7 @@
             let activeTab = 'keseluruhan';
             let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
             let paginationState = { keseluruhan: 1, bank_islam: 1, petty_cash: 1, koperasi_mini: 1 };
+            const accountNames = { bank_islam: "BANK ISLAM", petty_cash: "DOMPET TUNAI", koperasi_mini: "KOPERASI MINI" };
             
             // --- UI Elements ---
             const tabContainer = document.getElementById('tab-container');
@@ -483,9 +508,7 @@
             // --- Tab & UI Setup ---
             const setupTabs = () => {
                 const template = document.getElementById('account-tab-template');
-                const accountNames = { bank_islam: "Bank Islam", petty_cash: "Dompet Tunai PIBG", koperasi_mini: "Koperasi Mini" };
-                
-                Object.keys(BAKI_AWAL_TAHUN).forEach(key => {
+                Object.keys(accountNames).forEach(key => {
                     const clone = template.cloneNode(true);
                     clone.id = `${key}-content`;
                     clone.classList.add('tab-content');
@@ -538,45 +561,61 @@
                 }
             };
             
-             const renderKeseluruhanTable = (transactions) => {
-                 const tableBody = document.getElementById('keseluruhan-table');
-                 tableBody.innerHTML = '';
-
-                if (transactions.length === 0) {
+            const renderKeseluruhanTable = (groupedData) => {
+                const tableBody = document.getElementById('keseluruhan-table');
+                tableBody.innerHTML = '';
+                if (Object.keys(groupedData).length === 0) {
                      tableBody.innerHTML = `<tr><td colspan="4" class="py-10 text-center text-slate-500">TIADA TRANSAKSI.</td></tr>`;
                      return;
                 }
-                 
-                 const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
 
-                 const grouped = transactions.reduce((acc, t) => {
-                     const date = t.timestamp.toDate();
-                     const monthYear = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-                     const key = `${t.description.toLowerCase().trim()}::${monthYear}`;
+                let groupIndex = 0;
+                for (const [key, data] of Object.entries(groupedData)) {
+                    const groupId = `group-${groupIndex++}`;
+                    const masterRow = document.createElement('tr');
+                    masterRow.className = 'master-row';
+                    masterRow.dataset.groupId = groupId;
+                    masterRow.innerHTML = `
+                        <td class="py-3 px-4 text-center">
+                            <svg class="w-4 h-4 text-slate-500 icon-toggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </td>
+                        <td class="py-3 px-4">${key} (${data.transactions.length} REKOD)</td>
+                        <td class="py-3 px-4 text-right text-green-600">${data.totalMasuk > 0 ? `+ ${data.totalMasuk.toFixed(2)}` : '-'}</td>
+                        <td class="py-3 px-4 text-right text-red-600">${data.totalKeluar > 0 ? `- ${data.totalKeluar.toFixed(2)}` : '-'}</td>
+                    `;
+                    tableBody.appendChild(masterRow);
 
-                     if (!acc[key]) {
-                         acc[key] = { month: monthYear, description: t.description, masuk: 0, keluar: 0 };
-                     }
-                     if (t.type === 'masuk') acc[key].masuk += t.amount;
-                     else acc[key].keluar += t.amount;
-                     return acc;
-                 }, {});
+                    // Add sub-header for details
+                    const subHeaderRow = document.createElement('tr');
+                    subHeaderRow.className = 'detail-row hidden bg-slate-100 font-semibold';
+                    subHeaderRow.dataset.groupId = groupId;
+                    subHeaderRow.innerHTML = `
+                        <td class="py-2 px-4 text-xs text-slate-500">TARIKH</td>
+                        <td class="py-2 px-4 text-xs text-slate-500">AKAUN</td>
+                        <td class="py-2 px-4 text-xs text-slate-500 text-right">MASUK (RM)</td>
+                        <td class="py-2 px-4 text-xs text-slate-500 text-right">KELUAR (RM)</td>
+                    `;
+                    tableBody.appendChild(subHeaderRow);
 
-                 Object.values(grouped).forEach(g => {
-                     const row = document.createElement('tr');
-                     row.innerHTML = `
-                        <td class="py-3 px-4 text-sm text-slate-500">${g.month}</td>
-                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${g.description}</td>
-                        <td class="py-3 px-4 text-sm text-green-600 text-right font-medium">${g.masuk > 0 ? `+ ${g.masuk.toFixed(2)}` : '-'}</td>
-                        <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${g.keluar > 0 ? `- ${g.keluar.toFixed(2)}` : '-'}</td>
-                     `;
-                     tableBody.appendChild(row);
-                 });
+                    data.transactions.forEach(t => {
+                        const detailRow = document.createElement('tr');
+                        detailRow.className = 'detail-row hidden';
+                        detailRow.dataset.groupId = groupId;
+                        detailRow.innerHTML = `
+                            <td class="py-2 px-4">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
+                            <td class="py-2 px-4">${accountNames[t.account] || t.account}</td>
+                            <td class="py-2 px-4 text-right">${t.type === 'masuk' ? t.amount.toFixed(2) : '-'}</td>
+                            <td class="py-2 px-4 text-right">${t.type === 'keluar' ? t.amount.toFixed(2) : '-'}</td>
+                        `;
+                        tableBody.appendChild(detailRow);
+                    });
+                }
             };
+
 
             const renderTable = (accountId, transactionsToRender) => {
                  if(accountId === 'keseluruhan') {
-                     renderKeseluruhanTable(transactionsToRender);
+                     // The main render function now handles grouped data directly
                      return;
                  }
                 const contentEl = document.getElementById(`${accountId}-content`);
@@ -623,43 +662,57 @@
                 const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
                 const selectedLimit = parseInt(contentEl.querySelector('[name="limit-filter"]').value, 10);
-
-                let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
                 
-                const filtered = transactions.filter(t => {
+                const filtered = allTransactions.filter(t => {
                     const appDate = t.timestamp.toDate();
                     const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
                     const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
                     return monthMatch && yearMatch;
                 }).sort((a,b) => b.timestamp.seconds - a.timestamp.seconds);
                 
-                const currentPage = paginationState[activeTab] || 1;
-                const totalItems = (activeTab === 'keseluruhan') ? Object.keys(filtered.reduce((acc, t) => {
-                     const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
-                     const date = t.timestamp.toDate();
-                     const monthYear = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-                     const key = `${t.description.toLowerCase().trim()}::${monthYear}`;
-                     acc[key] = true;
-                     return acc;
-                }, {})).length : filtered.length;
-                const totalPages = Math.ceil(totalItems / selectedLimit);
-
-                const startIndex = (currentPage - 1) * selectedLimit;
-                const endIndex = startIndex + selectedLimit;
-                const paginated = filtered.slice(startIndex, endIndex);
-
                 calculateAndDisplayStats('keseluruhan', allTransactions);
-                if (activeTab !== 'keseluruhan') calculateAndDisplayStats(activeTab, transactions);
-                
-                renderTable(activeTab, paginated);
-                renderPaginationControls(currentPage, totalPages);
-                updateBulkDeleteButtonState();
+
+                if (activeTab === 'keseluruhan') {
+                    const grouped = filtered.reduce((acc, t) => {
+                        const key = t.description.toLowerCase().trim();
+                        if (!acc[key]) acc[key] = { transactions: [], totalMasuk: 0, totalKeluar: 0 };
+                        acc[key].transactions.push(t);
+                        if (t.type === 'masuk') acc[key].totalMasuk += t.amount;
+                        else acc[key].totalKeluar += t.amount;
+                        return acc;
+                    }, {});
+
+                    const currentPage = paginationState[activeTab] || 1;
+                    const totalItems = Object.keys(grouped).length;
+                    const totalPages = Math.ceil(totalItems / selectedLimit);
+                    const startIndex = (currentPage - 1) * selectedLimit;
+                    const paginatedGroupKeys = Object.keys(grouped).slice(startIndex, startIndex + selectedLimit);
+                    const paginatedGroupedData = paginatedGroupKeys.reduce((acc, key) => {
+                        acc[key] = grouped[key];
+                        return acc;
+                    }, {});
+                    
+                    renderKeseluruhanTable(paginatedGroupedData);
+                    renderPaginationControls(currentPage, totalPages);
+                } else {
+                    const accountTransactions = filtered.filter(t => t.account === activeTab);
+                    calculateAndDisplayStats(activeTab, accountTransactions);
+                    
+                    const currentPage = paginationState[activeTab] || 1;
+                    const totalItems = accountTransactions.length;
+                    const totalPages = Math.ceil(totalItems / selectedLimit);
+                    const startIndex = (currentPage - 1) * selectedLimit;
+                    const paginated = accountTransactions.slice(startIndex, startIndex + selectedLimit);
+
+                    renderTable(activeTab, paginated);
+                    renderPaginationControls(currentPage, totalPages);
+                    updateBulkDeleteButtonState();
+                }
             };
 
             const renderPaginationControls = (currentPage, totalPages) => {
                 const contentEl = document.getElementById(`${activeTab}-content`);
                 if (!contentEl) return;
-
                 const controlsContainer = contentEl.querySelector('[data-id="pagination-controls"]');
                 if (!controlsContainer) return;
                 
@@ -667,7 +720,6 @@
                     controlsContainer.innerHTML = '';
                     return;
                 }
-
                 controlsContainer.innerHTML = `
                     <button data-action="prev-page" ${currentPage === 1 ? 'disabled' : ''}>SEBELUM</button>
                     <span class="text-sm font-medium text-slate-600">MUKA SURAT ${currentPage} DARI ${totalPages}</span>
@@ -693,7 +745,6 @@
 
             const updateBulkDeleteButtonState = () => {
                  if(activeTab === 'keseluruhan' || activeTab === 'laporan') return;
-                
                  const contentEl = document.getElementById(`${activeTab}-content`);
                  if(!contentEl) return;
 
@@ -822,8 +873,17 @@
 
             tabContainer.addEventListener('click', async (e) => {
                 const target = e.target;
-                const actionBtn = target.closest('[data-action]');
-                
+
+                // Handle master row expand/collapse
+                const masterRow = target.closest('.master-row');
+                if(masterRow) {
+                    const groupId = masterRow.dataset.groupId;
+                    const detailRows = tabContainer.querySelectorAll(`.detail-row[data-group-id="${groupId}"]`);
+                    masterRow.classList.toggle('expanded');
+                    detailRows.forEach(row => row.classList.toggle('hidden'));
+                    return;
+                }
+
                 if (target.matches('[data-action="select-all"]')) {
                     const contentEl = document.getElementById(`${activeTab}-content`);
                     const allCheckboxes = contentEl.querySelectorAll('[data-action="select-row"]');
@@ -836,6 +896,7 @@
                     return;
                 }
 
+                const actionBtn = target.closest('[data-action]');
                 if (!actionBtn) return;
                 
                 const action = actionBtn.dataset.action;
@@ -853,18 +914,11 @@
                         applyFiltersAndRender();
                         break;
                     case 'add-income':
-                        transactionForm.reset();
-                        delete transactionForm.dataset.docId;
-                        transactionForm.dataset.type = 'masuk';
-                        document.getElementById('modal-title').textContent = 'TAMBAH DUIT MASUK';
-                        document.getElementById('trans-date').value = formatDateForInput(new Date());
-                        openModal(transactionModal);
-                        break;
                     case 'add-expense':
                         transactionForm.reset();
                         delete transactionForm.dataset.docId;
-                        transactionForm.dataset.type = 'keluar';
-                        document.getElementById('modal-title').textContent = 'TAMBAH DUIT KELUAR';
+                        transactionForm.dataset.type = (action === 'add-income' ? 'masuk' : 'keluar');
+                        document.getElementById('modal-title').textContent = (action === 'add-income' ? 'TAMBAH DUIT MASUK' : 'TAMBAH DUIT KELUAR');
                         document.getElementById('trans-date').value = formatDateForInput(new Date());
                         openModal(transactionModal);
                         break;
@@ -890,7 +944,6 @@
                                 await deleteDoc(doc(db, transactionsCol.path, id));
                                 showToast("Transaksi berjaya dipadam!");
                             } catch (error) {
-                                console.error("Error deleting transaction: ", error);
                                 showToast("Gagal memadam transaksi.", "error");
                             }
                         }
@@ -908,7 +961,6 @@
                                 await batch.commit();
                                 showToast(`${idsToDelete.length} transaksi berjaya dipadam!`);
                             } catch(error) {
-                                console.error("Error batch deleting transactions:", error);
                                 showToast("Gagal memadam transaksi terpilih.", "error");
                             }
                         }
@@ -928,69 +980,47 @@
                 const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
 
-                let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
-                
-                const filteredData = transactions.filter(t => {
+                const filteredData = allTransactions.filter(t => {
+                    if (activeTab !== 'keseluruhan' && t.account !== activeTab) return false;
                     const appDate = t.timestamp.toDate();
                     const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
                     const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
                     return monthMatch && yearMatch;
                 }).sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
-
-                const accountNames = { keseluruhan: "Keseluruhan", bank_islam: "Bank Islam", petty_cash: "Dompet Tunai PIBG", koperasi_mini: "Koperasi Mini" };
-                const title = `Penyata Kewangan - ${accountNames[activeTab]}`;
+                
+                const title = `Penyata Kewangan - ${accountNames[activeTab] || 'Keseluruhan'}`;
                 const filename = `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}`;
 
                 if (type === 'export-pdf') {
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
                     doc.text(title, 14, 15);
-                    if (activeTab === 'keseluruhan') {
-                        // Special handling for grouped data if needed, or just export raw
-                        doc.autoTable({
-                            head: [['TARIKH', 'BUTIRAN', 'AKAUN', 'MASUK (RM)', 'KELUAR (RM)']],
-                            body: filteredData.map(t => [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, accountNames[t.account] || t.account, t.type === 'masuk' ? t.amount.toFixed(2): '', t.type==='keluar' ? t.amount.toFixed(2):'']),
-                            startY: 20, headStyles: { fillColor: [79, 70, 229] }
-                        });
-                    } else {
-                        let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
-                        doc.autoTable({
-                            head: [['TARIKH', 'BUTIRAN', 'MASUK (RM)', 'KELUAR (RM)', 'BAKI (RM)']],
-                            body: filteredData.map(t => {
-                                baki += (t.type === 'masuk' ? t.amount : -t.amount);
-                                return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, t.type === 'masuk' ? t.amount.toFixed(2) : '', t.type === 'keluar' ? t.amount.toFixed(2) : '', baki.toFixed(2)];
-                            }),
-                             startY: 20, headStyles: { fillColor: [79, 70, 229] }
-                        });
-                    }
+                    const head = activeTab === 'keseluruhan' ? [['TARIKH', 'BUTIRAN', 'AKAUN', 'MASUK (RM)', 'KELUAR (RM)']] : [['TARIKH', 'BUTIRAN', 'MASUK (RM)', 'KELUAR (RM)', 'BAKI (RM)']];
+                    let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
+                    const body = filteredData.map(t => {
+                        if (activeTab === 'keseluruhan') {
+                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, accountNames[t.account] || t.account, t.type === 'masuk' ? t.amount.toFixed(2): '', t.type==='keluar' ? t.amount.toFixed(2):''];
+                        } else {
+                            baki += (t.type === 'masuk' ? t.amount : -t.amount);
+                            return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, t.type === 'masuk' ? t.amount.toFixed(2) : '', t.type === 'keluar' ? t.amount.toFixed(2) : '', baki.toFixed(2)];
+                        }
+                    });
+                    doc.autoTable({ head, body, startY: 20, headStyles: { fillColor: [79, 70, 229] } });
                     doc.save(`${filename}.pdf`);
 
                 } else if (type === 'export-excel') {
-                    let dataForExport = [];
-                     if (activeTab === 'keseluruhan') {
-                         dataForExport = filteredData.map(t => ({
-                             TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'),
-                             BUTIRAN: t.description,
-                             AKAUN: accountNames[t.account] || t.account,
-                             'MASUK (RM)': t.type === 'masuk' ? t.amount : '',
-                             'KELUAR (RM)': t.type === 'keluar' ? t.amount : ''
-                         }));
-                    } else {
-                        let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
-                        dataForExport = filteredData.map(t => {
+                    let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
+                    const dataForExport = filteredData.map(t => {
+                         if (activeTab === 'keseluruhan') {
+                             return { TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'), BUTIRAN: t.description, AKAUN: accountNames[t.account] || t.account, 'MASUK (RM)': t.type === 'masuk' ? t.amount : '', 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '' };
+                         } else {
                              baki += (t.type === 'masuk' ? t.amount : -t.amount);
-                             return {
-                                 TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'),
-                                 BUTIRAN: t.description,
-                                 'MASUK (RM)': t.type === 'masuk' ? t.amount : '',
-                                 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '',
-                                 'BAKI (RM)': baki
-                             }
-                        });
-                    }
+                             return { TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'), BUTIRAN: t.description, 'MASUK (RM)': t.type === 'masuk' ? t.amount : '', 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '', 'BAKI (RM)': baki };
+                         }
+                    });
                     const ws = XLSX.utils.json_to_sheet(dataForExport);
                     const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, accountNames[activeTab]);
+                    XLSX.utils.book_append_sheet(wb, ws, accountNames[activeTab] || 'Keseluruhan');
                     XLSX.writeFile(wb, `${filename}.xlsx`);
                 }
             };
@@ -1010,25 +1040,15 @@
                 };
                 
                 try {
-                    if (docId) {
-                        await updateDoc(doc(db, transactionsCol.path, docId), formData);
-                        showToast("Transaksi berjaya dikemaskini!");
-                    } else {
-                        await addDoc(transactionsCol, formData);
-                        showToast("Transaksi berjaya disimpan!");
-                    }
+                    if (docId) await updateDoc(doc(db, transactionsCol.path, docId), formData), showToast("Transaksi berjaya dikemaskini!");
+                    else await addDoc(transactionsCol, formData), showToast("Transaksi berjaya disimpan!");
                     transactionForm.reset();
                     closeModal(transactionModal);
-                } catch(error) {
-                    console.error("Error saving transaction:", error);
-                    showToast("Gagal menyimpan transaksi.", "error");
-                }
+                } catch(error) { showToast("Gagal menyimpan transaksi.", "error"); }
             });
             
             document.getElementById('open-settings-btn').addEventListener('click', () => {
-                Object.keys(BAKI_AWAL_TAHUN).forEach(key => {
-                    document.getElementById(`baki-${key}`).value = BAKI_AWAL_TAHUN[key];
-                });
+                Object.keys(BAKI_AWAL_TAHUN).forEach(key => document.getElementById(`baki-${key}`).value = BAKI_AWAL_TAHUN[key]);
                 openModal(settingsModal);
             });
 
@@ -1047,34 +1067,22 @@
                     updateUI();
                     showToast("Baki awal berjaya dikemaskini!");
                     closeModal(settingsModal);
-                } catch (error) {
-                    console.error("Error saving settings: ", error);
-                    showToast("Gagal menyimpan tetapan.", "error");
-                }
+                } catch (error) { showToast("Gagal menyimpan tetapan.", "error"); }
             });
             
             reportStartDateInput.addEventListener('change', renderAnnualReport);
             reportEndDateInput.addEventListener('change', renderAnnualReport);
             document.getElementById('print-report-btn').addEventListener('click', () => {
                  const style = `<style>
-                    body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; text-transform: uppercase;}
-                    table { width: 100%; border-collapse: collapse; }
-                    td, th { border: 1px solid #9ca3af; padding: 8px; font-size: 11px; }
-                    h3, h4, p { margin-bottom: 1rem; text-align: center; }
-                    h3 { font-size: 1.25rem; font-weight: bold; }
-                    h4 { text-align: left; border-bottom: 1px solid #333; padding-bottom: 4px; font-size: 1rem; font-weight: 600; margin-top: 2rem;}
-                    .text-right { text-align: right; } .text-left { text-align: left; } .font-bold { font-weight: bold; }
-                    .border-t-2 { border-top-width: 2px; } .border-slate-800 { border-color: #1e293b; }
-                    .grid { display: grid; } .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-                    .gap-x-16 { column-gap: 4rem; } .gap-y-12 { row-gap: 3rem; } .pt-12 { padding-top: 3rem; }
-                    .pt-2 { padding-top: 0.5rem; } .border-t { border-top-width: 1px; } .border-slate-300 { border-color: #d1d5db; }
-                    .justify-end { justify-content: flex-end; } .flex { display: flex; } .text-center { text-align: center; }
+                    body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; text-transform: uppercase;} table { width: 100%; border-collapse: collapse; }
+                    td, th { border: 1px solid #9ca3af; padding: 8px; font-size: 11px; } h3, h4, p { margin-bottom: 1rem; text-align: center; }
+                    h3 { font-size: 1.25rem; font-weight: bold; } h4 { text-align: left; border-bottom: 1px solid #333; padding-bottom: 4px; font-size: 1rem; font-weight: 600; margin-top: 2rem;}
+                    .text-right { text-align: right; } .text-left { text-align: left; } .font-bold { font-weight: bold; } .border-t-2 { border-top-width: 2px; } .border-slate-800 { border-color: #1e293b; }
+                    .grid { display: grid; } .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gap-x-16 { column-gap: 4rem; } .gap-y-12 { row-gap: 3rem; } .pt-12 { padding-top: 3rem; }
+                    .pt-2 { padding-top: 0.5rem; } .border-t { border-top-width: 1px; } .border-slate-300 { border-color: #d1d5db; } .justify-end { justify-content: flex-end; } .flex { display: flex; } .text-center { text-align: center; }
                  </style>`;
-
                  const printWindow = window.open('', '', 'height=800,width=800');
-                 printWindow.document.write(`<html><head><title>Penyata Kewangan Tahunan</title>${style}</head><body>`);
-                 printWindow.document.write(document.getElementById('print-area').innerHTML);
-                 printWindow.document.write('</body></html>');
+                 printWindow.document.write(`<html><head><title>Penyata Kewangan Tahunan</title>${style}</head><body>${document.getElementById('print-area').innerHTML}</body></html>`);
                  printWindow.document.close();
                  printWindow.focus();
                  setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
@@ -1094,13 +1102,7 @@
                     
                     if (amount > 0 && desc && dateStr) {
                         try {
-                             await addDoc(transactionsCol, {
-                                account: activeTab,
-                                type: income > 0 ? 'masuk' : 'keluar',
-                                description: desc.trim(),
-                                amount: amount,
-                                timestamp: Timestamp.fromDate(new Date(dateStr))
-                            });
+                             await addDoc(transactionsCol, { account: activeTab, type: income > 0 ? 'masuk' : 'keluar', description: desc.trim(), amount: amount, timestamp: Timestamp.fromDate(new Date(dateStr)) });
                             successCount++;
                         } catch(e) { console.error("Error processing row: ", row, e); }
                     }
