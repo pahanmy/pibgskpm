@@ -386,6 +386,7 @@
         const settingsForm = document.getElementById('settingsForm');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
+        const allYearFilters = document.querySelectorAll('[name="year-filter"], #laporan-year-filter');
 
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
@@ -525,16 +526,18 @@
             }
             years.sort((a, b) => b - a);
 
-            document.querySelectorAll('[name="year-filter"]').forEach(select => {
-                 while(select.options.length > 1) { select.remove(1); }
-                years.forEach(year => {
-                    const option = document.createElement('option');
-                    option.value = year;
-                    option.textContent = year;
-                    select.appendChild(option);
-                });
+            allYearFilters.forEach(select => {
+                if (select.tagName === 'SELECT') {
+                    while(select.options.length > 1) { select.remove(1); }
+                    years.forEach(year => {
+                        const option = document.createElement('option');
+                        option.value = year;
+                        option.textContent = year;
+                        select.appendChild(option);
+                    });
+                }
             });
-             document.getElementById('laporan-year-filter').value = new Date().getFullYear();
+            document.getElementById('laporan-year-filter').value = new Date().getFullYear();
         };
 
         // --- Annual Report Logic ---
@@ -743,13 +746,14 @@
                     populateYearFilters();
                     
                     const currentYear = new Date().getFullYear();
-                    const allYearFilters = document.querySelectorAll('[name="year-filter"], #laporan-year-filter');
                     allYearFilters.forEach(filter => {
-                        const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
-                        if(yearExists) {
-                            filter.value = currentYear;
-                        } else if (filter.options.length > (filter.id === 'laporan-year-filter' ? 0 : 1)) {
-                             filter.value = filter.options[filter.id === 'laporan-year-filter' ? 0 : 1].value;
+                        if (filter.tagName === 'SELECT') {
+                            const yearExists = Array.from(filter.options).some(opt => opt.value == currentYear);
+                            if(yearExists) {
+                                filter.value = currentYear;
+                            } else if (filter.options.length > 1) {
+                                filter.value = filter.options[1].value;
+                            }
                         } else {
                             filter.value = currentYear;
                         }
