@@ -409,7 +409,7 @@
         const newApplicationBtnInAnalysis = document.getElementById('newApplicationBtnInAnalysis');
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
-
+        
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
             toastMessage.textContent = message;
@@ -423,8 +423,8 @@
             tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
             tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
         };
-        
-        // --- Data Fetching and Processing ---
+
+        // --- Data Fetching, Processing, and Rendering ---
         const fetchApplications = () => {
              analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Memuatkan data...</td></tr>`;
             onSnapshot(applicationsCol, (snapshot) => {
@@ -439,15 +439,12 @@
 
         const calculateStats = () => {
             document.getElementById('total-apps').textContent = allApps.length;
-            
             const approvedApps = allApps.filter(app => app.status === 'Diluluskan');
             const pendingApps = allApps.filter(app => app.status === 'Dalam Proses');
             const rejectedApps = allApps.filter(app => app.status === 'Ditolak');
-
             document.getElementById('total-approved').textContent = approvedApps.length;
             document.getElementById('total-pending').textContent = pendingApps.length;
             document.getElementById('total-rejected').textContent = rejectedApps.length;
-            
             const totalAmount = approvedApps.reduce((sum, app) => sum + app.amount, 0);
             document.getElementById('total-amount').textContent = `RM ${totalAmount.toFixed(2)}`;
         };
@@ -456,10 +453,7 @@
             const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
             years.sort((a, b) => b - a);
             
-            while(yearFilter.options.length > 1) {
-                yearFilter.remove(1);
-            }
-
+            while(yearFilter.options.length > 1) { yearFilter.remove(1); }
             years.forEach(year => {
                 const option = document.createElement('option');
                 option.value = year;
@@ -475,10 +469,8 @@
             filteredApps = allApps.filter(app => {
                 const appDate = app.createdAt?.toDate();
                 if (!appDate) return false;
-
                 const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
                 const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
-
                 return monthMatch && yearMatch;
             });
             currentPage = 1;
@@ -534,29 +526,7 @@
             document.getElementById('page-info-total').textContent = filteredApps.length;
         };
         
-        // --- Event Listeners for Filters and Pagination ---
-        monthFilter.addEventListener('change', applyFiltersAndRender);
-        yearFilter.addEventListener('change', applyFiltersAndRender);
-        itemsPerPageSelect.addEventListener('change', () => {
-            currentPage = 1;
-            renderTable();
-        });
-        prevPageBtn.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderTable();
-            }
-        });
-        nextPageBtn.addEventListener('click', () => {
-            const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
-            const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
-            if(currentPage < totalPages){
-                currentPage++;
-                renderTable();
-            }
-        });
-
-        // --- Application Form Logic (Copied from mohon.html) ---
+        // --- Application Form Logic ---
         const formSteps = document.querySelectorAll('.form-step');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -629,152 +599,142 @@
             applicantPositionInput.classList.add('bg-slate-100');
         };
 
-        icInput.addEventListener('blur', async () => {
-            const icValue = icInput.value.trim();
-            teacherRegOption.classList.add('hidden');
-            applicantNameInput.readOnly = true;
-            applicantNameInput.classList.add('bg-slate-100');
-            applicantPositionInput.readOnly = true;
-            applicantPositionInput.classList.add('bg-slate-100');
-
-            if (icValue.length < 5) {
-                icFeedback.textContent = '';
-                return;
-            }
-
-            icFeedback.textContent = 'Mencari maklumat Exco...';
-            icFeedback.className = 'text-sm mt-2 h-5 text-slate-500';
-            applicantDetailsFieldset.disabled = true;
-            nextBtn.disabled = true;
-
-            try {
-                const q = query(excoMembersCol, where("ic", "==", icValue));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    icFeedback.textContent = 'No. KP tidak dijumpai dalam senarai Exco.';
-                    icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
-                    applicantNameInput.value = '';
-                    applicantPositionInput.value = '';
-                    teacherRegOption.classList.remove('hidden');
-                } else {
-                    const excoData = querySnapshot.docs[0].data();
-                    icFeedback.textContent = 'Maklumat Exco dijumpai!';
-                    icFeedback.className = 'text-sm mt-2 h-5 text-green-600';
-                    applicantNameInput.value = excoData.name;
-                    applicantPositionInput.value = excoData.pibgPosition;
-                    applicantDetailsFieldset.disabled = false;
-                    nextBtn.disabled = false;
-                }
-            } catch (error) {
-                console.error("Error fetching exco:", error);
-                icFeedback.textContent = 'Gagal membuat semakan. Sila cuba lagi.';
-                icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
-            }
-        });
-
-        registerTeacherBtn.addEventListener('click', () => {
-            icFeedback.textContent = 'Mod Guru: Sila masukkan nama anda di bawah.';
-            icFeedback.className = 'text-sm mt-2 h-5 text-blue-600';
-            
-            applicantNameInput.readOnly = false;
-            applicantNameInput.classList.remove('bg-slate-100');
-            applicantNameInput.value = '';
-            applicantNameInput.focus();
-
-            applicantPositionInput.value = 'Guru';
-            applicantPositionInput.readOnly = true;
-            applicantPositionInput.classList.add('bg-slate-100');
-
-            applicantDetailsFieldset.disabled = false;
-            nextBtn.disabled = false;
-            teacherRegOption.classList.add('hidden');
-        });
-        
-        nextBtn.addEventListener('click', () => {
-            if (validateStep(formCurrentStep) && formCurrentStep < formSteps.length) {
-                formCurrentStep++;
-                updateFormSteps(); updateProgressBar(); updateButtons();
-            }
-        });
-        prevBtn.addEventListener('click', () => {
-            if (formCurrentStep > 1) {
-                formCurrentStep--;
-                updateFormSteps(); updateProgressBar(); updateButtons();
-            }
-        });
-        
-        const costInputs = document.querySelectorAll('.cost-input');
-        const totalCostInput = document.getElementById('jumlah_keseluruhan');
-        const calculateTotal = () => {
-            let total = 0;
-            costInputs.forEach(input => { total += parseFloat(input.value) || 0; });
-            totalCostInput.value = total.toFixed(2);
-        };
-        costInputs.forEach(input => input.addEventListener('input', calculateTotal));
-        
-        applicationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!validateStep(formCurrentStep)) return;
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Menghantar...';
-            
-            try {
-                const newApplication = {
-                    applicant: applicantNameInput.value,
-                    applicantIC: icInput.value,
-                    position: applicantPositionInput.value,
-                    phone: document.getElementById('no_telefon').value,
-                    bankName: document.getElementById('nama_bank').value,
-                    bankAccount: document.getElementById('no_akaun').value,
-                    purpose: document.getElementById('tujuan').value,
-                    programDate: document.getElementById('tarikh_program').value,
-                    category: document.querySelector('input[name="kategori"]:checked').value === 'Lain-lain' 
-                        ? document.querySelector('input[name="kategori_lain"]').value 
-                        : document.querySelector('input[name="kategori"]:checked').value,
-                    participants: parseInt(document.getElementById('jumlah_peserta').value) || 0,
-                    days: parseInt(document.getElementById('jumlah_hari').value) || 0,
-                    budget: {
-                        makan: parseFloat(document.getElementById('makan_minum').value) || 0,
-                        angkut: parseFloat(document.getElementById('pengangkutan').value) || 0,
-                        lain: parseFloat(document.getElementById('lain_lain').value) || 0
-                    },
-                    amount: parseFloat(totalCostInput.value) || 0,
-                    status: 'Dalam Proses',
-                    votes: [],
-                    createdAt: serverTimestamp()
-                };
-                await addDoc(applicationsCol, newApplication);
-                document.getElementById('form-steps-container').style.display = 'none';
-                successMessage.classList.remove('hidden');
-                setTimeout(() => { 
-                    switchTab('tab-analysis-btn');
-                    resetApplicationForm();
-                }, 4000);
-
-            } catch (error) {
-                console.error("Error submitting application:", error);
-                showToast('Gagal menghantar permohonan.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Hantar Permohonan';
-            }
-        });
-        
-        // --- Initial Page Load ---
+        // --- Event Listeners and Initial Load ---
         document.addEventListener('DOMContentLoaded', () => {
+            (async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    fetchApplications();
+                } catch (error) {
+                    console.error("Firebase authentication failed:", error);
+                    analysisTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
+                }
+            })();
+
             switchTab('tab-analysis-btn');
             resetApplicationForm();
-             // Event Listeners for tab buttons
+            
             tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
-        
+            
             newApplicationBtnInAnalysis.addEventListener('click', () => {
                 switchTab('tab-form-btn');
                 resetApplicationForm();
             });
-        });
 
+            monthFilter.addEventListener('change', applyFiltersAndRender);
+            yearFilter.addEventListener('change', applyFiltersAndRender);
+            itemsPerPageSelect.addEventListener('change', () => { currentPage = 1; renderTable(); });
+            prevPageBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); } });
+            nextPageBtn.addEventListener('click', () => {
+                const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
+                const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
+                if(currentPage < totalPages){ currentPage++; renderTable(); }
+            });
+
+            icInput.addEventListener('blur', async () => {
+                const icValue = icInput.value.trim();
+                teacherRegOption.classList.add('hidden');
+                applicantNameInput.readOnly = true; applicantNameInput.classList.add('bg-slate-100');
+                applicantPositionInput.readOnly = true; applicantPositionInput.classList.add('bg-slate-100');
+
+                if (icValue.length < 5) { icFeedback.textContent = ''; return; }
+
+                icFeedback.textContent = 'Mencari maklumat Exco...';
+                icFeedback.className = 'text-sm mt-2 h-5 text-slate-500';
+                applicantDetailsFieldset.disabled = true;
+                nextBtn.disabled = true;
+
+                try {
+                    const q = query(excoMembersCol, where("ic", "==", icValue));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        icFeedback.textContent = 'No. KP tidak dijumpai dalam senarai Exco.';
+                        icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
+                        applicantNameInput.value = ''; applicantPositionInput.value = '';
+                        teacherRegOption.classList.remove('hidden');
+                    } else {
+                        const excoData = querySnapshot.docs[0].data();
+                        icFeedback.textContent = 'Maklumat Exco dijumpai!';
+                        icFeedback.className = 'text-sm mt-2 h-5 text-green-600';
+                        applicantNameInput.value = excoData.name;
+                        applicantPositionInput.value = excoData.pibgPosition;
+                        applicantDetailsFieldset.disabled = false;
+                        nextBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error("Error fetching exco:", error);
+                    icFeedback.textContent = 'Gagal membuat semakan. Sila cuba lagi.';
+                    icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
+                }
+            });
+
+            registerTeacherBtn.addEventListener('click', () => {
+                icFeedback.textContent = 'Mod Guru: Sila masukkan nama anda di bawah.';
+                icFeedback.className = 'text-sm mt-2 h-5 text-blue-600';
+                applicantNameInput.readOnly = false; applicantNameInput.classList.remove('bg-slate-100');
+                applicantNameInput.value = ''; applicantNameInput.focus();
+                applicantPositionInput.value = 'Guru'; applicantPositionInput.readOnly = true;
+                applicantPositionInput.classList.add('bg-slate-100');
+                applicantDetailsFieldset.disabled = false;
+                nextBtn.disabled = false;
+                teacherRegOption.classList.add('hidden');
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (validateStep(formCurrentStep) && formCurrentStep < formSteps.length) {
+                    formCurrentStep++; updateFormSteps(); updateProgressBar(); updateButtons();
+                }
+            });
+            prevBtn.addEventListener('click', () => {
+                if (formCurrentStep > 1) {
+                    formCurrentStep--; updateFormSteps(); updateProgressBar(); updateButtons();
+                }
+            });
+            
+            const costInputs = document.querySelectorAll('.cost-input');
+            const totalCostInput = document.getElementById('jumlah_keseluruhan');
+            const calculateTotal = () => {
+                let total = 0;
+                costInputs.forEach(input => { total += parseFloat(input.value) || 0; });
+                totalCostInput.value = total.toFixed(2);
+            };
+            costInputs.forEach(input => input.addEventListener('input', calculateTotal));
+            
+            applicationForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!validateStep(formCurrentStep)) return;
+
+                submitBtn.disabled = true; submitBtn.textContent = 'Menghantar...';
+                
+                try {
+                    const newApplication = {
+                        applicant: applicantNameInput.value, applicantIC: icInput.value,
+                        position: applicantPositionInput.value, phone: document.getElementById('no_telefon').value,
+                        bankName: document.getElementById('nama_bank').value, bankAccount: document.getElementById('no_akaun').value,
+                        purpose: document.getElementById('tujuan').value, programDate: document.getElementById('tarikh_program').value,
+                        category: document.querySelector('input[name="kategori"]:checked').value === 'Lain-lain' ? document.querySelector('input[name="kategori_lain"]').value : document.querySelector('input[name="kategori"]:checked').value,
+                        participants: parseInt(document.getElementById('jumlah_peserta').value) || 0,
+                        days: parseInt(document.getElementById('jumlah_hari').value) || 0,
+                        budget: { makan: parseFloat(document.getElementById('makan_minum').value) || 0, angkut: parseFloat(document.getElementById('pengangkutan').value) || 0, lain: parseFloat(document.getElementById('lain_lain').value) || 0 },
+                        amount: parseFloat(totalCostInput.value) || 0, status: 'Dalam Proses', votes: [], createdAt: serverTimestamp()
+                    };
+                    await addDoc(applicationsCol, newApplication);
+                    document.getElementById('form-steps-container').style.display = 'none';
+                    successMessage.classList.remove('hidden');
+                    setTimeout(() => { switchTab('tab-analysis-btn'); resetApplicationForm(); }, 4000);
+                } catch (error) {
+                    console.error("Error submitting application:", error);
+                    showToast('Gagal menghantar permohonan.', 'error');
+                } finally {
+                    submitBtn.disabled = false; submitBtn.textContent = 'Hantar Permohonan';
+                }
+            });
+        });
     </script>
 </body>
 </html>
