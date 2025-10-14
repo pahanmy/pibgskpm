@@ -368,6 +368,22 @@
         </div>
     </div>
 
+    <div id="share-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0" id="share-modal-panel">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-800">Kongsi Pautan Undian</h3>
+                <button id="close-share-modal-btn" class="text-slate-400 hover:text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-600">Salin dan kongsi mesej di bawah untuk menjemput ahli lain mengundi.</p>
+                <textarea id="share-text-area" readonly class="w-full h-48 p-3 border rounded-md bg-slate-50 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                <button id="copy-share-text-btn" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Salin Mesej</button>
+            </div>
+        </div>
+    </div>
+
 
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
         <p id="toast-message">This is a toast message!</p>
@@ -434,6 +450,10 @@
             const closeModalBtn = document.getElementById('close-modal-btn');
             const modalPanel = document.getElementById('modal-panel');
             const modalContent = document.getElementById('modal-content');
+            const shareModal = document.getElementById('share-modal');
+            const shareModalPanel = document.getElementById('share-modal-panel');
+            const closeShareModalBtn = document.getElementById('close-share-modal-btn');
+            const copyShareTextBtn = document.getElementById('copy-share-text-btn');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -564,7 +584,6 @@
                     const approvalThreshold = 10;
                     const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
                     const approvalVotes = votes.filter(v => v.vote === 'approve').length;
-                    const rejectionVotes = votes.filter(v => v.vote === 'reject').length;
                     const totalVotes = votes.length;
                     
                     const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
@@ -582,8 +601,6 @@
                     }
                     
                     const votingPercentage = Math.round((totalVotes / totalMembers) * 100);
-                    const approvalPercentage = totalVotes > 0 ? Math.round((approvalVotes / totalVotes) * 100) : 0;
-                    const rejectionPercentage = totalVotes > 0 ? Math.round((rejectionVotes / totalVotes) * 100) : 0;
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -602,15 +619,11 @@
                             </div>
                         </td>
                          <td class="py-3 px-4 text-xs text-slate-500">
-                            <div class="flex items-center space-x-2 mb-1.5">
+                            <div class="flex items-center space-x-2">
                                 <div class="w-full bg-slate-200 rounded-full h-2">
                                     <div class="bg-blue-600 h-2 rounded-full" style="width: ${votingPercentage}%"></div>
                                 </div>
                                 <span class="font-medium text-slate-700 text-xs w-10 text-right">${totalVotes}/${totalMembers}</span>
-                            </div>
-                            <div class="text-[10px] text-slate-500 flex justify-between">
-                                <span class="text-green-600 font-medium">Sokong: ${approvalPercentage}%</span>
-                                <span class="text-red-600 font-medium">Tolak: ${rejectionPercentage}%</span>
                             </div>
                         </td>
                         <td class="py-3 px-4 text-xs text-slate-500">
@@ -703,23 +716,27 @@
                 document.getElementById('page-info-total').textContent = filteredApps.length;
             };
 
-            const openModal = () => {
-                keputusanModal.classList.remove('hidden');
+            const openModal = (modal, panel) => {
+                modal.classList.remove('hidden');
                 setTimeout(() => { 
-                    keputusanModal.classList.remove('opacity-0');
-                    modalPanel.classList.remove('scale-95', 'opacity-0');
+                    modal.classList.remove('opacity-0');
+                    panel.classList.remove('scale-95', 'opacity-0');
                 }, 10);
             };
-            const closeModal = () => {
-                keputusanModal.classList.add('opacity-0');
-                modalPanel.classList.add('scale-95', 'opacity-0');
+            const closeModal = (modal, panel) => {
+                modal.classList.add('opacity-0');
+                panel.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => {
-                    keputusanModal.classList.add('hidden');
+                    modal.classList.add('hidden');
                 }, 300);
             };
 
             // --- Button Actions ---
             const shareApplication = async (id, purpose, amount) => {
+                const shareTextArea = document.getElementById('share-text-area');
+                shareTextArea.value = 'Menjana pautan pendek...';
+                openModal(shareModal, shareModalPanel);
+
                 const pageUrl = window.location.href.split('?')[0];
                 const votePage = pageUrl.includes('semak.html') ? pageUrl.replace('semak.html', 'undi.html') : `${pageUrl.replace(/\/$/, '')}/undi.html`;
                 const longUrl = `${votePage}?id=${id}`;
@@ -734,31 +751,13 @@
                     console.error('TinyURL API error:', error);
                 }
 
-                const shareText = `Salam semua.
+                shareTextArea.value = `Salam semua.
 Saya perlukan undian untuk permohonan ${id.substring(0, 5).toUpperCase()} : ${purpose}
 
 Jumlah Permohonan : RM ${parseFloat(amount).toFixed(2)}, sila undi di pautan berikut:
 ${shortUrl}
 
 Pengundian akan ditutup 48 jam dari sekarang.`;
-
-                const shareData = {
-                    title: `Undian untuk: ${purpose}`,
-                    text: shareText,
-                };
-                
-                if (navigator.share) {
-                    try {
-                        await navigator.share(shareData);
-                    } catch (err) {
-                        console.error("Share failed:", err);
-                         navigator.clipboard.writeText(shareText);
-                        showToast('Gagal berkongsi. Mesej telah disalin ke papan keratan.');
-                    }
-                } else {
-                    navigator.clipboard.writeText(shareText);
-                    showToast('Mesej jemputan mengundi disalin ke papan keratan!');
-                }
             };
             
             const deleteApplication = async (id) => {
@@ -885,11 +884,18 @@ Pengundian akan ditutup 48 jam dari sekarang.`;
             });
 
              // Modal Listeners
-            closeModalBtn.addEventListener('click', closeModal);
-            keputusanModal.addEventListener('click', (e) => {
-                if(e.target === keputusanModal) {
-                    closeModal();
-                }
+            closeModalBtn.addEventListener('click', () => closeModal(keputusanModal, modalPanel));
+            keputusanModal.addEventListener('click', (e) => { if(e.target === keputusanModal) closeModal(keputusanModal, modalPanel); });
+            closeShareModalBtn.addEventListener('click', () => closeModal(shareModal, shareModalPanel));
+            shareModal.addEventListener('click', (e) => { if(e.target === shareModal) closeModal(shareModal, shareModalPanel); });
+
+            copyShareTextBtn.addEventListener('click', () => {
+                const shareTextArea = document.getElementById('share-text-area');
+                shareTextArea.select();
+                navigator.clipboard.writeText(shareTextArea.value);
+                showToast('Mesej berjaya disalin!');
+                copyShareTextBtn.textContent = 'Disalin!';
+                setTimeout(() => { copyShareTextBtn.textContent = 'Salin Mesej'; }, 2000);
             });
 
             // Event delegation for dynamically created buttons
