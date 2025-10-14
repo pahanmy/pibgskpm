@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ms" class="scroll-smooth">
+<html lang="ms" class="scroll-smooth h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,7 +76,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
@@ -89,7 +89,7 @@
         </nav>
     </header>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="container mx-auto px-6 py-12 flex-grow">
         <div class="flex justify-between items-start mb-8">
             <div>
                 <h1 class="text-3xl font-bold text-slate-900">Penyata Kewangan PIBG</h1>
@@ -350,16 +350,16 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="mb-8">
-                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Ringkasan Keseluruhan</h4>
+                    
+                    <div class="mb-12">
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">RINGKASAN KESELURUHAN</h4>
                         <table class="w-full text-sm border-collapse border border-slate-400">
                             <tbody id="grand-summary-table"></tbody>
                         </table>
                     </div>
 
                     <div class="mb-12">
-                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">Ringkasan Baki</h4>
+                        <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">RINGKASAN BAKI</h4>
                         <table class="w-full text-sm border-collapse border border-slate-400">
                             <tbody id="balance-summary-table"></tbody>
                         </table>
@@ -488,10 +488,10 @@
         </div>
     </div>
 
-
-    <footer class="bg-white border-t mt-12">
-        <div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">
-            &copy; 2025 PERSATUAN IBU BAPA & GURU (PIBG) SK PULAU MELAYU. HAK CIPTA TERPELIHARA.
+    <footer class="bg-slate-800 text-slate-400 mt-12">
+        <div class="container mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-center text-sm">
+            <p class="mb-4 sm:mb-0">&copy; 2025 PIBG SK PULAU MELAYU. HAK CIPTA TERPELIHARA.</p>
+            <p>DIREKA OLEH KOMUNITI SK PULAU MELAYU</p>
         </div>
     </footer>
 
@@ -619,7 +619,7 @@
                     document.getElementById('keseluruhan-baki-akhir').textContent = formatCurrency(bakiAkhir);
                 } else {
                     const contentEl = document.getElementById(`${accountId}-content`);
-                    if(contentEl && contentEl.innerHTML) { // Check if content is populated
+                    if(contentEl && contentEl.innerHTML) {
                         contentEl.querySelector('[data-id="baki-awal"]').textContent = formatCurrency(bakiAwal);
                         contentEl.querySelector('[data-id="kutipan"]').textContent = formatCurrency(totalIn);
                         contentEl.querySelector('[data-id="perbelanjaan"]').textContent = formatCurrency(totalOut);
