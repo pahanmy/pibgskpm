@@ -31,7 +31,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
-    <!-- Header -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
@@ -39,16 +38,14 @@
                 <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
             </a>
             <div class="flex space-x-8">
-                <a href="mohon.html" class="text-slate-600 hover:text-indigo-600 font-semibold">Kembali ke Senarai Permohonan</a>
+                <a href="semak.html" class="text-slate-600 hover:text-indigo-600 font-semibold">Kembali ke Senarai Permohonan</a>
             </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-6 py-12">
         <div id="main-content" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-4xl mx-auto">
             
-            <!-- IC Verification Section -->
             <div id="ic-verification-section" class="p-8">
                 <h2 class="text-2xl font-bold text-slate-900 mb-2">Pengesahan Exco PIBG</h2>
                 <p class="text-slate-500 mb-6">Sila masukkan No. Kad Pengenalan anda untuk meneruskan proses undian.</p>
@@ -62,14 +59,12 @@
                 <p id="ic-verify-feedback" class="text-sm mt-4 text-center h-5"></p>
             </div>
 
-            <!-- Voting Form Section (Initially Hidden) -->
             <div id="voting-section" class="hidden">
                  <div class="p-6 border-b border-slate-200 bg-slate-50 rounded-t-xl">
                     <h2 id="vote-title" class="text-2xl font-bold text-slate-900">Borang Undian Permohonan</h2>
                     <p id="voter-info" class="mt-1 text-slate-500">Mengundi sebagai: <span class="font-semibold">Nama Pengundi (Jawatan)</span></p>
                 </div>
                 <form id="voteForm" class="p-8">
-                    <!-- Application Details -->
                     <div class="mb-6 pb-6 border-b">
                         <h3 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h3>
                         <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
@@ -84,7 +79,6 @@
                         </div>
                     </div>
                     
-                    <!-- Voting Statistics -->
                     <div class="mb-6">
                         <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
                         <div class="flex items-center">
@@ -95,7 +89,6 @@
                         </div>
                     </div>
                     
-                    <!-- Voting Options -->
                     <div class="space-y-4 pt-6 border-t">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
@@ -213,19 +206,13 @@
                 console.log("Firebase authentication successful.");
 
                 const urlParams = new URLSearchParams(window.location.search);
-                currentApplicationId = urlParams.get('id') || urlParams.get('vote');
-                const appIndex = urlParams.get('index');
-
+                currentApplicationId = urlParams.get('id');
 
                 if (!currentApplicationId) {
                     mainContent.innerHTML = `<div class="p-8 text-center"><h2 class="text-2xl font-bold text-red-600">ID Permohonan Tidak Sah</h2><p class="mt-2 text-slate-500">Sila kembali ke senarai permohonan dan cuba lagi.</p></div>`;
                     return;
                 }
                 
-                if(appIndex) {
-                    document.getElementById('vote-title').textContent = `Borang Undian Permohonan #${appIndex}`;
-                }
-
             } catch (error) {
                  console.error("Firebase authentication failed:", error);
                 showToast("Gagal menyambung ke pangkalan data.", 'error');
@@ -268,11 +255,11 @@
                     throw new Error("Anda telah mengundi untuk permohonan ini.");
                 }
 
-                // 4. Check if voting period is expired (14 days)
-                const fourteenDaysInMillis = 14 * 24 * 60 * 60 * 1000;
+                // 4. Check if voting period is expired (48 hours)
+                const fortyEightHoursInMillis = 48 * 60 * 60 * 1000;
                 const applicationDate = appData.createdAt.toDate();
-                if (Date.now() - applicationDate.getTime() > fourteenDaysInMillis) {
-                    throw new Error("Tempoh undian untuk permohonan ini telah tamat.");
+                if (Date.now() - applicationDate.getTime() > fortyEightHoursInMillis) {
+                    throw new Error("Tempoh undian (48 jam) untuk permohonan ini telah tamat.");
                 }
 
                 // 5. Populate and show voting form
@@ -301,8 +288,7 @@
             document.getElementById('vote-budget-total').textContent = `RM ${app.amount.toFixed(2)}`;
             
             // Populate voting stats
-            const excoSnapshot = await getDocs(excoMembersCol);
-            const totalExco = excoSnapshot.size;
+            const totalExco = 15; // Based on the 2/3 logic
             const currentVotes = app.votes?.length || 0;
             const percentage = totalExco > 0 ? Math.round((currentVotes / totalExco) * 100) : 0;
             document.getElementById('vote-progress-bar').style.width = `${percentage}%`;
@@ -328,19 +314,22 @@
             submitVoteBtn.textContent = "Menghantar...";
 
             try {
-                const voteOption = voteForm.querySelector('input[name="vote_option"]:checked').value;
+                const voteOptionValue = voteForm.querySelector('input[name="vote_option"]:checked').value;
                 const voteReason = reasonInput.value.trim();
 
-                if(voteOption === 'tolak' && !voteReason) {
+                if(voteOptionValue === 'tolak' && !voteReason) {
                     throw new Error("Sila nyatakan sebab anda tidak menyokong.");
                 }
+
+                // **FIX:** Standardize the vote value to 'approve' or 'reject'
+                const voteValue = voteOptionValue === 'sokong' ? 'approve' : 'reject';
 
                 const voteData = {
                     voterIc: icVerifyInput.value.trim(),
                     voterName: currentVoterData.name,
-                    choice: voteOption,
+                    vote: voteValue, // **FIX:** Use 'vote' instead of 'choice'
                     reason: voteReason || "",
-                    votedAt: new Date() // Correct way to store timestamp
+                    votedAt: serverTimestamp() // Use server timestamp for accuracy
                 };
 
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
@@ -349,8 +338,8 @@
                 votingSection.innerHTML = `
                     <div class="p-8 text-center">
                         <h2 class="text-2xl font-bold text-green-600">Undian Berjaya Dihantar!</h2>
-                        <p class="mt-2 text-slate-500">Terima kasih atas undian anda. Anda boleh menutup tetingkap ini.</p>
-                        <a href="mohon.html" class="mt-6 inline-block px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Kembali</a>
+                        <p class="mt-2 text-slate-500">Terima kasih atas undian anda. Halaman analisis akan dikemas kini secara automatik.</p>
+                        <a href="semak.html" class="mt-6 inline-block px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Kembali ke Papan Pemuka</a>
                     </div>
                 `;
 
@@ -364,4 +353,3 @@
     </script>
 </body>
 </html>
-
