@@ -233,8 +233,14 @@
                         <button data-action="export-excel" title="Eksport ke Excel" class="p-2 rounded-md bg-green-100 text-green-600 hover:bg-green-200 flex items-center space-x-2"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm9 4a1 1 0 011 1v1a1 1 0 01-2 0V7a1 1 0 011-1zm-2 4a1 1 0 01-1 1H7a1 1 0 110-2h3a1 1 0 011 1zm-1-3a1 1 0 10-2 0v1a1 1 0 102 0V7z"></path></svg> <span>EXCEL</span></button>
                         <button data-action="delete-selected" title="PADAM YANG DIPILIH" class="p-2 rounded-md bg-gray-300" disabled><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg></button>
                         <button data-action="paste-excel" title="TAMPAL DARI EXCEL" class="p-2 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
-                        <button data-action="add-income" title="TAMBAH DUIT MASUK" class="p-2 rounded-md bg-green-100 text-green-600 hover:bg-green-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg></button>
-                        <button data-action="add-expense" title="TAMBAH DUIT KELUAR" class="p-2 rounded-md bg-red-100 text-red-600 hover:bg-red-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg></button>
+                        <button data-action="add-income" title="TAMBAH DUIT MASUK" class="px-4 py-2 rounded-md bg-green-100 text-green-600 hover:bg-green-200 flex items-center space-x-2 font-semibold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l.293.293a1 1 0 001.414-1.414l-3-3z" clip-rule="evenodd" /></svg>
+                            <span>MASUK</span>
+                        </button>
+                        <button data-action="add-expense" title="TAMBAH DUIT KELUAR" class="px-4 py-2 rounded-md bg-red-100 text-red-600 hover:bg-red-200 flex items-center space-x-2 font-semibold">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-7.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L9 12.414V7a1 1 0 102 0v5.414l.293-.293a1 1 0 00-1.414-1.414l-3 3z" clip-rule="evenodd" /></svg>
+                            <span>KELUAR</span>
+                        </button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full w-full bg-white">
@@ -294,7 +300,7 @@
                                 <tbody id="income-report-table-bank"></tbody>
                             </table>
                         </div>
-                         <div class="mb-8">
+                        <div class="mb-8">
                             <h5 class="font-semibold text-slate-700 mb-2">PETTY CASH / TUNAI RUNCIT</h5>
                             <table class="w-full text-sm border-collapse border border-slate-400">
                                 <thead>
@@ -310,10 +316,9 @@
                         </div>
                     </div>
 
-
                     <div class="mb-8">
                         <h4 class="text-lg font-semibold mb-2 text-slate-800 border-b pb-2 uppercase">PERBELANJAAN</h4>
-                        <div class="mb-4">
+                         <div class="mb-4">
                             <h5 class="font-semibold text-slate-700 mb-2">BANK ISLAM</h5>
                             <table class="w-full text-sm border-collapse border border-slate-400">
                                 <thead>
@@ -326,7 +331,7 @@
                                 <tbody id="expense-report-table-bank"></tbody>
                             </table>
                         </div>
-                         <div class="mb-8">
+                        <div class="mb-8">
                             <h5 class="font-semibold text-slate-700 mb-2">PETTY CASH / TUNAI RUNCIT</h5>
                             <table class="w-full text-sm border-collapse border border-slate-400">
                                 <thead>
@@ -384,6 +389,32 @@
                     <div>
                         <label for="trans-date" class="block text-sm font-medium text-slate-700 mb-1">TARIKH</label>
                         <input type="date" id="trans-date" class="w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                    </div>
+                    <div id="income-category-section" class="hidden">
+                        <label for="trans-category-income" class="block text-sm font-medium text-slate-700 mb-1">KATEGORI MASUK</label>
+                        <select id="trans-category-income" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                            <option value="">-- PILIH KATEGORI --</option>
+                            <option value="Sumbangan Awam">SUMBANGAN AWAM</option>
+                            <option value="Jualan Baju">JUALAN BAJU</option>
+                            <option value="Wang KSIB">WANG KSIB</option>
+                            <option value="Jualan">JUALAN</option>
+                            <option value="Kebajikan">KEBAJIKAN</option>
+                            <option value="lain-lain">LAIN-LAIN</option>
+                        </select>
+                        <input type="text" id="trans-category-income-custom" placeholder="Nyatakan kategori lain..." class="hidden w-full px-3 py-2 mt-2 border border-slate-300 rounded-md">
+                    </div>
+                    <div id="expense-category-section" class="hidden">
+                        <label for="trans-category-expense" class="block text-sm font-medium text-slate-700 mb-1">KATEGORI KELUAR</label>
+                        <select id="trans-category-expense" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                            <option value="">-- PILIH KATEGORI --</option>
+                            <option value="Pemohonan">PEMOHONAN</option>
+                            <option value="Kecemasan">KECEMASAN</option>
+                            <option value="Kebajikan">KEBAJIKAN</option>
+                            <option value="Sukan">SUKAN</option>
+                            <option value="Anugerah">ANUGERAH</option>
+                            <option value="lain-lain">LAIN-LAIN</option>
+                        </select>
+                        <input type="text" id="trans-category-expense-custom" placeholder="Nyatakan kategori lain..." class="hidden w-full px-3 py-2 mt-2 border border-slate-300 rounded-md">
                     </div>
                     <div>
                         <label for="trans-desc" class="block text-sm font-medium text-slate-700 mb-1">BUTIRAN</label>
@@ -512,7 +543,15 @@
                 setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
             };
             const openModal = (modal) => modal.classList.replace('hidden', 'flex');
-            const closeModal = (modal) => modal.classList.replace('flex', 'hidden');
+            const closeModal = (modal) => {
+                modal.classList.replace('flex', 'hidden');
+                // Reset category fields
+                document.getElementById('income-category-section').classList.add('hidden');
+                document.getElementById('expense-category-section').classList.add('hidden');
+                document.getElementById('trans-category-income-custom').classList.add('hidden');
+                document.getElementById('trans-category-expense-custom').classList.add('hidden');
+                transactionForm.reset();
+            };
             const formatDateForInput = (date) => {
                 const d = new Date(date);
                 let month = '' + (d.getMonth() + 1);
@@ -524,23 +563,6 @@
             };
 
             // --- Tab & UI Setup ---
-            const setupTabs = () => {
-                const template = document.getElementById('account-tab-template');
-                Object.keys(accountNames).forEach(key => {
-                    if(key === 'bank_islam' || key === 'koperasi_mini') return; // Skip original templates
-                    const clone = template.cloneNode(true);
-                    clone.id = `${key}-content`;
-                    clone.classList.add('tab-content');
-                    clone.querySelector('[data-id="table-title"]').textContent = `Butiran Transaksi (${accountNames[key]})`;
-                    // Check if element exists before trying to append
-                    if(tabContainer.querySelector(`#${key}-content`)) {
-                        tabContainer.querySelector(`#${key}-content`).replaceWith(clone);
-                    } else {
-                        tabContainer.appendChild(clone);
-                    }
-                });
-            };
-            
             const switchTabs = (tabId) => {
                 activeTab = tabId;
                 document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active-tab', btn.dataset.tab === tabId));
@@ -740,69 +762,45 @@
                 const expenseTableBank = document.getElementById('expense-report-table-bank');
                 const expenseTablePetty = document.getElementById('expense-report-table-petty');
                 const balanceTable = document.getElementById('balance-summary-table');
-                
                 const tableCellClasses = "py-2 px-4 border border-slate-300";
                 const totalRowClasses = "font-bold border-t-2 border-slate-800";
 
-                // Filter transactions by source
                 const incomeBank = rangeTransactions.filter(t => t.type === 'masuk' && t.account === 'bank_islam').sort((a,b)=>a.timestamp.seconds - b.timestamp.seconds);
                 const incomePetty = rangeTransactions.filter(t => t.type === 'masuk' && (t.account === 'petty_cash' || t.account === 'koperasi_mini')).sort((a,b)=>a.timestamp.seconds - b.timestamp.seconds);
                 const expenseBank = rangeTransactions.filter(t => t.type === 'keluar' && t.account === 'bank_islam').sort((a,b)=>a.timestamp.seconds - b.timestamp.seconds);
                 const expensePetty = rangeTransactions.filter(t => t.type === 'keluar' && (t.account === 'petty_cash' || t.account === 'koperasi_mini')).sort((a,b)=>a.timestamp.seconds - b.timestamp.seconds);
                 
                 // --- RENDER INCOME ---
-                // Bank Islam Income
                 let totalIncomeBank = BAKI_AWAL_TAHUN.bank_islam || 0;
                 incomeTableBank.innerHTML = `<tr><td class="${tableCellClasses}" colspan="2">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${totalIncomeBank.toFixed(2)}</td></tr>`;
                 incomeBank.forEach(t => {
-                    incomeTableBank.innerHTML += `<tr>
-                        <td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        <td class="${tableCellClasses}">${t.description}</td>
-                        <td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td>
-                    </tr>`;
+                    incomeTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
                 });
                 const finalTotalIncomeBank = totalIncomeBank + incomeBank.reduce((sum, t) => sum + t.amount, 0);
-                incomeTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH PENDAPATAN</td><td class="text-right ${tableCellClasses}">${finalTotalIncomeBank.toFixed(2)}</td></tr>`;
+                incomeTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${finalTotalIncomeBank.toFixed(2)}</td></tr>`;
 
-                // Petty Cash (Combined) Income
                 let totalIncomePetty = (BAKI_AWAL_TAHUN.petty_cash || 0) + (BAKI_AWAL_TAHUN.koperasi_mini || 0);
                 incomeTablePetty.innerHTML = `<tr><td class="${tableCellClasses}" colspan="3">BAKI AWAL</td><td class="text-right ${tableCellClasses}">${totalIncomePetty.toFixed(2)}</td></tr>`;
                 incomePetty.forEach(t => {
-                    incomeTablePetty.innerHTML += `<tr>
-                        <td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        <td class="${tableCellClasses}">${accountNames[t.account]}</td>
-                        <td class="${tableCellClasses}">${t.description}</td>
-                        <td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td>
-                    </tr>`;
+                    incomeTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
                 });
                 const finalTotalIncomePetty = totalIncomePetty + incomePetty.reduce((sum, t) => sum + t.amount, 0);
-                incomeTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH PENDAPATAN</td><td class="text-right ${tableCellClasses}">${finalTotalIncomePetty.toFixed(2)}</td></tr>`;
+                incomeTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${finalTotalIncomePetty.toFixed(2)}</td></tr>`;
 
                 // --- RENDER EXPENSES ---
-                // Bank Islam Expense
                 expenseTableBank.innerHTML = '';
                 expenseBank.forEach(t => {
-                    expenseTableBank.innerHTML += `<tr>
-                        <td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        <td class="${tableCellClasses}">${t.description}</td>
-                        <td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td>
-                    </tr>`;
+                    expenseTableBank.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
                 });
                 const totalExpenseBank = expenseBank.reduce((sum, t) => sum + t.amount, 0);
-                expenseTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH PERBELANJAAN</td><td class="text-right ${tableCellClasses}">${totalExpenseBank.toFixed(2)}</td></tr>`;
+                expenseTableBank.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="2">JUMLAH</td><td class="text-right ${tableCellClasses}">${totalExpenseBank.toFixed(2)}</td></tr>`;
 
-                // Petty Cash (Combined) Expense
                 expenseTablePetty.innerHTML = '';
                 expensePetty.forEach(t => {
-                    expenseTablePetty.innerHTML += `<tr>
-                        <td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td>
-                        <td class="${tableCellClasses}">${accountNames[t.account]}</td>
-                        <td class="${tableCellClasses}">${t.description}</td>
-                        <td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td>
-                    </tr>`;
+                    expenseTablePetty.innerHTML += `<tr><td class="${tableCellClasses}">${t.timestamp.toDate().toLocaleDateString('ms-MY')}</td><td class="${tableCellClasses}">${accountNames[t.account]}</td><td class="${tableCellClasses}">${t.description}</td><td class="text-right ${tableCellClasses}">${t.amount.toFixed(2)}</td></tr>`;
                 });
                 const totalExpensePetty = expensePetty.reduce((sum, t) => sum + t.amount, 0);
-                expenseTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH PERBELANJAAN</td><td class="text-right ${tableCellClasses}">${totalExpensePetty.toFixed(2)}</td></tr>`;
+                expenseTablePetty.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}" colspan="3">JUMLAH</td><td class="text-right ${tableCellClasses}">${totalExpensePetty.toFixed(2)}</td></tr>`;
                 
                 // Populate Balance Summary
                 const bakiBank = finalTotalIncomeBank - totalExpenseBank;
@@ -811,7 +809,7 @@
 
                 balanceTable.innerHTML = `
                     <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="text-right ${tableCellClasses}">${bakiBank.toFixed(2)}</td></tr>
-                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN</td><td class="text-right ${tableCellClasses}">${bakiTangan.toFixed(2)}</td></tr>
+                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN (TUNAI RUNCIT + KOPERASI)</td><td class="text-right ${tableCellClasses}">${bakiTangan.toFixed(2)}</td></tr>
                     <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="text-right ${tableCellClasses}">${jumlahBaki.toFixed(2)}</td></tr>`;
             };
 
@@ -824,12 +822,10 @@
                     const settingsSnap = await getDoc(settingsDoc);
                     if (settingsSnap.exists()) BAKI_AWAL_TAHUN = settingsSnap.data().bakiAwal;
                     
-                    // Note: No need for setupTabs() anymore as the structure is static
                     onSnapshot(transactionsCol, (snapshot) => {
                         allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         populateYearFilters();
                         
-                        // Set default month for individual account tabs
                         const currentMonth = new Date().getMonth();
                         document.querySelectorAll('#bank_islam-content [name="month-filter"], #petty_cash-content [name="month-filter"], #koperasi_mini-content [name="month-filter"]').forEach(sel => {
                             sel.value = currentMonth;
@@ -899,8 +895,11 @@
                     case 'add-expense':
                         transactionForm.reset();
                         delete transactionForm.dataset.docId;
-                        transactionForm.dataset.type = (action === 'add-income' ? 'masuk' : 'keluar');
-                        document.getElementById('modal-title').textContent = (action === 'add-income' ? 'TAMBAH DUIT MASUK' : 'TAMBAH DUIT KELUAR');
+                        const type = action === 'add-income' ? 'masuk' : 'keluar';
+                        transactionForm.dataset.type = type;
+                        document.getElementById('modal-title').textContent = (type === 'masuk' ? 'TAMBAH DUIT MASUK' : 'TAMBAH DUIT KELUAR');
+                        document.getElementById('income-category-section').classList.toggle('hidden', type !== 'masuk');
+                        document.getElementById('expense-category-section').classList.toggle('hidden', type !== 'keluar');
                         document.getElementById('trans-date').value = formatDateForInput(new Date());
                         openModal(transactionModal);
                         break;
@@ -913,9 +912,29 @@
                             transactionForm.dataset.docId = id;
                             transactionForm.dataset.type = trans.type;
                             document.getElementById('modal-title').textContent = 'KEMASKINI TRANSAKSI';
+                             // Show/hide category sections
+                            document.getElementById('income-category-section').classList.toggle('hidden', trans.type !== 'masuk');
+                            document.getElementById('expense-category-section').classList.toggle('hidden', trans.type !== 'keluar');
+                            
+                            // Populate common fields
                             document.getElementById('trans-date').value = formatDateForInput(trans.timestamp.toDate());
                             document.getElementById('trans-desc').value = trans.description;
                             document.getElementById('trans-amount').value = trans.amount;
+
+                            // Populate category
+                            const category_section = trans.type === 'masuk' ? 'income' : 'expense';
+                            const catSelect = document.getElementById(`trans-category-${category_section}`);
+                            const catCustom = document.getElementById(`trans-category-${category_section}-custom`);
+                            const optionValues = [...catSelect.options].map(opt => opt.value);
+                            
+                            if (optionValues.includes(trans.category)) {
+                                catSelect.value = trans.category;
+                                catCustom.classList.add('hidden');
+                            } else if(trans.category) {
+                                catSelect.value = 'lain-lain';
+                                catCustom.value = trans.category;
+                                catCustom.classList.remove('hidden');
+                            }
                             openModal(transactionModal);
                         }
                         break;
@@ -954,6 +973,10 @@
                         break;
                 }
             });
+            
+            // Handle category 'Lain-lain' selection
+            document.getElementById('trans-category-income').addEventListener('change', e => document.getElementById('trans-category-income-custom').classList.toggle('hidden', e.target.value !== 'lain-lain'));
+            document.getElementById('trans-category-expense').addEventListener('change', e => document.getElementById('trans-category-expense-custom').classList.toggle('hidden', e.target.value !== 'lain-lain'));
             
             const handleExport = (type) => {
                 const contentEl = document.getElementById(`${activeTab}-content`);
@@ -1013,18 +1036,35 @@
             transactionForm.addEventListener('submit', async e => {
                 e.preventDefault();
                 const docId = transactionForm.dataset.docId;
+                const type = transactionForm.dataset.type;
+                
+                let category = '';
+                if(type === 'masuk') {
+                    const catSelect = document.getElementById('trans-category-income');
+                    category = catSelect.value;
+                    if(category === 'lain-lain') {
+                        category = document.getElementById('trans-category-income-custom').value.trim();
+                    }
+                } else {
+                    const catSelect = document.getElementById('trans-category-expense');
+                    category = catSelect.value;
+                    if(category === 'lain-lain') {
+                        category = document.getElementById('trans-category-expense-custom').value.trim();
+                    }
+                }
+
                 const formData = {
                     account: activeTab,
-                    type: transactionForm.dataset.type,
+                    type: type,
                     description: document.getElementById('trans-desc').value,
                     amount: parseFloat(document.getElementById('trans-amount').value),
+                    category: category,
                     timestamp: Timestamp.fromDate(new Date(document.getElementById('trans-date').value))
                 };
                 
                 try {
                     if (docId) await updateDoc(doc(db, transactionsCol.path, docId), formData), showToast("Transaksi berjaya dikemaskini!");
                     else await addDoc(transactionsCol, formData), showToast("Transaksi berjaya disimpan!");
-                    transactionForm.reset();
                     closeModal(transactionModal);
                 } catch(error) { showToast("Gagal menyimpan transaksi.", "error"); }
             });
