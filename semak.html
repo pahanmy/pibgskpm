@@ -378,7 +378,7 @@
             </div>
             <div class="p-6 space-y-4">
                 <p class="text-sm text-slate-600">Salin dan kongsi mesej di bawah untuk menjemput ahli lain mengundi.</p>
-                <textarea id="share-text-area" readonly class="w-full h-48 p-3 border rounded-md bg-slate-50 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                <textarea id="share-text-area" readonly class="w-full h-56 p-3 border rounded-md bg-slate-50 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none whitespace-pre-wrap"></textarea>
                 <button id="copy-share-text-btn" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Salin Mesej</button>
             </div>
         </div>
@@ -472,9 +472,8 @@
             // --- Data Fetching and Processing ---
             const fetchApplications = () => {
                  analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
-                onSnapshot(query(applicationsCol), (snapshot) => {
+                onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
                     allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                     
                     populateYearFilter();
                     applyFiltersAndRender();
@@ -495,7 +494,6 @@
 
             const populateYearFilter = () => {
                 const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
-                years.sort((a, b) => b - a);
                 
                 while(yearFilter.options.length > 1) { yearFilter.remove(1); }
                 years.forEach(year => {
@@ -601,6 +599,9 @@
                     }
                     
                     const votingPercentage = Math.round((totalVotes / totalMembers) * 100);
+                    
+                    const appIndexInAll = allApps.findIndex(a => a.id === app.id);
+                    const applicationNumber = allApps.length - appIndexInAll;
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -632,7 +633,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
                                     <span>Undi</span>
                                 </a>
-                                <button data-id="${app.id}" data-purpose="${app.purpose}" data-amount="${app.amount}" title="Kongsi" class="share-btn text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100">
+                                <button data-id="${app.id}" data-purpose="${app.purpose}" data-amount="${app.amount}" data-app-number="${applicationNumber}" title="Kongsi" class="share-btn text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" /></svg>
                                 </button>
                                 <button data-id="${app.id}" title="Padam" class="delete-btn text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100">
@@ -698,7 +699,7 @@
                     </div>
                 `;
                 modalContent.innerHTML = contentHtml;
-                openModal();
+                openModal(keputusanModal, modalPanel);
             };
 
             const updatePaginationControls = () => {
@@ -732,7 +733,7 @@
             };
 
             // --- Button Actions ---
-            const shareApplication = async (id, purpose, amount) => {
+            const shareApplication = async (id, purpose, amount, appNumber) => {
                 const shareTextArea = document.getElementById('share-text-area');
                 shareTextArea.value = 'Menjana pautan pendek...';
                 openModal(shareModal, shareModalPanel);
@@ -751,13 +752,24 @@
                     console.error('TinyURL API error:', error);
                 }
 
-                shareTextArea.value = `Salam semua.
-Saya perlukan undian untuk permohonan ${id.substring(0, 5).toUpperCase()} : ${purpose}
+                shareTextArea.value = `Assalamualaikum & Salam Sejahtera,
 
-Jumlah Permohonan : RM ${parseFloat(amount).toFixed(2)}, sila undi di pautan berikut:
-${shortUrl}
+🗳️ *PERLUKAN UNDIAN SEGERA* 🗳️
 
-Pengundian akan ditutup 48 jam dari sekarang.`;
+Mohon jasa baik ahli Exco untuk membuat undian bagi permohonan berikut:
+
+*Permohonan #${appNumber}:*
+*${purpose.toUpperCase()}*
+
+💰 *Jumlah Dipohon:*
+*RM ${parseFloat(amount).toFixed(2)}*
+
+Sila buat undian anda di pautan berikut:
+🔗 ${shortUrl}
+
+⏰ *Peringatan:* Tempoh undian akan ditutup dalam masa 48 jam dari tarikh permohonan dibuat.
+
+Kerjasama anda amat dihargai. Terima kasih.`;
             };
             
             const deleteApplication = async (id) => {
@@ -913,7 +925,8 @@ Pengundian akan ditutup 48 jam dari sekarang.`;
                     const appId = targetBtn.dataset.id;
                     const appPurpose = targetBtn.dataset.purpose;
                     const appAmount = targetBtn.dataset.amount;
-                    shareApplication(appId, appPurpose, appAmount);
+                    const appNumber = targetBtn.dataset.appNumber;
+                    shareApplication(appId, appPurpose, appAmount, appNumber);
                 } else if (targetBtn.matches('.delete-btn')) {
                     const appId = targetBtn.dataset.id;
                     deleteApplication(appId);
