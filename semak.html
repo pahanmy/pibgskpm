@@ -45,7 +45,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
@@ -58,7 +58,7 @@
         </nav>
     </header>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="container mx-auto px-6 py-12 flex-grow">
         <div class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-7xl mx-auto">
             <div class="p-6 border-b border-slate-200">
                 <h2 class="text-3xl font-bold text-slate-900">Sistem Peruntukan PIBG</h2>
@@ -183,8 +183,7 @@
                                         <tr>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">No.</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Pemohon</th>
-                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tujuan</th>
-                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarikh Mohon</th>
+                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tujuan & Tarikh Program</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jumlah (RM)</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Peratus Kelulusan</th>
@@ -449,7 +448,7 @@
             
             // --- Data Fetching and Processing ---
             const fetchApplications = () => {
-                 analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10">Memuatkan data...</td></tr>`;
+                 analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
                 onSnapshot(query(applicationsCol), (snapshot) => {
                     allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     allApps.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
@@ -514,7 +513,7 @@
             const renderTable = () => {
                 analysisTableBody.innerHTML = '';
                 if (filteredApps.length === 0) {
-                    analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
+                    analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
                     updatePaginationControls();
                     return;
                 }
@@ -525,34 +524,36 @@
                 const pageItems = filteredApps.slice(startIndex, endIndex);
 
                 pageItems.forEach((app, index) => {
-                    const formattedDate = app.createdAt ? new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY') : 'N/A';
-                    
+                    const programDateFormatted = app.programDate ? new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Tidak Dinyatakan';
+
                     // Mock percentage for demonstration. Replace with actual data from `app.votes`.
                     const mockPercentage = Math.floor(Math.random() * 101);
                     const progressColorClass = getProgressColor(mockPercentage);
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td class="py-3 px-4 text-sm text-slate-500">${startIndex + index + 1}</td>
-                        <td class="py-3 px-4 text-sm font-medium text-slate-900">${app.applicant}</td>
-                        <td class="py-3 px-4 text-sm text-slate-600">${app.purpose}</td>
-                        <td class="py-3 px-4 text-sm text-slate-500">${formattedDate}</td>
-                        <td class="py-3 px-4 text-sm text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
-                        <td class="py-3 px-4 text-sm text-slate-500">
+                        <td class="py-3 px-4 text-xs text-slate-500">${startIndex + index + 1}</td>
+                        <td class="py-3 px-4 text-xs font-medium text-slate-900">${app.applicant}</td>
+                        <td class="py-3 px-4">
+                            <div class="font-medium text-xs text-slate-900">${app.purpose}</div>
+                            <div class="text-xs text-slate-500 mt-1">${programDateFormatted}</div>
+                        </td>
+                        <td class="py-3 px-4 text-xs text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
+                        <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center space-x-2">
                                 ${getStatusBadge(app.status)}
                                 <button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Keputusan</button>
                             </div>
                         </td>
-                         <td class="py-3 px-4 text-sm text-slate-500">
+                         <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center space-x-2">
-                                <div class="w-full bg-slate-200 rounded-full h-2.5">
-                                    <div class="${progressColorClass} h-2.5 rounded-full" style="width: ${mockPercentage}%"></div>
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="${progressColorClass} h-2 rounded-full" style="width: ${mockPercentage}%"></div>
                                 </div>
                                 <span class="font-medium text-slate-700 text-xs w-10 text-right">${mockPercentage}%</span>
                             </div>
                         </td>
-                        <td class="py-3 px-4 text-sm text-slate-500">
+                        <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center justify-center space-x-2">
                                 <a href="undi.html?id=${app.id}" title="Undi Permohonan" class="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700 transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
@@ -705,7 +706,7 @@
                     fetchApplications();
                 } catch (error) {
                     console.error("Firebase authentication failed:", error);
-                    analysisTableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
+                    analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
                 }
             })();
 
