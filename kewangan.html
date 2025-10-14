@@ -51,6 +51,15 @@
             cursor: not-allowed;
             opacity: 0.5;
         }
+        .pagination-controls button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            background-color: #e2e8f0; /* slate-200 */
+            font-weight: 500;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: #cbd5e1; /* slate-300 */
+        }
         @media print {
             body * {
                 visibility: hidden;
@@ -131,9 +140,9 @@
                             <div>
                                 <label class="text-sm font-medium text-slate-700">PAPAR:</label>
                                 <select name="limit-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                     <option value="15">15</option>
+                                     <option value="10">10</option>
+                                     <option value="20">20</option>
                                      <option value="30">30</option>
-                                     <option value="all">SEMUA</option>
                                 </select>
                             </div>
                             <div>
@@ -148,6 +157,12 @@
                                     <option value="all">SEMUA</option>
                                 </select>
                             </div>
+                             <button data-action="export-pdf" title="Eksport ke PDF" class="p-2 mt-6 rounded-md bg-red-100 text-red-600 hover:bg-red-200">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm1 4a1 1 0 100 2h6a1 1 0 100-2H5zm0 4a1 1 0 100 2h3a1 1 0 100-2H5z"></path></svg>
+                            </button>
+                            <button data-action="export-excel" title="Eksport ke Excel" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm9 4a1 1 0 011 1v1a1 1 0 01-2 0V7a1 1 0 011-1zm-2 4a1 1 0 01-1 1H7a1 1 0 110-2h3a1 1 0 011 1zm-1-3a1 1 0 10-2 0v1a1 1 0 102 0V7z"></path></svg>
+                            </button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -163,6 +178,7 @@
                             <tbody id="keseluruhan-table" class="divide-y divide-slate-200"></tbody>
                         </table>
                     </div>
+                     <div data-id="pagination-controls" class="pagination-controls flex justify-between items-center mt-4"></div>
                 </div>
             </div>
 
@@ -192,9 +208,9 @@
                             <div>
                                 <label class="text-sm font-medium text-slate-700">PAPAR:</label>
                                 <select name="limit-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                     <option value="15">15</option>
+                                     <option value="10">10</option>
+                                     <option value="20">20</option>
                                      <option value="30">30</option>
-                                     <option value="all">SEMUA</option>
                                 </select>
                             </div>
                              <div>
@@ -209,17 +225,15 @@
                                     <option value="all">SEMUA</option>
                                 </select>
                             </div>
-                            <button data-action="delete-selected" title="PADAM YANG DIPILIH" class="p-2 mt-6 rounded-md bg-gray-300" disabled>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
-                            </button>
-                            <button data-action="paste-excel" title="TAMPAL DARI EXCEL" class="p-2 mt-6 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
-                            <button data-action="add-income" title="TAMBAH DUIT MASUK" class="p-2 mt-6 rounded-md bg-green-100 text-green-600 hover:bg-green-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                            </button>
-                             <button data-action="add-expense" title="TAMBAH DUIT KELUAR" class="p-2 mt-6 rounded-md bg-red-100 text-red-600 hover:bg-red-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
-                            </button>
                         </div>
+                    </div>
+                    <div class="flex justify-end items-center space-x-2 mb-4">
+                        <button data-action="export-pdf" title="Eksport ke PDF" class="p-2 rounded-md bg-red-100 text-red-600 hover:bg-red-200 flex items-center space-x-2"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm1 4a1 1 0 100 2h6a1 1 0 100-2H5zm0 4a1 1 0 100 2h3a1 1 0 100-2H5z"></path></svg> <span>PDF</span></button>
+                        <button data-action="export-excel" title="Eksport ke Excel" class="p-2 rounded-md bg-green-100 text-green-600 hover:bg-green-200 flex items-center space-x-2"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm9 4a1 1 0 011 1v1a1 1 0 01-2 0V7a1 1 0 011-1zm-2 4a1 1 0 01-1 1H7a1 1 0 110-2h3a1 1 0 011 1zm-1-3a1 1 0 10-2 0v1a1 1 0 102 0V7z"></path></svg> <span>EXCEL</span></button>
+                        <button data-action="delete-selected" title="PADAM YANG DIPILIH" class="p-2 rounded-md bg-gray-300" disabled><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg></button>
+                        <button data-action="paste-excel" title="TAMPAL DARI EXCEL" class="p-2 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm0 2h6v12H7V4zm4 2.5a.5.5 0 01.5.5v1a.5.5 0 01-1 0v-1a.5.5 0 01.5-.5zM8.5 9a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5z" clip-rule="evenodd" /></svg></button>
+                        <button data-action="add-income" title="TAMBAH DUIT MASUK" class="p-2 rounded-md bg-green-100 text-green-600 hover:bg-green-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg></button>
+                        <button data-action="add-expense" title="TAMBAH DUIT KELUAR" class="p-2 rounded-md bg-red-100 text-red-600 hover:bg-red-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg></button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full w-full bg-white">
@@ -237,6 +251,7 @@
                             <tbody data-id="table-body" class="divide-y divide-slate-200"></tbody>
                         </table>
                     </div>
+                    <div data-id="pagination-controls" class="pagination-controls flex justify-between items-center mt-4"></div>
                 </div>
             </div>
             
@@ -432,6 +447,7 @@
             let allTransactions = [];
             let activeTab = 'keseluruhan';
             let BAKI_AWAL_TAHUN = { bank_islam: 0, petty_cash: 0, koperasi_mini: 0 };
+            let paginationState = { keseluruhan: 1, bank_islam: 1, petty_cash: 1, koperasi_mini: 1 };
             
             // --- UI Elements ---
             const tabContainer = document.getElementById('tab-container');
@@ -522,7 +538,7 @@
                 }
             };
             
-            const renderKeseluruhanTable = (transactions) => {
+             const renderKeseluruhanTable = (transactions) => {
                  const tableBody = document.getElementById('keseluruhan-table');
                  tableBody.innerHTML = '';
 
@@ -539,18 +555,10 @@
                      const key = `${t.description.toLowerCase().trim()}::${monthYear}`;
 
                      if (!acc[key]) {
-                         acc[key] = {
-                             month: monthYear,
-                             description: t.description,
-                             masuk: 0,
-                             keluar: 0
-                         };
+                         acc[key] = { month: monthYear, description: t.description, masuk: 0, keluar: 0 };
                      }
-                     if (t.type === 'masuk') {
-                         acc[key].masuk += t.amount;
-                     } else {
-                         acc[key].keluar += t.amount;
-                     }
+                     if (t.type === 'masuk') acc[key].masuk += t.amount;
+                     else acc[key].keluar += t.amount;
                      return acc;
                  }, {});
 
@@ -586,7 +594,7 @@
                 tableBody.innerHTML += bakiRow;
 
                 let runningBalance = BAKI_AWAL_TAHUN[accountId] || 0;
-                transactionsToRender.sort((a,b) => a.timestamp.seconds - b.timestamp.seconds).forEach(t => {
+                transactionsToRender.forEach(t => {
                     runningBalance += (t.type === 'masuk' ? t.amount : -t.amount);
                     const row = document.createElement('tr');
                     const isIncome = t.type === 'masuk';
@@ -600,12 +608,8 @@
                         <td class="py-3 px-4 text-sm text-red-600 text-right font-medium">${!isIncome ? `- ${t.amount.toFixed(2)}` : '-'}</td>
                         <td class="py-3 px-4 text-sm font-semibold text-slate-800 text-right">${runningBalance.toFixed(2)}</td>
                         <td class="py-3 px-4 text-center">
-                            <button data-action="edit" data-id="${t.id}" class="action-btn bg-yellow-100 text-yellow-700" title="KEMASKINI">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
-                            </button>
-                            <button data-action="delete" data-id="${t.id}" class="action-btn bg-red-100 text-red-700" title="PADAM">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
-                            </button>
+                            <button data-action="edit" data-id="${t.id}" class="action-btn bg-yellow-100 text-yellow-700" title="KEMASKINI"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>
+                            <button data-action="delete" data-id="${t.id}" class="action-btn bg-red-100 text-red-700" title="PADAM"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg></button>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -614,11 +618,11 @@
             
             const applyFiltersAndRender = () => {
                 const contentEl = document.getElementById(`${activeTab}-content`);
-                if (!contentEl) return;
+                if (!contentEl || activeTab === 'laporan') return;
                 
                 const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
                 const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
-                const selectedLimit = contentEl.querySelector('[name="limit-filter"]').value;
+                const selectedLimit = parseInt(contentEl.querySelector('[name="limit-filter"]').value, 10);
 
                 let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
                 
@@ -629,13 +633,46 @@
                     return monthMatch && yearMatch;
                 }).sort((a,b) => b.timestamp.seconds - a.timestamp.seconds);
                 
-                const limited = selectedLimit === 'all' ? filtered : filtered.slice(0, parseInt(selectedLimit, 10));
-                
+                const currentPage = paginationState[activeTab] || 1;
+                const totalItems = (activeTab === 'keseluruhan') ? Object.keys(filtered.reduce((acc, t) => {
+                     const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+                     const date = t.timestamp.toDate();
+                     const monthYear = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+                     const key = `${t.description.toLowerCase().trim()}::${monthYear}`;
+                     acc[key] = true;
+                     return acc;
+                }, {})).length : filtered.length;
+                const totalPages = Math.ceil(totalItems / selectedLimit);
+
+                const startIndex = (currentPage - 1) * selectedLimit;
+                const endIndex = startIndex + selectedLimit;
+                const paginated = filtered.slice(startIndex, endIndex);
+
                 calculateAndDisplayStats('keseluruhan', allTransactions);
                 if (activeTab !== 'keseluruhan') calculateAndDisplayStats(activeTab, transactions);
                 
-                renderTable(activeTab, limited);
+                renderTable(activeTab, paginated);
+                renderPaginationControls(currentPage, totalPages);
                 updateBulkDeleteButtonState();
+            };
+
+            const renderPaginationControls = (currentPage, totalPages) => {
+                const contentEl = document.getElementById(`${activeTab}-content`);
+                if (!contentEl) return;
+
+                const controlsContainer = contentEl.querySelector('[data-id="pagination-controls"]');
+                if (!controlsContainer) return;
+                
+                if (totalPages <= 1) {
+                    controlsContainer.innerHTML = '';
+                    return;
+                }
+
+                controlsContainer.innerHTML = `
+                    <button data-action="prev-page" ${currentPage === 1 ? 'disabled' : ''}>SEBELUM</button>
+                    <span class="text-sm font-medium text-slate-600">MUKA SURAT ${currentPage} DARI ${totalPages}</span>
+                    <button data-action="next-page" ${currentPage === totalPages ? 'disabled' : ''}>SETERUSNYA</button>
+                `;
             };
             
             const populateYearFilters = () => {
@@ -698,9 +735,7 @@
                 const groupTransactions = (transactions) => {
                     return transactions.reduce((acc, t) => {
                         const key = t.description.toLowerCase().trim();
-                        if (!acc[key]) {
-                            acc[key] = { description: t.description, total: 0 };
-                        }
+                        if (!acc[key]) acc[key] = { description: t.description, total: 0 };
                         acc[key].total += t.amount;
                         return acc;
                     }, {});
@@ -708,13 +743,13 @@
 
                 // Populate Income
                 let totalIncome = Object.values(BAKI_AWAL_TAHUN).reduce((a,b) => a + b, 0);
-                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">BAKI AWAL TAHUN</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
+                incomeTable.innerHTML = `<tr><td class="${tableCellClasses}">BAKI AWAL TAHUN</td><td class="text-right ${tableCellClasses}">${totalIncome.toFixed(2)}</td></tr>`;
                 const groupedIncome = groupTransactions(rangeTransactions.filter(t => t.type === 'masuk'));
                 Object.values(groupedIncome).forEach(g => {
                     totalIncome += g.total;
-                    incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="${tableCellClasses} text-right">${g.total.toFixed(2)}</td></tr>`;
+                    incomeTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="text-right ${tableCellClasses}">${g.total.toFixed(2)}</td></tr>`;
                 });
-                incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PENDAPATAN</td><td class="${tableCellClasses} text-right">${totalIncome.toFixed(2)}</td></tr>`;
+                incomeTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PENDAPATAN</td><td class="text-right ${tableCellClasses}">${totalIncome.toFixed(2)}</td></tr>`;
 
                 // Populate Expenses
                 let totalExpense = 0;
@@ -722,9 +757,9 @@
                 const groupedExpense = groupTransactions(rangeTransactions.filter(t => t.type === 'keluar'));
                 Object.values(groupedExpense).forEach(g => {
                     totalExpense += g.total;
-                    expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="${tableCellClasses} text-right">${g.total.toFixed(2)}</td></tr>`;
+                    expenseTable.innerHTML += `<tr><td class="${tableCellClasses}">${g.description}</td><td class="text-right ${tableCellClasses}">${g.total.toFixed(2)}</td></tr>`;
                 });
-                expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PERBELANJAAN</td><td class="${tableCellClasses} text-right">${totalExpense.toFixed(2)}</td></tr>`;
+                expenseTable.innerHTML += `<tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH PERBELANJAAN</td><td class="text-right ${tableCellClasses}">${totalExpense.toFixed(2)}</td></tr>`;
                 
                 // Populate Balance Summary
                 const bankIn = rangeTransactions.filter(t => t.account === 'bank_islam' && t.type === 'masuk').reduce((sum, t) => sum + t.amount, 0);
@@ -736,9 +771,9 @@
                 const jumlahBaki = bakiBank + bakiTangan;
 
                 balanceTable.innerHTML = `
-                    <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="${tableCellClasses} text-right">${bakiBank.toFixed(2)}</td></tr>
-                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN</td><td class="${tableCellClasses} text-right">${bakiTangan.toFixed(2)}</td></tr>
-                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="${tableCellClasses} text-right">${jumlahBaki.toFixed(2)}</td></tr>`;
+                    <tr><td class="${tableCellClasses}">BAKI DI BANK</td><td class="text-right ${tableCellClasses}">${bakiBank.toFixed(2)}</td></tr>
+                    <tr><td class="${tableCellClasses}">BAKI DI TANGAN</td><td class="text-right ${tableCellClasses}">${bakiTangan.toFixed(2)}</td></tr>
+                    <tr class="${totalRowClasses}"><td class="${tableCellClasses}">JUMLAH BAKI</td><td class="text-right ${tableCellClasses}">${jumlahBaki.toFixed(2)}</td></tr>`;
             };
 
             // --- Authentication & Initial Load ---
@@ -778,6 +813,13 @@
             // --- Event Listeners ---
             document.querySelectorAll('.tab-button').forEach(btn => btn.addEventListener('click', () => switchTabs(btn.dataset.tab)));
             
+            tabContainer.addEventListener('change', e => {
+                if (e.target.matches('[name="month-filter"], [name="year-filter"], [name="limit-filter"]')) {
+                    paginationState[activeTab] = 1;
+                    applyFiltersAndRender();
+                }
+            });
+
             tabContainer.addEventListener('click', async (e) => {
                 const target = e.target;
                 const actionBtn = target.closest('[data-action]');
@@ -794,16 +836,22 @@
                     return;
                 }
 
-                if (!actionBtn) {
-                     if (e.target.closest('[name="month-filter"], [name="year-filter"], [name="limit-filter"]')) {
-                        applyFiltersAndRender();
-                     }
-                     return;
-                }
+                if (!actionBtn) return;
+                
                 const action = actionBtn.dataset.action;
                 const id = actionBtn.dataset.id;
                 
                 switch(action) {
+                    case 'prev-page':
+                        if (paginationState[activeTab] > 1) {
+                            paginationState[activeTab]--;
+                            applyFiltersAndRender();
+                        }
+                        break;
+                    case 'next-page':
+                        paginationState[activeTab]++;
+                        applyFiltersAndRender();
+                        break;
                     case 'add-income':
                         transactionForm.reset();
                         delete transactionForm.dataset.docId;
@@ -856,9 +904,7 @@
                         if (confirm(`ANDA PASTI MAHU PADAM ${idsToDelete.length} TRANSAKSI YANG DIPILIH?\nTINDAKAN INI TIDAK BOLEH DIBATALKAN.`)) {
                             try {
                                 const batch = writeBatch(db);
-                                idsToDelete.forEach(docId => {
-                                    batch.delete(doc(db, transactionsCol.path, docId));
-                                });
+                                idsToDelete.forEach(docId => batch.delete(doc(db, transactionsCol.path, docId)));
                                 await batch.commit();
                                 showToast(`${idsToDelete.length} transaksi berjaya dipadam!`);
                             } catch(error) {
@@ -868,8 +914,86 @@
                         }
                         break;
                     }
+                    case 'export-pdf':
+                    case 'export-excel':
+                        handleExport(action);
+                        break;
                 }
             });
+            
+            const handleExport = (type) => {
+                const contentEl = document.getElementById(`${activeTab}-content`);
+                if (!contentEl) return;
+                
+                const selectedMonth = contentEl.querySelector('[name="month-filter"]').value;
+                const selectedYear = contentEl.querySelector('[name="year-filter"]').value;
+
+                let transactions = (activeTab === 'keseluruhan') ? allTransactions : allTransactions.filter(t => t.account === activeTab);
+                
+                const filteredData = transactions.filter(t => {
+                    const appDate = t.timestamp.toDate();
+                    const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
+                    const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
+                    return monthMatch && yearMatch;
+                }).sort((a,b) => a.timestamp.seconds - b.timestamp.seconds);
+
+                const accountNames = { keseluruhan: "Keseluruhan", bank_islam: "Bank Islam", petty_cash: "Dompet Tunai PIBG", koperasi_mini: "Koperasi Mini" };
+                const title = `Penyata Kewangan - ${accountNames[activeTab]}`;
+                const filename = `penyata-${activeTab}-${new Date().toISOString().slice(0,10)}`;
+
+                if (type === 'export-pdf') {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    doc.text(title, 14, 15);
+                    if (activeTab === 'keseluruhan') {
+                        // Special handling for grouped data if needed, or just export raw
+                        doc.autoTable({
+                            head: [['TARIKH', 'BUTIRAN', 'AKAUN', 'MASUK (RM)', 'KELUAR (RM)']],
+                            body: filteredData.map(t => [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, accountNames[t.account] || t.account, t.type === 'masuk' ? t.amount.toFixed(2): '', t.type==='keluar' ? t.amount.toFixed(2):'']),
+                            startY: 20, headStyles: { fillColor: [79, 70, 229] }
+                        });
+                    } else {
+                        let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
+                        doc.autoTable({
+                            head: [['TARIKH', 'BUTIRAN', 'MASUK (RM)', 'KELUAR (RM)', 'BAKI (RM)']],
+                            body: filteredData.map(t => {
+                                baki += (t.type === 'masuk' ? t.amount : -t.amount);
+                                return [t.timestamp.toDate().toLocaleDateString('ms-MY'), t.description, t.type === 'masuk' ? t.amount.toFixed(2) : '', t.type === 'keluar' ? t.amount.toFixed(2) : '', baki.toFixed(2)];
+                            }),
+                             startY: 20, headStyles: { fillColor: [79, 70, 229] }
+                        });
+                    }
+                    doc.save(`${filename}.pdf`);
+
+                } else if (type === 'export-excel') {
+                    let dataForExport = [];
+                     if (activeTab === 'keseluruhan') {
+                         dataForExport = filteredData.map(t => ({
+                             TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'),
+                             BUTIRAN: t.description,
+                             AKAUN: accountNames[t.account] || t.account,
+                             'MASUK (RM)': t.type === 'masuk' ? t.amount : '',
+                             'KELUAR (RM)': t.type === 'keluar' ? t.amount : ''
+                         }));
+                    } else {
+                        let baki = BAKI_AWAL_TAHUN[activeTab] || 0;
+                        dataForExport = filteredData.map(t => {
+                             baki += (t.type === 'masuk' ? t.amount : -t.amount);
+                             return {
+                                 TARIKH: t.timestamp.toDate().toLocaleDateString('ms-MY'),
+                                 BUTIRAN: t.description,
+                                 'MASUK (RM)': t.type === 'masuk' ? t.amount : '',
+                                 'KELUAR (RM)': t.type === 'keluar' ? t.amount : '',
+                                 'BAKI (RM)': baki
+                             }
+                        });
+                    }
+                    const ws = XLSX.utils.json_to_sheet(dataForExport);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, accountNames[activeTab]);
+                    XLSX.writeFile(wb, `${filename}.xlsx`);
+                }
+            };
 
             document.getElementById('cancel-trans-btn').addEventListener('click', () => closeModal(transactionModal));
             transactionModal.addEventListener('click', (e) => { if(e.target === transactionModal) closeModal(transactionModal); });
