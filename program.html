@@ -16,9 +16,9 @@
         .gradient-text { background: linear-gradient(to right, #4f46e5, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .status-tiada { background-color: #f3f4f6; color: #4b5563; }
-        .status-baru { background-color: #e0e7ff; color: #3730a3; }
-        .status-lulus { background-color: #d1fae5; color: #065f46; }
-        .status-tolak { background-color: #fee2e2; color: #991b1b; }
+        .status-baru, .status-dalam-proses { background-color: #e0e7ff; color: #3730a3; }
+        .status-lulus, .status-diluluskan { background-color: #d1fae5; color: #065f46; }
+        .status-tolak, .status-ditolak { background-color: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -124,12 +124,26 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, addDoc, collection, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4", authDomain: "pibgskpm-01.firebaseapp.com", projectId: "pibgskpm-01", storageBucket: "pibgskpm-01.appspot.com", messagingSenderId: "166309223339", appId: "1:166309223339:web:cbe72e17506b40820c90ee" };
+        // --- Firebase Setup ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
+            authDomain: "pibgskpm-01.firebaseapp.com",
+            projectId: "pibgskpm-01",
+            storageBucket: "pibgskpm-01.appspot.com",
+            messagingSenderId: "166309223339",
+            appId: "1:166309223339:web:cbe72e17506b40820c90ee"
+        };
+        
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const programsCol = collection(db, "pibg_programs");
         
+        // --- Collection References ---
+        const programsCol = collection(db, "pibg_programs");
+        const applicationsCol = collection(db, `/artifacts/${appId}/public/data/applications`);
+
+        // --- UI Elements ---
         const addProgramBtn = document.getElementById('addProgramBtn');
         const choiceModal = document.getElementById('choiceModal');
         const choiceYesBtn = document.getElementById('choice-yes');
@@ -139,8 +153,22 @@
         const cancelProgramBtn = document.getElementById('cancelProgramBtn');
         const programsListBody = document.getElementById('programsListBody');
 
-        (async () => { try { await signInAnonymously(auth); listenForPrograms(); } catch (e) { console.error(e); } })();
+        // --- State Variables ---
+        let programsFromPrograms = [];
+        let programsFromApplications = [];
 
+        // --- Authentication & Initial Load ---
+        (async () => { 
+            try { 
+                await signInAnonymously(auth); 
+                listenForData(); 
+            } catch (e) { 
+                console.error("Authentication failed:", e); 
+                programsListBody.innerHTML = `<tr><td colspan="5" class="text-center p-10 text-red-500">Gagal menyambung ke pangkalan data.</td></tr>`;
+            } 
+        })();
+
+        // --- Event Listeners ---
         addProgramBtn.addEventListener('click', () => choiceModal.classList.replace('hidden', 'flex'));
         choiceModal.addEventListener('click', () => choiceModal.classList.replace('flex', 'hidden'));
 
@@ -157,6 +185,9 @@
 
         programForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
             try {
                 await addDoc(programsCol, {
                     name: document.getElementById('prog-nama').value,
@@ -168,42 +199,82 @@
                     createdAt: serverTimestamp()
                 });
                 programModal.classList.replace('flex', 'hidden');
-                alert('Program berjaya disimpan!');
-            } catch (error) { console.error("Error:", error); alert("Gagal menyimpan."); }
+                // No need for alert, onSnapshot will update the list automatically.
+            } catch (error) { 
+                console.error("Error adding program:", error); 
+                alert("Gagal menyimpan program."); 
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan Program';
+            }
         });
 
-        const listenForPrograms = () => {
-            const q = query(programsCol, orderBy("startDate", "desc"));
-            onSnapshot(q, (snapshot) => {
-                programsListBody.innerHTML = '';
-                if (snapshot.empty) {
-                    programsListBody.innerHTML = `<tr><td colspan="5" class="text-center p-10">Belum ada program.</td></tr>`;
-                    return;
-                }
-                snapshot.docs.forEach((doc, index) => {
-                    const prog = doc.data();
-                    let date = new Date(prog.startDate).toLocaleDateString('ms-MY');
-                    if (prog.endDate) date += ` - ${new Date(prog.endDate).toLocaleDateString('ms-MY')}`;
-                    
-                    let statusClass = '', statusText = prog.fundingStatus || 'N/A';
-                    switch (statusText.toLowerCase()) {
-                        case 'tidak berkaitan': statusClass = 'status-tiada'; break;
-                        case 'baru': statusClass = 'status-baru'; break;
-                        case 'diluluskan': statusClass = 'status-lulus'; break;
-                        case 'ditolak': statusClass = 'status-tolak'; break;
-                        default: statusClass = 'status-tiada';
-                    }
-                    
-                    programsListBody.innerHTML += `
-                        <tr class="hover:bg-slate-50">
-                            <td class="py-4 px-5">${index + 1}</td>
-                            <td class="py-4 px-5 font-medium">${prog.name}</td>
-                            <td class="py-4 px-5">${prog.type}</td>
-                            <td class="py-4 px-5">${date}</td>
-                            <td class="py-4 px-5 text-center"><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        </tr>`;
-                });
+        // --- Data Fetching and Rendering ---
+        const renderCombinedPrograms = () => {
+            const allPrograms = [...programsFromPrograms, ...programsFromApplications];
+            
+            // Sort by start date, most recent first
+            allPrograms.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+            programsListBody.innerHTML = '';
+            if (allPrograms.length === 0) {
+                programsListBody.innerHTML = `<tr><td colspan="5" class="text-center p-10">Belum ada sebarang program yang didaftarkan.</td></tr>`;
+                return;
+            }
+
+            allPrograms.forEach((prog, index) => {
+                let date = prog.startDate ? new Date(prog.startDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric'}) : 'Tiada Tarikh';
+                if (prog.endDate) date += ` - ${new Date(prog.endDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric'})}`;
+                
+                let statusText = prog.fundingStatus || 'N/A';
+                let statusClass = `status-${statusText.toLowerCase().replace(/\s+/g, '-')}`;
+                
+                const row = `
+                    <tr class="hover:bg-slate-50 transition-colors duration-200">
+                        <td class="py-4 px-5 text-sm text-slate-500">${index + 1}</td>
+                        <td class="py-4 px-5 font-medium text-slate-800">${prog.name}</td>
+                        <td class="py-4 px-5 text-sm text-slate-600">${prog.type}</td>
+                        <td class="py-4 px-5 text-sm text-slate-600">${date}</td>
+                        <td class="py-4 px-5 text-center"><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    </tr>`;
+                programsListBody.innerHTML += row;
             });
+        };
+
+        const listenForData = () => {
+            // Listener for programs without funding
+            const qPrograms = query(programsCol, orderBy("createdAt", "desc"));
+            onSnapshot(qPrograms, (snapshot) => {
+                programsFromPrograms = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        name: data.name,
+                        type: data.type,
+                        startDate: data.startDate,
+                        endDate: data.endDate,
+                        fundingStatus: data.fundingStatus
+                    };
+                });
+                renderCombinedPrograms();
+            }, error => console.error("Error listening to programs collection:", error));
+
+            // Listener for programs from funding applications
+            const qApplications = query(applicationsCol, orderBy("createdAt", "desc"));
+            onSnapshot(qApplications, (snapshot) => {
+                programsFromApplications = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        name: data.purpose,
+                        type: data.category,
+                        startDate: data.programDate,
+                        endDate: null, // Applications don't have an end date
+                        fundingStatus: data.status
+                    };
+                });
+                renderCombinedPrograms();
+            }, error => console.error("Error listening to applications collection:", error));
         };
     </script>
 </body>
