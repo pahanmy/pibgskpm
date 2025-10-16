@@ -313,7 +313,6 @@
                                 <div>
                                     <h5 class="font-medium text-slate-800 mb-2 border-t pt-4">Perincian Anggaran Perbelanjaan</h5>
                                     <p class="text-xs text-slate-500 mb-4">Masukkan nilai sebenar untuk memudahkan proses semakan.</p>
-                                    
                                     <div class="space-y-4">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
@@ -417,7 +416,8 @@
         import { getFirestore, collection, onSnapshot, doc, addDoc, serverTimestamp, query, where, getDocs, deleteDoc, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
-        const firebaseConfig = {
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
             authDomain: "pibgskpm-01.firebaseapp.com",
             projectId: "pibgskpm-01",
@@ -458,18 +458,36 @@
                 lampiranFile: document.getElementById('lampiran_file'), uploadProgress: document.getElementById('upload-progress')
             };
 
-            const showToast = (message, type = 'success') => { /* ... Functionality remains the same ... */ };
-            const switchTab = (targetTabId) => { /* ... Functionality remains the same ... */ };
-            const fetchApplications = () => { /* ... Functionality remains the same ... */ };
-            const calculateStats = () => { /* ... Functionality remains the same ... */ };
-            const populateYearFilter = () => { /* ... Functionality remains the same ... */ };
-            const applyFiltersAndRender = () => { /* ... Functionality remains the same ... */ };
-            const renderTable = () => { /* ... Functionality remains the same ... */ };
-            const updatePaginationControls = () => { /* ... Functionality remains the same ... */ };
-            const openModal = (modal, panel) => { /* ... Functionality remains the same ... */ };
-            const closeModal = (modal, panel) => { /* ... Functionality remains the same ... */ };
-            const shareApplication = async (id, purpose, amount, appNumber) => { /* ... Functionality remains the same ... */ };
-            const deleteApplication = async (id) => { /* ... Functionality remains the same ... */ };
+            const showToast = (message, type = 'success') => {
+                ui.toastMessage.textContent = message;
+                ui.toast.className = ui.toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
+                ui.toast.classList.remove('opacity-0', 'translate-y-10');
+                setTimeout(() => ui.toast.classList.add('opacity-0', 'translate-y-10'), 3000);
+            };
+
+            const switchTab = (targetTabId) => {
+                ui.tabButtons.forEach(btn => btn.classList.toggle('active-tab', btn.id === targetTabId));
+                ui.tabContents.forEach(content => content.classList.toggle('hidden', content.id !== targetTabId.replace('-btn', '-content')));
+            };
+            
+            const fetchApplications = () => {
+                ui.analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
+                onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
+                    allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    populateYearFilter();
+                    applyFiltersAndRender();
+                });
+            };
+            
+            const calculateStats = () => { /* ... */ };
+            const populateYearFilter = () => { /* ... */ };
+            const applyFiltersAndRender = () => { /* ... */ };
+            const renderTable = () => { /* ... */ };
+            const updatePaginationControls = () => { /* ... */ };
+            const openModal = (modal, panel) => { /* ... */ };
+            const closeModal = (modal, panel) => { /* ... */ };
+            const shareApplication = async (id, purpose, amount, appNumber) => { /* ... */ };
+            const deleteApplication = async (id) => { /* ... */ };
 
             const updateFormSteps = () => {
                 ui.formSteps.forEach(step => step.classList.remove('active'));
@@ -498,8 +516,11 @@
                 let isValid = true;
                 inputs.forEach(input => {
                     let isInputValid;
-                    if (input.type === 'radio') isInputValid = currentFormStep.querySelector(`input[name="${input.name}"]:checked`);
-                    else isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
+                    if (input.type === 'radio') {
+                        isInputValid = currentFormStep.querySelector(`input[name="${input.name}"]:checked`);
+                    } else {
+                        isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
+                    }
                     if (step > 1 && input.closest('fieldset')?.disabled) return;
                     input.classList.toggle('border-red-500', !isInputValid);
                     if (!isInputValid) isValid = false;
@@ -520,9 +541,7 @@
                 const getRadioValue = (name) => document.querySelector(`input[name="${name}"]:checked`)?.value || 'Tidak Dinyatakan';
                 let total = 0;
 
-                let budgetHtml = `<table class="min-w-full text-sm">
-                                    <thead class="bg-slate-200"><tr><th class="p-2 text-left">Perkara</th><th class="p-2 text-right">Jumlah (RM)</th></tr></thead>
-                                    <tbody class="divide-y divide-slate-200">`;
+                let budgetHtml = `<table class="min-w-full text-sm"><thead class="bg-slate-200"><tr><th class="p-2 text-left">Perkara</th><th class="p-2 text-right">Jumlah (RM)</th></tr></thead><tbody class="divide-y divide-slate-200">`;
                 const addRow = (label, value) => {
                     const amount = parseFloat(value) || 0;
                     total += amount;
@@ -538,10 +557,7 @@
                     const kos = item.querySelector('.lain-lain-kos').value;
                     addRow(perkara, kos);
                 });
-                budgetHtml += `</tbody>
-                                <tfoot class="bg-slate-200 font-bold">
-                                    <tr><td class="p-2 text-left">Jumlah Keseluruhan</td><td class="p-2 text-right" id="summary-total-amount">RM ${total.toFixed(2)}</td></tr>
-                                </tfoot></table>`;
+                budgetHtml += `</tbody><tfoot class="bg-slate-200 font-bold"><tr><td class="p-2 text-left">Jumlah Keseluruhan</td><td class="p-2 text-right" id="summary-total-amount">RM ${total.toFixed(2)}</td></tr></tfoot></table>`;
 
                 ui.summaryContainer.innerHTML = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -591,8 +607,15 @@
                     );
                 });
             };
-
-            (async () => { /* Auth logic */ })();
+            
+            (async () => {
+                try {
+                    await signInAnonymously(auth);
+                    fetchApplications();
+                } catch (error) {
+                    console.error("Firebase authentication failed:", error);
+                }
+            })();
 
             ui.tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
             ui.newApplicationBtnInAnalysis.addEventListener('click', () => { switchTab('tab-form-btn'); resetApplicationForm(); });
@@ -673,11 +696,9 @@
                 } catch (error) {
                     console.error("Error submitting application:", error);
                     showToast('Gagal menghantar permohonan. Sila cuba lagi.', 'error');
-                } finally {
                     ui.submitBtn.disabled = false; ui.submitBtn.textContent = 'Hantar Permohonan';
                 }
             });
-            // Other listeners like IC blur, teacher reg, etc. would go here, unchanged.
         });
     </script>
 </body>
