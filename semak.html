@@ -941,7 +941,6 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 }
             });
             
-            // ===== PERUBAHAN JAVASCRIPT: LOGIK BARU UNTUK BUTANG SAHKAN =====
             sahkanIcBtn.addEventListener('click', async () => {
                 const icValue = icInput.value.trim();
                 teacherRegOption.classList.add('hidden');
@@ -980,27 +979,28 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                         applicantDetailsFieldset.disabled = false;
                         nextBtn.disabled = false;
 
-                        // Cuba isi maklumat bank dari permohonan lepas
-                        const qPrev = query(applicationsCol, where("applicantIC", "==", icValue), orderBy("createdAt", "desc"), limit(1));
-                        const prevAppsSnapshot = await getDocs(qPrev);
-                        if (!prevAppsSnapshot.empty) {
-                            const lastApp = prevAppsSnapshot.docs[0].data();
-                            document.getElementById('nama_bank').value = lastApp.bankName || '';
-                            document.getElementById('no_akaun').value = lastApp.bankAccount || '';
-                            showToast('Maklumat bank dari permohonan lepas telah diisi.');
+                        try {
+                            const qPrev = query(applicationsCol, where("applicantIC", "==", icValue), orderBy("createdAt", "desc"), limit(1));
+                            const prevAppsSnapshot = await getDocs(qPrev);
+                            if (!prevAppsSnapshot.empty) {
+                                const lastApp = prevAppsSnapshot.docs[0].data();
+                                document.getElementById('nama_bank').value = lastApp.bankName || '';
+                                document.getElementById('no_akaun').value = lastApp.bankAccount || '';
+                                showToast('Maklumat bank dari permohonan lepas telah diisi.');
+                            }
+                        } catch (bankError) {
+                            console.warn("Tidak dapat memuatkan maklumat bank lepas:", bankError);
                         }
                     }
                 } catch (error) {
-                    console.error("Error fetching exco/previous app:", error);
+                    console.error("Gagal membuat semakan Exco:", error);
                     icFeedback.textContent = 'Gagal membuat semakan. Sila semak sambungan internet.';
                     icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
                 } finally {
-                    // Aktifkan semula butang selepas selesai
                     sahkanIcBtn.disabled = false;
                     sahkanIcBtn.textContent = 'Sahkan';
                 }
             });
-            // ===== AKHIR PERUBAHAN JAVASCRIPT =====
 
             if(registerTeacherBtn) {
                 registerTeacherBtn.addEventListener('click', () => {
@@ -1039,7 +1039,6 @@ Kerjasama anda amat dihargai. Terima kasih.`;
 
                 submitBtn.disabled = true; submitBtn.textContent = 'Menghantar...';
                 
-                // Rujuk semula 'totalCostInput' kepada ID yang betul 'jumlah_keseluruhan'
                 const totalCostInput = document.getElementById('jumlah_keseluruhan');
 
                 try {
