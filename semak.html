@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Peruntukan PIBG | PIBG SK Pulau Melayu</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
@@ -13,12 +15,13 @@
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .gradient-text { background: linear-gradient(to right, #4f46e5, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .form-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; }
+        .form-input:read-only { background-color: #f3f4f6; cursor: not-allowed; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-             <a href="index.html" class="flex items-center space-x-3">
+            <a href="index.html" class="flex items-center space-x-3">
                 <img src="https://placehold.co/40x40/4f46e5/ffffff?text=SKPM" alt="Logo SK Pulau Melayu" class="h-10 w-10 rounded-md">
                 <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
             </a>
@@ -30,61 +33,44 @@
             </div>
             <div class="md:hidden"><button id="mobile-menu-button" class="text-slate-600">Menu</button></div>
         </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+             <a href="index.html" class="block py-2 px-6 text-sm">Utama</a>
+             <a href="program.html" class="block py-2 px-6 text-sm">Program</a>
+             <a href="semak.html" class="block py-2 px-6 text-sm">Peruntukan</a>
+             <a href="index.html#hubungi-kami" class="block py-2 px-6 text-sm">Hubungi Kami</a>
+        </div>
     </header>
 
     <main class="container mx-auto px-6 py-16">
         <section id="application-form-section" class="mb-16">
-            <h1 class="text-3xl font-bold gradient-text mb-2">Borang Permohonan Peruntukan Program</h1>
-            <p class="text-slate-600 mb-6">Gunakan borang ini untuk mendaftar program baharu yang memerlukan tajaan kewangan PIBG.</p>
+            <h1 class="text-3xl font-bold gradient-text mb-2">Borang Permohonan Peruntukan</h1>
+            <p class="text-slate-600 mb-6">Lengkapkan maklumat kewangan untuk program yang telah dipilih.</p>
 
             <form id="allocationForm" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 space-y-6">
-                <div class="border-b pb-6">
-                    <h3 class="text-lg font-semibold text-slate-800">Bahagian A: Maklumat Program</h3>
-                    <div class="mt-4 grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="form-prog-name">Nama Program <span class="text-red-500">*</span></label>
-                            <input type="text" id="form-prog-name" class="form-input mt-1" required>
-                        </div>
-                        <div>
-                            <label for="form-prog-type">Jenis Program <span class="text-red-500">*</span></label>
-                            <select id="form-prog-type" class="form-input mt-1" required>
-                                <option value="">-- Sila Pilih --</option>
-                                <option value="Program Khas">Program Khas</option>
-                                <option value="Mesyuarat">Mesyuarat</option>
-                                <option value="Lawatan">Lawatan</option>
-                                <option value="Sumbangan/Derma">Sumbangan/Derma</option>
-                            </select>
-                        </div>
-                        <div>
-                           <label for="form-prog-start-date">Tarikh Mula <span class="text-red-500">*</span></label>
-                           <input type="date" id="form-prog-start-date" class="form-input mt-1" required>
-                        </div>
-                        <div>
-                           <label for="form-prog-end-date">Tarikh Akhir</label>
-                           <input type="date" id="form-prog-end-date" class="form-input mt-1">
-                        </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium">Nama Program</label>
+                        <input type="text" id="form-prog-name" class="form-input" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Tarikh Program</label>
+                        <input type="text" id="form-prog-date" class="form-input" readonly>
                     </div>
                 </div>
-                
+                <hr>
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800">Bahagian B: Maklumat Kewangan</h3>
-                    <div class="mt-4 grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="form-ic">No. KP Pemohon <span class="text-red-500">*</span></label>
-                            <input type="text" id="form-ic" class="form-input mt-1" placeholder="Cth: 801122-13-xxxx" required>
-                        </div>
-                        <div>
-                            <label for="form-amount">Jumlah Dipohon (RM) <span class="text-red-500">*</span></label>
-                            <input type="number" id="form-amount" class="form-input mt-1" placeholder="Cth: 350.50" step="0.01" required>
-                        </div>
-                    </div>
-                     <div class="mt-6">
-                        <label for="form-justification">Justifikasi / Ringkasan Kertas Kerja <span class="text-red-500">*</span></label>
-                        <textarea id="form-justification" rows="4" class="form-input mt-1" required></textarea>
-                    </div>
+                    <label for="form-ic" class="block text-sm font-medium">No. KP Pemohon <span class="text-red-500">*</span></label>
+                    <input type="text" id="form-ic" class="form-input" placeholder="Cth: 801122-13-xxxx" required>
                 </div>
-
-                <div class="text-right pt-4">
+                <div>
+                    <label for="form-amount" class="block text-sm font-medium">Jumlah Dipohon (RM) <span class="text-red-500">*</span></label>
+                    <input type="number" id="form-amount" class="form-input" placeholder="Cth: 350.50" step="0.01" required>
+                </div>
+                <div>
+                    <label for="form-justification" class="block text-sm font-medium">Justifikasi / Kertas Kerja <span class="text-red-500">*</span></label>
+                    <textarea id="form-justification" rows="4" class="form-input" required></textarea>
+                </div>
+                <div class="text-right">
                     <button type="submit" class="px-8 py-2.5 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700">Hantar Permohonan</button>
                 </div>
             </form>
@@ -97,13 +83,13 @@
                     <table class="min-w-full bg-white">
                         <thead class="bg-slate-100">
                             <tr>
-                                <th class="p-3 text-left text-xs font-semibold uppercase">Nama Program</th>
-                                <th class="p-3 text-left text-xs font-semibold uppercase">Jumlah Dipohon (RM)</th>
-                                <th class="p-3 text-left text-xs font-semibold uppercase">Status</th>
-                            </tr>
+                                <th class="py-3 px-5 text-left text-xs font-semibold uppercase">Nama Program</th>
+                                <th class="py-3 px-5 text-left text-xs font-semibold uppercase">Jumlah Dipohon (RM)</th>
+                                <th class="py-3 px-5 text-left text-xs font-semibold uppercase">Status</th>
+                                </tr>
                         </thead>
                         <tbody id="allocationsListBody" class="divide-y divide-slate-200">
-                            <tr><td colspan="3" class="text-center p-10">Memuatkan senarai...</td></tr>
+                            <tr><td colspan="3" class="text-center p-10 text-slate-500">Memuatkan senarai permohonan...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -111,12 +97,12 @@
         </section>
     </main>
 
-    <footer class="bg-white border-t mt-16"><div class="container mx-auto p-6 text-center text-sm">&copy; 2025 PIBG SK Pulau Melayu.</div></footer>
+    <footer class="bg-white border-t mt-16"><div class="container mx-auto px-6 py-6 text-center text-slate-500 text-sm">&copy; 2025 PIBG SK Pulau Melayu. Hak Cipta Terpelihara.</div></footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, collection, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4", authDomain: "pibgskpm-01.firebaseapp.com", projectId: "pibgskpm-01", storageBucket: "pibgskpm-01.appspot.com", messagingSenderId: "166309223339", appId: "1:166309223339:web:cbe72e17506b40820c90ee" };
         const app = initializeApp(firebaseConfig);
@@ -126,52 +112,99 @@
 
         const allocationForm = document.getElementById('allocationForm');
         const allocationsListBody = document.getElementById('allocationsListBody');
-        
-        (async () => { try { await signInAnonymously(auth); listenForAllocations(); } catch(e) { console.error(e) } })();
+        let currentProgramId = null;
 
-        allocationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                await addDoc(programsCol, {
-                    name: document.getElementById('form-prog-name').value,
-                    type: document.getElementById('form-prog-type').value,
-                    startDate: document.getElementById('form-prog-start-date').value,
-                    endDate: document.getElementById('form-prog-end-date').value || null,
-                    applicantIC: document.getElementById('form-ic').value,
-                    amountRequested: parseFloat(document.getElementById('form-amount').value),
-                    justification: document.getElementById('form-justification').value,
-                    requiresFunding: true,
-                    fundingStatus: 'Baru',
-                    createdAt: serverTimestamp()
-                });
-                alert("Permohonan peruntukan telah berjaya dihantar!");
-                allocationForm.reset();
-            } catch (error) {
-                console.error("Error: ", error);
-                alert("Gagal menghantar permohonan.");
+        // Fungsi untuk dapatkan ID dari URL
+        const getProgramIdFromUrl = () => {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        };
+
+        // Fungsi untuk ambil data program & isi borang
+        const populateForm = async (programId) => {
+            const programDocRef = doc(db, "pibg_programs", programId);
+            const docSnap = await getDoc(programDocRef);
+
+            if (docSnap.exists()) {
+                const program = docSnap.data();
+                document.getElementById('form-prog-name').value = program.name;
+                let dateDisplay = new Date(program.startDate).toLocaleDateString('ms-MY');
+                if (program.endDate) dateDisplay += ` - ${new Date(program.endDate).toLocaleDateString('ms-MY')}`;
+                document.getElementById('form-prog-date').value = dateDisplay;
+                currentProgramId = programId; // Simpan ID untuk submission
+            } else {
+                console.log("No such document!");
+                document.getElementById('application-form-section').innerHTML = '<p class="text-red-500 text-center">Program tidak ditemui. Sila pastikan anda datang dari halaman Program.</p>';
             }
-        });
+        };
 
+        // Dengar senarai permohonan yang perlukan dana sahaja
         const listenForAllocations = () => {
             const q = query(programsCol, where("requiresFunding", "==", true));
             onSnapshot(q, (snapshot) => {
                 allocationsListBody.innerHTML = '';
                 if(snapshot.empty){
-                    allocationsListBody.innerHTML = `<tr><td colspan="3" class="text-center p-10">Tiada permohonan.</td></tr>`;
+                    allocationsListBody.innerHTML = `<tr><td colspan="3" class="text-center p-10 text-slate-500">Tiada permohonan peruntukan buat masa ini.</td></tr>`;
                     return;
                 }
                 snapshot.forEach(doc => {
-                    const prog = doc.data();
-                    allocationsListBody.innerHTML += `
-                        <tr class="hover:bg-slate-50">
-                            <td class="p-3">${prog.name}</td>
-                            <td class="p-3">RM ${prog.amountRequested.toFixed(2)}</td>
-                            <td class="p-3">${prog.fundingStatus}</td>
-                        </tr>
+                    const program = doc.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-4 px-5 text-sm">${program.name}</td>
+                        <td class="py-4 px-5 text-sm">RM ${program.amountRequested || '-'}</td>
+                        <td class="py-4 px-5 text-sm">${program.fundingStatus}</td>
                     `;
+                    allocationsListBody.appendChild(row);
                 });
             });
         };
+        
+        // Event listener untuk hantar borang kewangan
+        allocationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentProgramId) {
+                alert("Sila pilih program dari halaman Program terlebih dahulu.");
+                return;
+            }
+
+            const programDocRef = doc(db, "pibg_programs", currentProgramId);
+            const financialData = {
+                applicantIC: document.getElementById('form-ic').value,
+                amountRequested: parseFloat(document.getElementById('form-amount').value),
+                justification: document.getElementById('form-justification').value,
+                applicationDate: serverTimestamp() // Boleh tambah jika perlu
+            };
+
+            try {
+                await updateDoc(programDocRef, financialData);
+                alert("Permohonan peruntukan kewangan telah berjaya dihantar!");
+                allocationForm.reset();
+                document.getElementById('form-prog-name').value = '';
+                document.getElementById('form-prog-date').value = '';
+                currentProgramId = null;
+            } catch (error) {
+                console.error("Error updating document: ", error);
+                alert("Gagal menghantar permohonan.");
+            }
+        });
+        
+        // Logik utama apabila halaman dimuatkan
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await signInAnonymously(auth);
+                const programId = getProgramIdFromUrl();
+                if(programId) {
+                    populateForm(programId);
+                } else {
+                     document.getElementById('application-form-section').style.display = 'none';
+                }
+                listenForAllocations();
+            } catch (error) {
+                console.error("Auth Error:", error);
+            }
+        });
+
     </script>
 </body>
 </html>
