@@ -305,30 +305,51 @@
                                 <div>
                                     <h5 class="font-medium text-slate-800 mb-2 border-t pt-4">Perincian Pemohonan Harian</h5>
                                     <p class="text-xs text-slate-500 mb-4">Masukkan nilai sebenar untuk memudahkan proses semakan.</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-slate-700 mb-1">Makan Minum (RM) <span class="text-red-600">*</span></label>
-                                            <input type="number" step="0.01" id="makan_minum" name="makan_minum" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                                    
+                                    <div class="space-y-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-slate-700 mb-1">Makan Minum Murid (RM)</label>
+                                                <input type="number" step="0.01" id="makan_murid" name="makan_murid" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-slate-700 mb-1">Makan Minum Guru Pengiring (RM)</label>
+                                                <input type="number" step="0.01" id="makan_guru" name="makan_guru" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md">
+                                            </div>
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-medium text-slate-700 mb-1">Pengangkutan (RM) <span class="text-red-600">*</span></label>
-                                            <input type="number" step="0.01" id="pengangkutan" name="pengangkutan" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                                            <label class="block text-sm font-medium text-slate-700 mb-2">Pengangkutan</label>
+                                            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="flex items-center"><input type="radio" name="jenis_pengangkutan" value="Sewa Van" class="h-4 w-4 text-indigo-600 border-slate-300"> <label class="ml-2 text-sm text-slate-700">Sewa Van</label></div>
+                                                    <div class="flex items-center"><input type="radio" name="jenis_pengangkutan" value="Kenderaan Guru" class="h-4 w-4 text-indigo-600 border-slate-300"> <label class="ml-2 text-sm text-slate-700">Kenderaan Guru</label></div>
+                                                </div>
+                                                <div class="flex-grow">
+                                                     <label for="pengangkutan_kos" class="sr-only">Kos Pengangkutan (RM)</label>
+                                                     <input type="number" step="0.01" id="pengangkutan_kos" name="pengangkutan_kos" placeholder="Kos Pengangkutan (RM)" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-slate-700 mb-1">Lain-lain (RM) <span class="text-red-600">*</span></label>
-                                            <input type="number" step="0.01" id="lain_lain" name="lain_lain" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" required>
+                                        <div class="border-t pt-4">
+                                             <label class="block text-sm font-medium text-slate-700 mb-2">Perbelanjaan Lain</label>
+                                             <div id="lain-lain-container" class="space-y-3">
+                                                 </div>
+                                             <button type="button" id="tambah-perkara-btn" class="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-2">
+                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" /></svg>
+                                                 <span>Tambah Perkara</span>
+                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Jumlah Keseluruhan (RM)</label>
-                                    <input type="text" id="jumlah_keseluruhan" name="jumlah_keseluruhan" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100" readonly>
+                                <div class="mt-4">
+                                    <label class="block text-sm font-bold text-slate-800 mb-1">Jumlah Keseluruhan (RM)</label>
+                                    <input type="text" id="jumlah_keseluruhan" name="jumlah_keseluruhan" placeholder="0.00" class="w-full px-3 py-2 border-2 border-slate-400 rounded-md bg-slate-100 font-bold text-lg" readonly>
                                 </div>
                                 <div class="space-y-6 mt-6 pt-6 border-t">
                                     <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Kertas Kerja Yang Telah Disahkan (Jika ada)</label>
-                                        <p class="text-xs text-slate-500 mb-2">Muat naik 1 fail sokongan. Saiz maksimum 10MB.</p>
-                                        <input type="file" name="lampiran" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"/>
+                                        <label for="lampiran_link" class="block text-sm font-medium text-slate-700 mb-1">Pautan Kertas Kerja (cth: Google Drive)</label>
+                                        <p class="text-xs text-slate-500 mb-2">Sila pastikan pautan boleh diakses oleh semua (publicly accessible).</p>
+                                        <input type="url" id="lampiran_link" name="lampiran_link" placeholder="https://docs.google.com/document/d/..." class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
                                     </div>
                                     <div class="pt-4">
                                         <div class="flex items-center">
@@ -462,6 +483,8 @@
             const shareModalPanel = document.getElementById('share-modal-panel');
             const closeShareModalBtn = document.getElementById('close-share-modal-btn');
             const copyShareTextBtn = document.getElementById('copy-share-text-btn');
+            const tambahPerkaraBtn = document.getElementById('tambah-perkara-btn');
+            const lainLainContainer = document.getElementById('lain-lain-container');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -823,19 +846,19 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 let isValid = true;
                 inputs.forEach(input => {
                     let isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
-                    // For step 2, the fieldset itself is the form step content, so we don't need to check closest('fieldset').disabled
                     if (step > 1 && input.closest('fieldset')?.disabled) return;
                     input.classList.toggle('border-red-500', !isInputValid);
                     if (!isInputValid) isValid = false;
                 });
-                 // Step 1 is valid only after IC check is successful and details fieldset is enabled
                  if (step === 1 && applicantDetailsFieldset.disabled) isValid = false;
                 return isValid;
             };
             
             const calculateTotal = () => {
                 let total = 0;
-                document.querySelectorAll('.cost-input').forEach(input => { total += parseFloat(input.value) || 0; });
+                document.querySelectorAll('.cost-input').forEach(input => {
+                    total += parseFloat(input.value) || 0;
+                });
                 document.getElementById('jumlah_keseluruhan').value = total.toFixed(2);
             };
 
@@ -847,7 +870,7 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 updateButtons();
                 icFeedback.textContent = '';
                 icFeedback.className = 'text-sm mt-2 h-5';
-                applicantDetailsFieldset.disabled = true; // Re-disable fieldset on reset
+                applicantDetailsFieldset.disabled = true;
                 nextBtn.disabled = true;
                 successMessage.classList.add('hidden');
                 document.getElementById('form-steps-container').style.display = 'block';
@@ -856,15 +879,14 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 applicantNameInput.classList.add('bg-slate-100');
                 applicantPositionInput.readOnly = true;
                 applicantPositionInput.classList.add('bg-slate-100');
+                lainLainContainer.innerHTML = ''; // Clear dynamic items
                 
-                // Set default values
-                document.getElementById('tarikh_program').value = new Date().toISOString().split('T')[0];
-                document.getElementById('jumlah_peserta').value = 2;
-                document.getElementById('jumlah_hari').value = 1;
-                document.getElementById('makan_minum').value = 1;
-                document.getElementById('pengangkutan').value = 1;
-                document.getElementById('lain_lain').value = 1;
-                calculateTotal();
+                // Set default values for step 4
+                document.getElementById('makan_murid').value = '';
+                document.getElementById('makan_guru').value = '';
+                document.getElementById('pengangkutan_kos').value = '';
+                document.getElementById('lampiran_link').value = '';
+                calculateTotal(); // Recalculate total to 0.00
             };
 
             // --- Authentication & Initial Load ---
@@ -920,7 +942,6 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 setTimeout(() => { copyShareTextBtn.textContent = 'Salin Mesej'; }, 2000);
             });
 
-            // Event delegation for dynamically created buttons
             analysisTableBody.addEventListener('click', (e) => {
                 const targetBtn = e.target.closest('button, a');
                 if (!targetBtn) return;
@@ -928,18 +949,12 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 if (targetBtn.matches('.keputusan-btn')) {
                     const appId = targetBtn.dataset.id;
                     const appData = filteredApps.find(app => app.id === appId);
-                    if (appData) {
-                        populateAndOpenModal(appData);
-                    }
+                    if (appData) populateAndOpenModal(appData);
                 } else if (targetBtn.matches('.share-btn')) {
-                    const appId = targetBtn.dataset.id;
-                    const appPurpose = targetBtn.dataset.purpose;
-                    const appAmount = targetBtn.dataset.amount;
-                    const appNumber = targetBtn.dataset.appNumber;
-                    shareApplication(appId, appPurpose, appAmount, appNumber);
+                    const { id, purpose, amount, appNumber } = targetBtn.dataset;
+                    shareApplication(id, purpose, amount, appNumber);
                 } else if (targetBtn.matches('.delete-btn')) {
-                    const appId = targetBtn.dataset.id;
-                    deleteApplication(appId);
+                    deleteApplication(targetBtn.dataset.id);
                 }
             });
 
@@ -948,7 +963,7 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 teacherRegOption.classList.add('hidden');
                 applicantNameInput.readOnly = true; applicantNameInput.classList.add('bg-slate-100');
                 applicantPositionInput.readOnly = true; applicantPositionInput.classList.add('bg-slate-100');
-                applicantDetailsFieldset.disabled = true; // Always disable first
+                applicantDetailsFieldset.disabled = true;
 
                 if (icValue.length < 5) { icFeedback.textContent = ''; return; }
 
@@ -972,7 +987,7 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                         applicantNameInput.value = excoData.name;
                         applicantPositionInput.value = excoData.pibgPosition;
                         document.getElementById('no_telefon').value = excoData.phone || '';
-                        applicantDetailsFieldset.disabled = false; // Enable fieldset for next step
+                        applicantDetailsFieldset.disabled = false;
                         nextBtn.disabled = false;
 
                         const qPrev = query(applicationsCol, where("applicantIC", "==", icValue), orderBy("createdAt", "desc"), limit(1));
@@ -999,7 +1014,7 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                     applicantNameInput.value = ''; applicantNameInput.focus();
                     applicantPositionInput.value = 'Guru'; applicantPositionInput.readOnly = true;
                     applicantPositionInput.classList.add('bg-slate-100');
-                    applicantDetailsFieldset.disabled = false; // Enable fieldset for next step
+                    applicantDetailsFieldset.disabled = false;
                     nextBtn.disabled = false;
                     teacherRegOption.classList.add('hidden');
                 });
@@ -1020,8 +1035,35 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 });
             }
             
-            document.querySelectorAll('.cost-input').forEach(input => input.addEventListener('input', calculateTotal));
-            
+            // Event listener for all cost inputs
+            applicationForm.addEventListener('input', (e) => {
+                if(e.target.classList.contains('cost-input')) {
+                    calculateTotal();
+                }
+            });
+
+            // Event listener for adding new 'lain-lain' item
+            tambahPerkaraBtn.addEventListener('click', () => {
+                const newItemRow = document.createElement('div');
+                newItemRow.className = 'flex items-center gap-2 lain-lain-item';
+                newItemRow.innerHTML = `
+                    <input type="text" placeholder="Perkara (cth: Hadiah)" class="lain-lain-perkara w-full px-3 py-2 border border-slate-300 rounded-md text-sm">
+                    <input type="number" step="0.01" placeholder="0.00" class="cost-input lain-lain-kos w-40 px-3 py-2 border border-slate-300 rounded-md text-sm">
+                    <button type="button" class="remove-item-btn text-red-500 hover:text-red-700 p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                    </button>
+                `;
+                lainLainContainer.appendChild(newItemRow);
+            });
+
+            // Event listener for removing 'lain-lain' item (using event delegation)
+            lainLainContainer.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-item-btn')) {
+                    e.target.closest('.lain-lain-item').remove();
+                    calculateTotal();
+                }
+            });
+
             applicationForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (!validateStep(formCurrentStep)) return;
@@ -1029,7 +1071,16 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 submitBtn.disabled = true; submitBtn.textContent = 'Menghantar...';
                 
                 try {
-                    const totalCostInput = document.getElementById('jumlah_keseluruhan');
+                    // Collect dynamic 'lain-lain' items
+                    const perkaraLainItems = [];
+                    document.querySelectorAll('.lain-lain-item').forEach(item => {
+                        const perkara = item.querySelector('.lain-lain-perkara').value;
+                        const kos = parseFloat(item.querySelector('.lain-lain-kos').value) || 0;
+                        if(perkara && kos > 0) {
+                            perkaraLainItems.push({ perkara, kos });
+                        }
+                    });
+
                     const newApplication = {
                         applicant: applicantNameInput.value, applicantIC: icInput.value,
                         position: applicantPositionInput.value, phone: document.getElementById('no_telefon').value,
@@ -1038,8 +1089,18 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                         category: document.querySelector('input[name="kategori"]:checked').value === 'Lain-lain' ? document.querySelector('input[name="kategori_lain"]').value : document.querySelector('input[name="kategori"]:checked').value,
                         participants: parseInt(document.getElementById('jumlah_peserta').value) || 0,
                         days: parseInt(document.getElementById('jumlah_hari').value) || 0,
-                        budget: { makan: parseFloat(document.getElementById('makan_minum').value) || 0, angkut: parseFloat(document.getElementById('pengangkutan').value) || 0, lain: parseFloat(document.getElementById('lain_lain').value) || 0 },
-                        amount: parseFloat(totalCostInput.value) || 0, status: 'Dalam Proses', votes: [], createdAt: serverTimestamp()
+                        budget: { 
+                            makanMurid: parseFloat(document.getElementById('makan_murid').value) || 0,
+                            makanGuru: parseFloat(document.getElementById('makan_guru').value) || 0,
+                            pengangkutanJenis: document.querySelector('input[name="jenis_pengangkutan"]:checked')?.value || 'Tidak dinyatakan',
+                            pengangkutanKos: parseFloat(document.getElementById('pengangkutan_kos').value) || 0,
+                            perkaraLain: perkaraLainItems
+                        },
+                        lampiranLink: document.getElementById('lampiran_link').value || '',
+                        amount: parseFloat(document.getElementById('jumlah_keseluruhan').value) || 0, 
+                        status: 'Dalam Proses', 
+                        votes: [], 
+                        createdAt: serverTimestamp()
                     };
                     await addDoc(applicationsCol, newApplication);
                     document.getElementById('form-steps-container').style.display = 'none';
