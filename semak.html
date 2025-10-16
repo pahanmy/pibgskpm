@@ -219,22 +219,20 @@
                         <div id="form-steps-container">
                              <div class="mb-8">
                                 <div class="flex justify-between items-center">
-                                    <div class="step-indicator active flex-1 text-center" data-step="1"><div class="step-circle mx-auto">1</div><p class="step-text">Pemohon</p></div>
+                                    <div class="step-indicator active flex-1 text-center" data-step="1"><div class="step-circle mx-auto">1</div><p class="step-text">Pengesahan IC</p></div>
                                     <div class="flex-1 h-0.5 bg-slate-200"></div>
-                                    <div class="step-indicator flex-1 text-center" data-step="2"><div class="step-circle mx-auto">2</div><p class="step-text">Program</p></div>
+                                    <div class="step-indicator flex-1 text-center" data-step="2"><div class="step-circle mx-auto">2</div><p class="step-text">Pemohon</p></div>
                                     <div class="flex-1 h-0.5 bg-slate-200"></div>
-                                    <div class="step-indicator flex-1 text-center" data-step="3"><div class="step-circle mx-auto">3</div><p class="step-text">Bajet & Hantar</p></div>
+                                    <div class="step-indicator flex-1 text-center" data-step="3"><div class="step-circle mx-auto">3</div><p class="step-text">Program</p></div>
+                                    <div class="flex-1 h-0.5 bg-slate-200"></div>
+                                    <div class="step-indicator flex-1 text-center" data-step="4"><div class="step-circle mx-auto">4</div><p class="step-text">Bajet & Hantar</p></div>
                                 </div>
                             </div>
+
                             <div id="form-step-1" class="form-step space-y-6 active">
                                 <div>
                                     <label for="no_ic_pemohon" class="block text-sm font-medium text-slate-700 mb-1">No. Kad Pengenalan Exco <span class="text-red-600">*</span></label>
-                                    <div class="flex items-center space-x-2">
-                                        <input type="text" id="no_ic_pemohon" name="no_ic_pemohon" placeholder="Masukkan No. KP dan tekan Sahkan" class="flex-grow w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                        <button type="button" id="sahkan-ic-btn" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed">
-                                            Sahkan
-                                        </button>
-                                    </div>
+                                    <input type="text" id="no_ic_pemohon" name="no_ic_pemohon" placeholder="Masukkan No. KP dan tekan Enter atau alih kursor" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                     <p id="ic-feedback" class="text-sm mt-2 h-5"></p>
                                     <div id="teacher-reg-option" class="hidden mt-2">
                                         <p class="text-slate-600 text-sm">Bukan seorang Exco?
@@ -242,7 +240,10 @@
                                         </p>
                                     </div>
                                 </div>
-                                <fieldset id="applicant-details-fieldset" disabled class="space-y-6 border-t border-slate-200 mt-6 pt-6">
+                            </div>
+                            
+                            <div id="form-step-2" class="form-step space-y-6">
+                                <fieldset id="applicant-details-fieldset" class="space-y-6">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label for="nama_pemohon" class="block text-sm font-medium text-slate-700 mb-1">Nama Pemohon <span class="text-red-600">*</span></label>
@@ -269,7 +270,8 @@
                                     </div>
                                 </fieldset>
                             </div>
-                            <div id="form-step-2" class="form-step space-y-6">
+
+                            <div id="form-step-3" class="form-step space-y-6">
                                 <div>
                                     <label for="tujuan" class="block text-sm font-medium text-slate-700 mb-1">Tujuan Pemohonan <span class="text-red-600">*</span></label>
                                     <textarea id="tujuan" name="tujuan" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
@@ -288,7 +290,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="form-step-3" class="form-step space-y-6">
+
+                            <div id="form-step-4" class="form-step space-y-6">
                                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label for="jumlah_peserta" class="block text-sm font-medium text-slate-700 mb-1">Jumlah Peserta (Termasuk guru)</label>
@@ -459,9 +462,6 @@
             const shareModalPanel = document.getElementById('share-modal-panel');
             const closeShareModalBtn = document.getElementById('close-share-modal-btn');
             const copyShareTextBtn = document.getElementById('copy-share-text-btn');
-            
-            // ===== ELEMEN BARU UNTUK BUTANG SAHKAN =====
-            const sahkanIcBtn = document.getElementById('sahkan-ic-btn');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -823,10 +823,12 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 let isValid = true;
                 inputs.forEach(input => {
                     let isInputValid = (input.type === 'checkbox') ? input.checked : input.value.trim() !== '';
-                    if (input.closest('fieldset')?.disabled) return;
+                    // For step 2, the fieldset itself is the form step content, so we don't need to check closest('fieldset').disabled
+                    if (step > 1 && input.closest('fieldset')?.disabled) return;
                     input.classList.toggle('border-red-500', !isInputValid);
                     if (!isInputValid) isValid = false;
                 });
+                 // Step 1 is valid only after IC check is successful and details fieldset is enabled
                  if (step === 1 && applicantDetailsFieldset.disabled) isValid = false;
                 return isValid;
             };
@@ -845,7 +847,7 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                 updateButtons();
                 icFeedback.textContent = '';
                 icFeedback.className = 'text-sm mt-2 h-5';
-                applicantDetailsFieldset.disabled = true;
+                applicantDetailsFieldset.disabled = true; // Re-disable fieldset on reset
                 nextBtn.disabled = true;
                 successMessage.classList.add('hidden');
                 document.getElementById('form-steps-container').style.display = 'block';
@@ -940,26 +942,19 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                     deleteApplication(appId);
                 }
             });
-            
-            // ===== PERUBAHAN JAVASCRIPT: LOGIK BARU UNTUK BUTANG SAHKAN =====
-            sahkanIcBtn.addEventListener('click', async () => {
+
+            icInput.addEventListener('blur', async () => {
                 const icValue = icInput.value.trim();
                 teacherRegOption.classList.add('hidden');
                 applicantNameInput.readOnly = true; applicantNameInput.classList.add('bg-slate-100');
                 applicantPositionInput.readOnly = true; applicantPositionInput.classList.add('bg-slate-100');
+                applicantDetailsFieldset.disabled = true; // Always disable first
 
-                if (icValue.length < 5) {
-                    icFeedback.textContent = 'Sila masukkan No. KP yang sah.';
-                    icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
-                    return;
-                }
+                if (icValue.length < 5) { icFeedback.textContent = ''; return; }
 
-                icFeedback.textContent = 'Menyemak maklumat Exco...';
+                icFeedback.textContent = 'Mencari maklumat Exco...';
                 icFeedback.className = 'text-sm mt-2 h-5 text-slate-500';
-                applicantDetailsFieldset.disabled = true;
                 nextBtn.disabled = true;
-                sahkanIcBtn.disabled = true;
-                sahkanIcBtn.textContent = '...';
 
                 try {
                     const q = query(excoMembersCol, where("ic", "==", icValue));
@@ -977,10 +972,9 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                         applicantNameInput.value = excoData.name;
                         applicantPositionInput.value = excoData.pibgPosition;
                         document.getElementById('no_telefon').value = excoData.phone || '';
-                        applicantDetailsFieldset.disabled = false;
+                        applicantDetailsFieldset.disabled = false; // Enable fieldset for next step
                         nextBtn.disabled = false;
 
-                        // Cuba isi maklumat bank dari permohonan lepas
                         const qPrev = query(applicationsCol, where("applicantIC", "==", icValue), orderBy("createdAt", "desc"), limit(1));
                         const prevAppsSnapshot = await getDocs(qPrev);
                         if (!prevAppsSnapshot.empty) {
@@ -992,15 +986,10 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                     }
                 } catch (error) {
                     console.error("Error fetching exco/previous app:", error);
-                    icFeedback.textContent = 'Gagal membuat semakan. Sila semak sambungan internet.';
+                    icFeedback.textContent = 'Gagal membuat semakan. Sila cuba lagi.';
                     icFeedback.className = 'text-sm mt-2 h-5 text-red-600';
-                } finally {
-                    // Aktifkan semula butang selepas selesai
-                    sahkanIcBtn.disabled = false;
-                    sahkanIcBtn.textContent = 'Sahkan';
                 }
             });
-            // ===== AKHIR PERUBAHAN JAVASCRIPT =====
 
             if(registerTeacherBtn) {
                 registerTeacherBtn.addEventListener('click', () => {
@@ -1010,7 +999,7 @@ Kerjasama anda amat dihargai. Terima kasih.`;
                     applicantNameInput.value = ''; applicantNameInput.focus();
                     applicantPositionInput.value = 'Guru'; applicantPositionInput.readOnly = true;
                     applicantPositionInput.classList.add('bg-slate-100');
-                    applicantDetailsFieldset.disabled = false;
+                    applicantDetailsFieldset.disabled = false; // Enable fieldset for next step
                     nextBtn.disabled = false;
                     teacherRegOption.classList.add('hidden');
                 });
@@ -1039,10 +1028,8 @@ Kerjasama anda amat dihargai. Terima kasih.`;
 
                 submitBtn.disabled = true; submitBtn.textContent = 'Menghantar...';
                 
-                // Rujuk semula 'totalCostInput' kepada ID yang betul 'jumlah_keseluruhan'
-                const totalCostInput = document.getElementById('jumlah_keseluruhan');
-
                 try {
+                    const totalCostInput = document.getElementById('jumlah_keseluruhan');
                     const newApplication = {
                         applicant: applicantNameInput.value, applicantIC: icInput.value,
                         position: applicantPositionInput.value, phone: document.getElementById('no_telefon').value,
