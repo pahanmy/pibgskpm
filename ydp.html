@@ -414,7 +414,10 @@
             const loadDashboardData = async () => {
                 analysisTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-slate-500">Memuatkan data...</td></tr>`;
                 try {
-                    const excoSnapshot = await getDocs(collection(db, excoMembersCol));
+                    const excoSnapshot = await getDocs(excoMembersCol);
+                    if (excoSnapshot.empty) {
+                        throw new Error("Tidak dapat memuatkan senarai Exco.");
+                    }
                     excoMembersList = excoSnapshot.docs.map(doc => doc.data().name);
 
                     onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
@@ -479,9 +482,10 @@
                         throw new Error("Akses ditolak. Pengguna bukan YDP.");
                     }
 
+                    // --- If verification is successful ---
                     icVerificationSection.classList.add('hidden');
                     mainDashboardContent.classList.remove('hidden');
-                    loadDashboardData();
+                    await loadDashboardData();
 
                 } catch (error) {
                     icVerifyFeedback.textContent = error.message;
