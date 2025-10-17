@@ -534,6 +534,13 @@
             // --- Modal Management ---
             const populateAndOpenModal = (app) => {
                 const decisionDate = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                const totalExco = excoMembersList.length > 0 ? excoMembersList.length : 15;
+                const votesArray = app.votes || [];
+                const jumlahMengundi = votesArray.length;
+                const jumlahTidakMengundi = totalExco - jumlahMengundi;
+                const peratusUndian = totalExco > 0 ? Math.round((jumlahMengundi / totalExco) * 100) : 0;
+
                 const contentHtml = `
                     <div id="notice-content-to-capture" class="p-6 md:p-8">
                         <div class="text-center mb-6">
@@ -549,6 +556,25 @@
                                 <br>
                                 <strong class="text-green-700 text-lg my-2 block text-center bg-green-50 p-3 rounded-lg">💰 RM ${parseFloat(app.amount).toFixed(2)}</strong>
                             </p>
+
+                            <div class="my-6">
+                                <h4 class="text-md font-semibold text-slate-800 border-b pb-2 mb-3">Ringkasan Undian</h4>
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div class="bg-slate-100 p-3 rounded-lg">
+                                        <span class="block text-xl font-bold text-green-600">${jumlahMengundi}</span>
+                                        <span class="text-xs text-slate-500">Telah Mengundi</span>
+                                    </div>
+                                    <div class="bg-slate-100 p-3 rounded-lg">
+                                        <span class="block text-xl font-bold text-red-600">${jumlahTidakMengundi}</span>
+                                        <span class="text-xs text-slate-500">Tidak Mengundi</span>
+                                    </div>
+                                    <div class="bg-slate-100 p-3 rounded-lg">
+                                        <span class="block text-xl font-bold text-blue-600">${peratusUndian}%</span>
+                                        <span class="text-xs text-slate-500">Peratus Undian</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <p class="font-bold text-slate-800">Sehubungan dengan itu, pihak yang terlibat DIARAHKAN untuk mengambil tindakan segera seperti berikut:</p>
                             <div class="space-y-4">
                                 <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
