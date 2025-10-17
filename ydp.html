@@ -166,7 +166,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
@@ -191,14 +191,12 @@
             const analysisTableBody = document.getElementById('analysis-table-body');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
-
-            // --- Elements for IC Verification ---
+            
             const icVerificationSection = document.getElementById('ic-verification-section');
             const mainDashboardContent = document.getElementById('main-dashboard-content');
             const ydpIcInput = document.getElementById('ydp-ic-verify');
             const verifyIcBtn = document.getElementById('verify-ic-btn');
             const icVerifyFeedback = document.getElementById('ic-verify-feedback');
-
 
             const showToast = (message, type = 'success') => {
                 toastMessage.textContent = message;
@@ -413,17 +411,9 @@
                 openModal('details-modal');
             };
             
-            // --- NEW: Function to load dashboard data after verification ---
             const loadDashboardData = async () => {
                 analysisTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-slate-500">Memuatkan data...</td></tr>`;
                 try {
-                    // This block is corrected
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    
                     const excoSnapshot = await getDocs(collection(db, excoMembersCol));
                     excoMembersList = excoSnapshot.docs.map(doc => doc.data().name);
 
@@ -441,16 +431,28 @@
                         renderTable();
                     });
                 } catch (error) {
-                    console.error("Initialization failed:", error);
-                    showToast('Gagal memuatkan data.', 'error');
+                    console.error("Dashboard data load failed:", error);
+                    showToast('Gagal memuatkan data papan pemuka.', 'error');
                     analysisTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-red-500">Gagal memuatkan data. Sila semak kebenaran akses anda.</td></tr>`;
                 }
             };
             
-            // --- NEW: Event listener for IC verification ---
-            verifyIcBtn.addEventListener('click', () => {
+            // --- INITIAL AUTHENTICATION ON PAGE LOAD ---
+            (async () => {
+                try {
+                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch(e) {
+                    console.error("Initial auth failed:", e);
+                    showToast("Sesi pengesahan gagal.", "error");
+                }
+            })();
+
+            verifyIcBtn.addEventListener('click', async () => {
                 const icValue = ydpIcInput.value.trim();
-                const YDP_IC = '890522135381'; // Hardcoded YDP IC
 
                 if (icValue.length !== 12) {
                     icVerifyFeedback.textContent = "Sila masukkan 12 digit No. Kad Pengenalan.";
@@ -460,14 +462,29 @@
 
                 verifyIcBtn.disabled = true;
                 verifyIcBtn.innerHTML = `<div class="loader mx-auto"></div>`;
-                icVerifyFeedback.textContent = "";
-                
-                if (icValue === YDP_IC) {
+                icVerifyFeedback.textContent = "Mengesahkan...";
+                icVerifyFeedback.className = 'text-sm mt-4 text-center h-5 text-slate-500';
+
+                try {
+                    const q = query(excoMembersCol, where("ic", "==", icValue));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        throw new Error("No. KP tidak dijumpai dalam senarai Exco.");
+                    }
+
+                    const ydpData = querySnapshot.docs[0].data();
+
+                    if (ydpData.pibgPosition !== 'YDP') {
+                        throw new Error("Akses ditolak. Pengguna bukan YDP.");
+                    }
+
                     icVerificationSection.classList.add('hidden');
                     mainDashboardContent.classList.remove('hidden');
                     loadDashboardData();
-                } else {
-                    icVerifyFeedback.textContent = "No. KP tidak sah. Akses ditolak.";
+
+                } catch (error) {
+                    icVerifyFeedback.textContent = error.message;
                     icVerifyFeedback.className = 'text-sm mt-4 text-center h-5 text-red-500';
                     verifyIcBtn.disabled = false;
                     verifyIcBtn.innerHTML = `
@@ -477,7 +494,6 @@
                         Sahkan Identiti`;
                 }
             });
-
 
             document.getElementById('year-filter').addEventListener('change', renderTable);
 
