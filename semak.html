@@ -491,7 +491,7 @@
                                 const voters = votes.map(v => v.voterName ? v.voterName.toUpperCase() : '');
                                 const votersData = JSON.stringify(voters);
 
-                                return `<button data-voters='${votersData}' class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-slate-100 text-slate-800 font-semibold rounded-md hover:bg-slate-200 text-xs">
+                                return `<button data-voters='${votersData}' data-purpose="${app.purpose}" data-amount="${app.amount}" class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-slate-100 text-slate-800 font-semibold rounded-md hover:bg-slate-200 text-xs">
                                             <span>Lihat Status Undi</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" /></svg>
                                         </button>`;
@@ -617,6 +617,10 @@
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.1 3.9C17.9 1.7 15 .5 12 .5 5.8.5.7 5.6.7 11.9c0 2 .5 3.9 1.5 5.6L.6 23.4l6.1-1.6c1.6.9 3.5 1.5 5.3 1.5 6.1 0 11.2-5.2 11.2-11.5 0-2.9-1.1-5.6-3.2-7.8zM12 21.4c-1.7 0-3.3-.5-4.8-1.3l-.4-.2-3.5 1 1-3.4L4 17c-1-1.5-1.5-3.2-1.5-5.1 0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.7 2.8 1.8 1.8 2.8 4.2 2.8 6.7-.1 5.2-4.3 9.4-9.5 9.4zm5.1-7.1c-.3-.1-1.7-.9-1.9-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.4c-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6s.3-.3.4-.5c.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10 9 9.3 7.5 9 7c-.3-.5-.6-.4-.8-.4h-.7c-.2 0-.5.2-.7.5-.3.3-.9 1-.9 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg>
                             <span>Kongsi WhatsApp</span>
                         </button>
+                        <button id="download-pdf-btn" class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white font-semibold text-sm rounded-md hover:bg-red-700 flex items-center justify-center space-x-2">
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span>Muat Turun PDF</span>
+                        </button>
                         <button data-app-id="${app.id}" id="download-png-btn" class="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-md hover:bg-indigo-700 flex items-center justify-center space-x-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             <span>Muat Turun PNG</span>
@@ -723,6 +727,7 @@
             keputusanModal.addEventListener('click', (e) => {
                 const whatsappBtn = e.target.closest('#share-whatsapp-btn');
                 const pngBtn = e.target.closest('#download-png-btn');
+                const pdfBtn = e.target.closest('#download-pdf-btn');
 
                 if (e.target === keputusanModal) {
                     closeModal(keputusanModal, modalPanel);
@@ -735,6 +740,35 @@
                     const message = `📢 *NOTIS KELULUSAN PERUNTUKAN PIBG* 📢\n\nPerhatian,\n\nPermohonan dana bagi program *${purpose.toUpperCase()}* telah *✅ DILULUSKAN* dengan jumlah peruntukan sebanyak *💰 RM ${amount}*.\n\nSila rujuk notis rasmi yang akan diedarkan untuk tindakan selanjutnya oleh pihak pemohon dan bendahari.\n\nHarap maklum.`;
                     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
                     window.open(whatsappUrl, '_blank');
+                }
+
+                if (pdfBtn) {
+                    const noticeElement = document.getElementById('notice-content-to-capture');
+                    const actionButtons = document.getElementById('modal-actions');
+                    
+                    actionButtons.style.display = 'none';
+                    
+                    const style = document.createElement('style');
+                    style.innerHTML = `
+                        @media print {
+                            body * { visibility: hidden; }
+                            .fixed { position: static; }
+                            #keputusan-modal, #notice-content-to-capture, #notice-content-to-capture * { visibility: visible; }
+                            #keputusan-modal {
+                                display: block !important;
+                                position: absolute; left: 0; top: 0; width: 100%; height: auto;
+                                background: white; box-shadow: none; border: none; z-index: 9999;
+                            }
+                            #modal-panel { transform: none !important; opacity: 1 !important; }
+                            #modal-content { max-height: none; overflow-y: visible; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+
+                    window.print();
+
+                    document.head.removeChild(style);
+                    actionButtons.style.display = 'flex';
                 }
 
                 if (pngBtn) {
@@ -789,16 +823,48 @@
                 } else if (targetBtn.matches('.delete-btn')) {
                     deleteApplication(targetBtn.dataset.id);
                 } else if (targetBtn.matches('.view-voters-btn')) {
+                    const purpose = targetBtn.dataset.purpose;
+                    const amount = parseFloat(targetBtn.dataset.amount).toFixed(2);
                     const voters = JSON.parse(targetBtn.dataset.voters);
-                    nonVotersList.innerHTML = ''; 
+                    const totalExco = excoMembersList.length > 0 ? excoMembersList.length : 15;
+                    const votedCount = voters.length;
+                    const nonVotedCount = totalExco - votedCount;
 
-                    const header = `<h4 class="text-sm font-bold text-slate-800 mb-4">SENARAI SUDAH MENGUNDI (${voters.length})</h4>`;
+                    nonVotersList.innerHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-xs text-slate-500">Permohonan:</p>
+                                <p class="font-bold text-indigo-700">${purpose.toUpperCase()}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Jumlah Dimohon:</p>
+                                <p class="font-bold text-slate-800">RM ${amount}</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 pt-3">
+                                 <div class="bg-green-50 p-3 rounded-lg text-center">
+                                    <div class="flex items-center justify-center text-green-600">
+                                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                       <span class="text-xl font-bold">${votedCount}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-1">Telah Mengundi</p>
+                                 </div>
+                                 <div class="bg-red-50 p-3 rounded-lg text-center">
+                                    <div class="flex items-center justify-center text-red-600">
+                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                                         <span class="text-xl font-bold">${nonVotedCount}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-1">Tidak Mengundi</p>
+                                 </div>
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-800 pt-4 border-t mt-4">Senarai Sudah Mengundi (${votedCount})</h4>
+                        </div>
+                    `;
+
                     let listHTML = '';
-
                     if (voters.length > 0) {
-                        listHTML = '<ul class="space-y-3">';
-                        voters.forEach(name => {
-                            if (name) { // Add a check to ensure name is not an empty string
+                        listHTML = '<ul class="space-y-3 mt-3">';
+                        voters.sort().forEach(name => {
+                            if (name) { 
                                 listHTML += `
                                     <li class="flex items-center text-sm text-slate-700">
                                         <span class="flex items-center justify-center h-6 w-6 rounded-full bg-green-100 text-green-700 text-xs font-semibold mr-3">${name.charAt(0).toUpperCase()}</span>
@@ -808,10 +874,9 @@
                         });
                         listHTML += '</ul>';
                     } else {
-                        listHTML = '<p class="text-slate-500 text-sm text-center">Belum ada undian yang direkodkan.</p>';
+                        listHTML = '<p class="text-slate-500 text-sm text-center mt-3">Belum ada undian yang direkodkan.</p>';
                     }
-
-                    nonVotersList.innerHTML = header + listHTML;
+                    nonVotersList.innerHTML += listHTML;
                     openModal(nonVotersModal, nonVotersModalPanel);
 
                 } else if (targetBtn.matches('.action-menu-btn')) {
