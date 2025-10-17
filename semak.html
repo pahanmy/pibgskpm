@@ -222,15 +222,15 @@
         </div>
     </div>
 
-    <div id="voters-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="voters-modal-panel">
+    <div id="non-voters-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="non-voters-modal-panel">
             <div class="p-4 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
                 <h3 class="text-lg font-bold text-slate-800">Status Undian EXCO</h3>
-                <button id="close-voters-modal-btn" class="text-slate-500 hover:text-slate-800">
+                <button id="close-non-voters-modal-btn" class="text-slate-500 hover:text-slate-800">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div id="voters-list-content" class="p-6 max-h-[60vh] overflow-y-auto">
+            <div id="non-voters-list" class="p-6 max-h-[60vh] overflow-y-auto">
                 </div>
         </div>
     </div>
@@ -249,7 +249,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -296,10 +296,10 @@
             const shareModalPanel = document.getElementById('share-modal-panel');
             const closeShareModalBtn = document.getElementById('close-share-modal-btn');
             const copyShareTextBtn = document.getElementById('copy-share-text-btn');
-            const votersModal = document.getElementById('voters-modal');
-            const votersModalPanel = document.getElementById('voters-modal-panel');
-            const closeVotersModalBtn = document.getElementById('close-voters-modal-btn');
-            const votersListContent = document.getElementById('voters-list-content');
+            const nonVotersModal = document.getElementById('non-voters-modal');
+            const nonVotersModalPanel = document.getElementById('non-voters-modal-panel');
+            const closeNonVotersModalBtn = document.getElementById('close-non-voters-modal-btn');
+            const nonVotersList = document.getElementById('non-voters-list');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -487,14 +487,15 @@
                                 <span class="font-medium text-slate-700 text-sm w-12 text-right">${totalVotes}/${totalMembers}</span>
                             </div>
                              ${(() => {
-                                const voters = votes.map(v => v.name ? v.name.toUpperCase() : '').filter(Boolean);
+                                const voters = votes.map(v => v.name ? v.name.toUpperCase() : '');
                                 const nonVoters = excoMembersList.filter(member => member && !voters.includes(member.toUpperCase()));
+                                const nonVotersCount = nonVoters.length;
                                 
-                                const votersData = JSON.stringify(votes.map(v => v.name).filter(Boolean));
+                                const votersData = JSON.stringify(votes.map(v => v.name)); // Simpan nama asal untuk paparan
                                 const nonVotersData = JSON.stringify(nonVoters);
 
-                                if (totalVotes === 0) {
-                                    return `<div class="text-xs text-slate-400 font-medium mt-2">Belum ada undian</div>`;
+                                if (finalStatus !== 'Dalam Proses' && totalVotes === 0) {
+                                    return `<div class="text-xs text-slate-400 font-medium mt-2">Tiada undian direkodkan</div>`;
                                 }
 
                                 return `<button data-voters='${votersData}' data-non-voters='${nonVotersData}' class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-slate-100 text-slate-700 font-semibold rounded-md hover:bg-slate-200 text-xs">
@@ -676,8 +677,8 @@
             keputusanModal.addEventListener('click', (e) => { if(e.target === keputusanModal) closeModal(keputusanModal, modalPanel); });
             closeShareModalBtn.addEventListener('click', () => closeModal(shareModal, shareModalPanel));
             shareModal.addEventListener('click', (e) => { if(e.target === shareModal) closeModal(shareModal, shareModalPanel); });
-            closeVotersModalBtn.addEventListener('click', () => closeModal(votersModal, votersModalPanel));
-            votersModal.addEventListener('click', (e) => { if(e.target === votersModal) closeModal(votersModal, votersModalPanel); });
+            closeNonVotersModalBtn.addEventListener('click', () => closeModal(nonVotersModal, nonVotersModalPanel));
+            nonVotersModal.addEventListener('click', (e) => { if(e.target === nonVotersModal) closeModal(nonVotersModal, nonVotersModalPanel); });
             
             copyShareTextBtn.addEventListener('click', () => {
                 const shareTextArea = document.getElementById('share-text-area');
@@ -709,7 +710,7 @@
                 } else if (targetBtn.matches('.view-voters-btn')) {
                     const voters = JSON.parse(targetBtn.dataset.voters);
                     const nonVoters = JSON.parse(targetBtn.dataset.nonVoters);
-                    votersListContent.innerHTML = ''; 
+                    nonVotersList.innerHTML = ''; 
                     
                     const votedCount = voters.length;
                     const notVotedCount = nonVoters.length;
@@ -728,13 +729,12 @@
                         <div class="border-t -mx-6 mb-6"></div>
                         <h4 class="text-sm font-bold text-slate-800 mb-4">SENARAI SUDAH MENGUNDI</h4>
                     `;
-                    votersListContent.innerHTML += summaryHTML;
+                    nonVotersList.innerHTML += summaryHTML;
 
                     if(voters.length > 0) {
                         const listElement = document.createElement('ul');
                         listElement.className = 'space-y-3';
                         voters.forEach(name => {
-                            if (!name) return;
                             const item = document.createElement('li');
                             item.className = 'flex items-center text-sm text-slate-700';
                             item.innerHTML = `
@@ -745,11 +745,11 @@
                             `;
                             listElement.appendChild(item);
                         });
-                        votersListContent.appendChild(listElement);
+                        nonVotersList.appendChild(listElement);
                     } else {
-                        votersListContent.innerHTML += '<p class="text-slate-500 text-center">Belum ada undian direkodkan.</p>';
+                        nonVotersList.innerHTML += '<p class="text-slate-500 text-center">Belum ada undian direkodkan.</p>';
                     }
-                    openModal(votersModal, votersModalPanel);
+                    openModal(nonVotersModal, nonVotersModalPanel);
                 } else if (targetBtn.matches('.action-menu-btn')) {
                     document.querySelectorAll('.action-menu-dropdown').forEach(dropdown => {
                         if (dropdown !== targetBtn.nextElementSibling) {
