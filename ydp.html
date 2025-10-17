@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Pemuka YDP | Analisis Permohonan PIBG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #334155;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -70px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://placehold.co/40x40/4f46e5/ffffff?text=SKPM" alt="Logo SK Pulau Melayu" class="h-10 w-10 rounded-md">
+                <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
+            </a>
+            <div class="flex space-x-8">
+                 <a href="semak.html" title="Kembali ke Analisis Permohonan" class="text-slate-600 hover:text-indigo-600 p-2 rounded-full hover:bg-slate-100 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 flex-grow">
+        <div class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-screen-2xl mx-auto">
+            <div class="p-6 border-b border-slate-200">
+                <h2 class="text-3xl font-bold text-slate-900">Papan Pemuka YDP</h2>
+                <p class="mt-1 text-slate-500">Analisis dan pengurusan terperinci untuk semua permohonan peruntukan.</p>
+            </div>
+
+            <div class="p-6 md:p-8">
+                 <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-800">Senarai Permohonan Terperinci</h3>
+                    <div class="flex items-center space-x-4">
+                        <div>
+                            <label for="year-filter" class="text-sm font-medium text-slate-700">Tahun:</label>
+                            <select id="year-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="all">Semua</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full w-full bg-white">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="py-4 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Permohonan</th>
+                                <th class="py-4 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Undian</th>
+                                <th class="py-4 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Keputusan Undian</th>
+                                <th class="py-4 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Status Semasa</th>
+                                <th class="py-4 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analysis-table-body" class="divide-y divide-slate-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="details-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl transform max-h-[90vh] flex flex-col" id="details-modal-panel">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
+                <h3 class="text-xl font-bold text-slate-800">Butiran Penuh Permohonan</h3>
+                <button class="close-modal-btn text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="details-content" class="p-6 md:p-8 overflow-y-auto text-sm"></div>
+        </div>
+    </div>
+    
+    <div id="voter-status-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg transform max-h-[90vh] flex flex-col" id="voter-status-modal-panel">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
+                <h3 class="text-xl font-bold text-slate-800">Status Undian EXCO</h3>
+                <button class="close-modal-btn text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="voter-status-content" class="p-6 md:p-8 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+        </div>
+    </div>
+
+    <div id="rejection-reasons-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-xl transform max-h-[90vh] flex flex-col" id="rejection-reasons-modal-panel">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
+                <h3 class="text-xl font-bold text-slate-800">Alasan Tidak Menyokong</h3>
+                <button class="close-modal-btn text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="rejection-reasons-content" class="p-6 md:p-8 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
+        <p id="toast-message"></p>
+    </div>
+
+    <footer class="bg-gray-800 text-gray-300 mt-12">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center text-xs font-medium">
+            <p class="mb-2 sm:mb-0">© 2025 PIBG SK PULAU MELAYU. HAK CIPTA TERPELIHARA.</p>
+            <p>DIREKA OLEH KOMUNITI SK PULAU MELAYU</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyCp-DmxgF1gckJQ24dkrRNVIPUSwADS7u4",
+            authDomain: "pibgskpm-01.firebaseapp.com",
+            projectId: "pibgskpm-01",
+            storageBucket: "pibgskpm-01.appspot.com",
+            messagingSenderId: "166309223339",
+            appId: "1:166309223339:web:cbe72e17506b40820c90ee"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const applicationsCol = collection(db, `/artifacts/${appId}/public/data/applications`);
+        const excoMembersCol = collection(db, `/artifacts/${appId}/public/data/exco_members`);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let allApps = [];
+            let excoMembersList = []; 
+            const analysisTableBody = document.getElementById('analysis-table-body');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+
+            const showToast = (message, type = 'success') => {
+                toastMessage.textContent = message;
+                toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
+            };
+
+            const openModal = (modalId) => document.getElementById(modalId).classList.replace('hidden', 'flex');
+            const closeModal = (modalId) => document.getElementById(modalId).classList.replace('flex', 'hidden');
+
+            document.querySelectorAll('.close-modal-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const modal = e.target.closest('.fixed');
+                    if (modal) closeModal(modal.id);
+                });
+            });
+
+            const renderStatusDisplay = (status) => {
+                let icon = '';
+                let colors = '';
+                switch (status) {
+                    case 'Diluluskan':
+                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
+                        colors = 'bg-green-100 text-green-800';
+                        break;
+                    case 'Ditolak':
+                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>`;
+                        colors = 'bg-red-100 text-red-800';
+                        break;
+                    default: 
+                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>`;
+                        colors = 'bg-yellow-100 text-yellow-800';
+                        break;
+                }
+                return `<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${colors}">${icon} ${status}</span>`;
+            };
+            
+            const renderTable = () => {
+                analysisTableBody.innerHTML = '';
+                const selectedYear = document.getElementById('year-filter').value;
+                const filteredApps = selectedYear === 'all' 
+                    ? allApps 
+                    : allApps.filter(app => app.createdAt?.toDate().getFullYear() == selectedYear);
+
+                if (filteredApps.length === 0) {
+                    analysisTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-slate-500">Tiada permohonan dijumpai untuk tahun yang dipilih.</td></tr>`;
+                    return;
+                }
+
+                filteredApps.forEach(app => {
+                    const totalMembers = excoMembersList.length > 0 ? excoMembersList.length : 15;
+                    const approvalThreshold = Math.ceil(totalMembers * (2 / 3));
+                    const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
+                    const approvalVotes = votes.filter(v => v.vote === 'approve').length;
+                    const rejectionVotes = votes.filter(v => v.vote === 'reject').length;
+                    const totalVotes = votes.length;
+                    const notVoted = totalMembers - totalVotes;
+                    const votingPercentage = totalMembers > 0 ? Math.round((totalVotes / totalMembers) * 100) : 0;
+                    const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
+                    const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
+                    
+                    let finalStatus = 'Dalam Proses'; 
+                    if (approvalVotes >= approvalThreshold) finalStatus = 'Diluluskan';
+                    else if (votingPeriodEnded) finalStatus = 'Ditolak';
+
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-slate-50";
+
+                    row.innerHTML = `
+                        <td class="py-4 px-4 align-top">
+                            <p class="font-bold text-indigo-700">${app.purpose.toUpperCase()}</p>
+                            <p class="text-xs text-slate-600 mt-1">Oleh: <span class="font-medium">${app.applicant.toUpperCase()}</span></p>
+                            <p class="text-xs text-slate-400 mt-1">Pada: ${new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY')}</p>
+                            <p class="font-semibold text-slate-800 text-lg mt-2">RM ${parseFloat(app.amount).toFixed(2)}</p>
+                        </td>
+                        <td class="py-4 px-4 align-top">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <div class="w-full bg-slate-200 rounded-full h-2.5">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${votingPercentage}%"></div>
+                                </div>
+                                <span class="font-semibold text-slate-700 text-sm">${votingPercentage}%</span>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <p>Telah Mengundi: <span class="font-bold text-green-600">${totalVotes}</span></p>
+                                <p>Belum Mengundi: <span class="font-bold text-red-600">${notVoted}</span></p>
+                            </div>
+                            <button data-id="${app.id}" class="view-voters-btn text-xs font-semibold text-indigo-600 hover:underline mt-2">Lihat Pengundi</button>
+                        </td>
+                        <td class="py-4 px-4 align-top">
+                            <div class="text-sm space-y-2">
+                                <p class="flex items-center">
+                                    <span class="font-semibold text-green-600 w-8">${approvalVotes}</span>
+                                    <span>Sokong</span>
+                                </p>
+                                <p class="flex items-center">
+                                    <span class="font-semibold text-red-600 w-8">${rejectionVotes}</span>
+                                    <span>Tidak Sokong</span>
+                                </p>
+                            </div>
+                             ${rejectionVotes > 0 ? `<button data-id="${app.id}" class="view-rejections-btn text-xs font-semibold text-indigo-600 hover:underline mt-2">Lihat Sebab</button>` : ''}
+                        </td>
+                        <td class="py-4 px-4 text-center align-top">${renderStatusDisplay(finalStatus)}</td>
+                        <td class="py-4 px-4 text-center align-top">
+                            <div class="flex flex-col items-center justify-center space-y-2">
+                                <button data-id="${app.id}" class="view-details-btn p-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 w-full flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Butiran
+                                </button>
+                                <a href="undi.html?id=${app.id}" class="p-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 w-full flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    Undi
+                                </a>
+                                <button data-id="${app.id}" class="delete-btn p-2 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 w-full flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
+                                    Padam
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    analysisTableBody.appendChild(row);
+                });
+            };
+
+            const populateVoterStatusModal = (app) => {
+                const votes = app.votes || [];
+                const votedNames = votes.map(v => v.voterName.toUpperCase());
+                const notVotedNames = excoMembersList.filter(name => !votedNames.includes(name.toUpperCase()));
+
+                let votedHtml = `<div><h4 class="font-bold text-green-600 mb-3">Telah Mengundi (${votedNames.length})</h4><ul class="space-y-2">`;
+                votedNames.forEach(name => {
+                    votedHtml += `<li class="text-sm text-slate-700">${name}</li>`;
+                });
+                votedHtml += `</ul></div>`;
+
+                let notVotedHtml = `<div><h4 class="font-bold text-red-600 mb-3">Belum Mengundi (${notVotedNames.length})</h4><ul class="space-y-2">`;
+                 notVotedNames.forEach(name => {
+                    notVotedHtml += `<li class="text-sm text-slate-700">${name.toUpperCase()}</li>`;
+                });
+                notVotedHtml += `</ul></div>`;
+
+                document.getElementById('voter-status-content').innerHTML = votedHtml + notVotedHtml;
+                openModal('voter-status-modal');
+            };
+
+            const populateRejectionReasonsModal = (app) => {
+                const rejectionVotes = (app.votes || []).filter(v => v.vote === 'reject' && v.reason);
+                let contentHtml = '<p class="text-center text-slate-500">Tiada alasan diberikan.</p>';
+                if (rejectionVotes.length > 0) {
+                    contentHtml = '<ul class="space-y-4">';
+                    rejectionVotes.forEach(vote => {
+                        contentHtml += `<li class="p-3 bg-slate-50 rounded-lg border">
+                            <p class="font-semibold text-slate-800">${vote.voterName.toUpperCase()}</p>
+                            <p class="text-slate-600 mt-1 italic">"${vote.reason}"</p>
+                        </li>`;
+                    });
+                    contentHtml += '</ul>';
+                }
+                document.getElementById('rejection-reasons-content').innerHTML = contentHtml;
+                openModal('rejection-reasons-modal');
+            };
+            
+            const populateDetailsModal = (app) => {
+                let kategori = app.category;
+                if (kategori === 'Lain-lain' && app.kategori_lain) {
+                    kategori = `Lain-lain: ${app.kategori_lain}`;
+                }
+                let lokasi = app.location;
+                if (lokasi === 'Luar Sekolah' && app.locationDetails) {
+                    lokasi = `Luar Sekolah: ${app.locationDetails}`;
+                }
+
+                const contentHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-3">Maklumat Pemohon</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                                <div><strong class="font-medium text-slate-500">Nama:</strong> ${app.applicant}</div>
+                                <div><strong class="font-medium text-slate-500">Jawatan:</strong> ${app.position}</div>
+                                <div><strong class="font-medium text-slate-500">No. Telefon:</strong> ${app.phone}</div>
+                                <div><strong class="font-medium text-slate-500">Bank:</strong> ${app.bankName} (${app.bankAccount})</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-3">Maklumat Program</h4>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                                <div class="md:col-span-2"><strong class="font-medium text-slate-500">Nama Program:</strong> ${app.purpose}</div>
+                                <div><strong class="font-medium text-slate-500">Tarikh Mula:</strong> ${new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY')}</div>
+                                <div><strong class="font-medium text-slate-500">Tempoh:</strong> ${app.programDuration} Hari</div>
+                                <div><strong class="font-medium text-slate-500">Kategori:</strong> ${kategori}</div>
+                                <div><strong class="font-medium text-slate-500">Peringkat:</strong> ${app.programLevel}</div>
+                                <div><strong class="font-medium text-slate-500">Lokasi:</strong> ${lokasi}</div>
+                                <div><strong class="font-medium text-slate-500">Penyertaan:</strong> ${app.muridCount} Murid, ${app.guruCount} Guru</div>
+                                <div class="md:col-span-2"><strong class="font-medium text-slate-500">Pautan Kertas Kerja:</strong> ${app.driveLink ? `<a href="${app.driveLink}" target="_blank" class="text-indigo-600 hover:underline break-all">${app.driveLink}</a>` : 'Tiada'}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-3">Perincian Bajet</h4>
+                            <div class="bg-slate-50 p-4 rounded-md border">
+                                <table class="min-w-full">
+                                    <tfoot class="border-t-2 border-slate-300">
+                                        <tr>
+                                            <td class="py-2 font-bold text-slate-800">JUMLAH KESELURUHAN</td>
+                                            <td class="py-2 font-bold text-slate-800 text-right">RM ${parseFloat(app.amount).toFixed(2)}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>`;
+                document.getElementById('details-content').innerHTML = contentHTML;
+                openModal('details-modal');
+            };
+            
+            (async () => {
+                try {
+                    await signInAnonymously(auth);
+                    const excoSnapshot = await getDocs(collection(db, excoMembersCol));
+                    excoMembersList = excoSnapshot.docs.map(doc => doc.data().name);
+
+                    onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
+                        allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        const yearFilter = document.getElementById('year-filter');
+                        const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
+                        while(yearFilter.options.length > 1) { yearFilter.remove(1); }
+                        years.sort((a,b) => b-a).forEach(year => {
+                            const option = document.createElement('option');
+                            option.value = year;
+                            option.textContent = year;
+                            yearFilter.appendChild(option);
+                        });
+                        renderTable();
+                    });
+                } catch (error) {
+                    console.error("Initialization failed:", error);
+                    showToast('Gagal memuatkan data.', 'error');
+                }
+            })();
+
+            document.getElementById('year-filter').addEventListener('change', renderTable);
+
+            analysisTableBody.addEventListener('click', (e) => {
+                const targetBtn = e.target.closest('button, a');
+                if (!targetBtn) return;
+                
+                const appId = targetBtn.dataset.id;
+                const app = allApps.find(a => a.id === appId);
+
+                if (targetBtn.matches('.view-details-btn')) {
+                    if (app) populateDetailsModal(app);
+                } else if (targetBtn.matches('.view-voters-btn')) {
+                    if (app) populateVoterStatusModal(app);
+                } else if (targetBtn.matches('.view-rejections-btn')) {
+                    if (app) populateRejectionReasonsModal(app);
+                } else if (targetBtn.matches('.delete-btn')) {
+                    if (confirm('Anda pasti ingin memadam permohonan ini?')) {
+                         deleteDoc(doc(db, applicationsCol.path, appId))
+                            .then(() => showToast('Permohonan berjaya dipadam.'))
+                            .catch(err => showToast('Gagal memadam permohonan.', 'error'));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
