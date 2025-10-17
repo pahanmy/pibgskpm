@@ -30,9 +30,9 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 flex items-center justify-center min-h-screen">
+<body class="bg-slate-50 text-slate-800 flex items-center justify-center min-h-screen p-4">
 
-    <main class="container mx-auto px-6">
+    <main class="container mx-auto">
         <div id="main-content" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-4xl mx-auto">
             
             <div id="ic-verification-section" class="p-8 md:p-12 flex flex-col items-center text-center">
@@ -46,11 +46,11 @@
                         <label for="voter-ic-verify" class="sr-only">No. Kad Pengenalan</label>
                         <input type="password" id="voter-ic-verify" placeholder="Masukkan No. Kad Pengenalan" class="w-full text-center px-4 py-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg pr-12" autocomplete="off">
                         <button type="button" id="toggle-ic-visibility" class="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 hover:text-indigo-600 focus:outline-none">
-                            <svg id="icon-show" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg id="icon-show" xmlns="http://www.w.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
-                            <svg id="icon-hide" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg id="icon-hide" xmlns="http://www.w.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                             </svg>
                         </button>
@@ -64,45 +64,68 @@
 
 
             <div id="voting-section" class="hidden">
-                 <div class="p-6 border-b border-slate-200 bg-slate-50 rounded-t-xl">
-                    <h2 id="vote-title" class="text-2xl font-bold text-slate-900">Borang Undian Permohonan</h2>
-                    <p id="voter-info" class="mt-1 text-slate-500">Mengundi sebagai: <span class="font-semibold">Nama Pengundi (Jawatan)</span></p>
+                 <div class="p-6 border-b border-slate-200 bg-slate-50/50 rounded-t-xl">
+                    <h2 class="text-2xl font-bold text-slate-900" id="vote-program-name">Borang Undian Permohonan</h2>
+                    <p class="mt-1 text-slate-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
+                    <p id="voter-info" class="mt-2 text-sm text-indigo-600">Mengundi sebagai: <span class="font-semibold">Nama Pengundi (Jawatan)</span></p>
                 </div>
-                <div class="p-8">
-                    <div id="vote-countdown-container" class="hidden mb-6 p-4 text-center bg-red-50 border border-red-200 rounded-lg">
-                        <p class="text-sm font-semibold text-red-700">Tempoh Undian Akan Tamat Dalam:</p>
-                        <p id="vote-countdown-timer" class="text-2xl font-bold text-red-800 mt-1"></p>
+                <div class="p-6 md:p-8">
+                    <div id="vote-countdown-container" class="hidden mb-6 p-4 text-center bg-red-50 border-l-4 border-red-400">
+                        <p class="text-sm font-semibold text-red-800">Tempoh Undian Akan Tamat Dalam:</p>
+                        <p id="vote-countdown-timer" class="text-2xl font-bold text-red-800 mt-1 tracking-wider"></p>
                     </div>
-                    <form id="voteForm">
-                        <div class="mb-6 pb-6 border-b">
-                            <h3 class="text-lg font-semibold text-gray-800" id="vote-program-name">Nama Program Diundi</h3>
-                            <p class="text-sm text-gray-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
-                             <div class="mt-4 bg-gray-50 p-4 rounded-lg border">
-                                <h5 class="font-semibold mb-2">Perincian Bajet:</h5>
-                                <div class="text-sm space-y-1">
-                                   <div class="flex justify-between"><span>Makan Minum:</span> <span id="vote-budget-makan">RM 0.00</span></div>
-                                   <div class="flex justify-between"><span>Pengangkutan:</span> <span id="vote-budget-angkut">RM 0.00</span></div>
-                                   <div class="flex justify-between"><span>Lain-lain:</span> <span id="vote-budget-lain">RM 0.00</span></div>
-                                   <div class="flex justify-between border-t mt-2 pt-2 font-bold"><span>Jumlah Keseluruhan:</span> <span id="vote-budget-total">RM 0.00</span></div>
-                                </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
+                        <div class="lg:col-span-3 space-y-4">
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2">Maklumat Program</h4>
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
+                                <div><strong class="font-medium text-slate-500">Kategori:</strong> <span id="vote-info-kategori" class="text-slate-800"></span></div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                                <div><strong class="font-medium text-slate-500">Tarikh:</strong> <span id="vote-info-tarikh" class="text-slate-800"></span></div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zM6 8a2 2 0 11-4 0 2 2 0 014 0zM1.49 15.326a.78.78 0 01-.358-.442 3 3 0 014.308-3.516 6.484 6.484 0 00-1.905 3.959c-.023.222-.014.442.025.654a4.97 4.97 0 01-2.07-.655zM16.44 15.98a4.97 4.97 0 01-2.07-.654.78.78 0 01.358-.442 3 3 0 014.308 3.516 6.484 6.484 0 00-1.905-3.959c.023-.222.014-.442-.025-.654zM12 8a2 2 0 11-4 0 2 2 0 014 0zM10 18a6 6 0 00-4.473-5.771 4 4 0 015.546 0A6 6 0 0010 18z" /></svg>
+                                <div><strong class="font-medium text-slate-500">Penyertaan:</strong> <span id="vote-info-penyertaan" class="text-slate-800"></span></div>
+                            </div>
+                             <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div><strong class="font-medium text-slate-500">Tempoh:</strong> <span id="vote-info-tempoh" class="text-slate-800"></span></div>
+                            </div>
+                             <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+                                <div><strong class="font-medium text-slate-500">Lokasi:</strong> <span id="vote-info-lokasi" class="text-slate-800"></span></div>
+                            </div>
+                             <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M11.906 2.119a.5.5 0 00-.812 0l-3 4A.5.5 0 008.5 7h3a.5.5 0 00.406-.881l-3-4zM12 10a2 2 0 10-4 0 2 2 0 004 0zM8.5 13a.5.5 0 00-.406.881l3 4a.5.5 0 00.812 0l3-4A.5.5 0 0014.5 13h-6z" /></svg>
+                                <div><strong class="font-medium text-slate-500">Peringkat:</strong> <span id="vote-info-peringkat" class="text-slate-800"></span></div>
                             </div>
                         </div>
-                        
-                        <div class="mb-6">
-                            <h5 class="font-semibold mb-2">Statistik Undian Semasa:</h5>
-                            <div class="flex items-center">
-                                <div class="w-full bg-gray-200 rounded-full h-4">
-                                    <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4"></div>
+                        <div class="lg:col-span-2">
+                             <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-4">Perincian Bajet</h4>
+                             <div id="vote-budget-details-container" class="bg-slate-50 p-4 rounded-lg border">
                                 </div>
-                                <span id="vote-progress-text" class="ml-3 font-medium text-sm">0/0 (0%)</span>
+                        </div>
+                    </div>
+
+                    <form id="voteForm">
+                        <div class="mb-6">
+                            <h5 class="font-semibold mb-2 text-slate-800">Statistik Undian Semasa:</h5>
+                            <div class="flex items-center">
+                                <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
+                                    <div id="vote-progress-bar" class="bg-indigo-600 h-4 rounded-full text-center text-white text-xs leading-4 transition-all duration-500"></div>
+                                </div>
+                                <span id="vote-progress-text" class="ml-4 font-medium text-sm text-slate-600 whitespace-nowrap">0/0 (0%)</span>
                             </div>
                         </div>
                         
                         <div class="space-y-4 pt-6 border-t">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
-                                 <div class="flex flex-col md:flex-row gap-4">
-                                    <div class="flex-1">
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Pilihan Undi Anda: <span class="text-red-600">*</span></label>
+                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
                                         <input type="radio" name="vote_option" value="sokong" id="vote-sokong" class="hidden" required>
                                         <label for="vote-sokong" class="vote-label flex flex-col items-center justify-center p-4 border-slate-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400">
                                             <svg class="h-8 w-8 text-green-500 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -111,7 +134,7 @@
                                             <span class="text-green-700 font-semibold">Menyokong</span>
                                         </label>
                                     </div>
-                                    <div class="flex-1">
+                                    <div>
                                         <input type="radio" name="vote_option" value="tolak" id="vote-tolak" class="hidden">
                                          <label for="vote-tolak" class="vote-label flex flex-col items-center justify-center p-4 border-slate-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400">
                                             <svg class="h-8 w-8 text-red-500 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -123,22 +146,26 @@
                                 </div>
                             </div>
                             <div id="reason-container" class="hidden">
-                                <label for="vote-reason" class="block text-sm font-medium text-gray-700 mb-1">Sebab Tidak Menyokong <span class="text-red-600">*</span></label>
+                                <label for="vote-reason" class="block text-sm font-medium text-slate-700 mb-1">Sebab Tidak Menyokong <span class="text-red-600">*</span></label>
                                 <textarea id="vote-reason" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                             </div>
                              <div class="pt-4">
                                 <div class="flex items-center">
-                                    <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
-                                    <label for="vote-agreement" class="ml-2 block text-sm text-gray-800">Saya mengesahkan undian saya dan bersetuju dengan keputusan ini.</label>
+                                    <input id="vote-agreement" name="vote-agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500" required>
+                                    <label for="vote-agreement" class="ml-2 block text-sm text-slate-800">Saya mengesahkan undian saya dan bersetuju dengan keputusan ini.</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
-                            <button type="submit" id="submitVoteBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm">Hantar Undian</button>
+                        <div class="p-6 -mx-6 -mb-8 mt-8 border-t flex-shrink-0 flex justify-center items-center bg-slate-50/50 rounded-b-xl">
+                            <button type="submit" id="submitVoteBtn" class="w-full md:w-auto text-lg flex items-center justify-center gap-3 px-8 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/50 transition-all transform hover:scale-105">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Hantar Undian
+                            </button>
                         </div>
                     </form>
                 </div>
-                 <div id="vote-feedback-message" class="hidden text-center p-8"></div>
             </div>
         </div>
     </main>
@@ -213,16 +240,16 @@
                 const remainingSeconds = endTime - now;
 
                 if (remainingSeconds > 0) {
-                    const hours = Math.floor(remainingSeconds / 3600);
-                    const minutes = Math.floor((remainingSeconds % 3600) / 60);
-                    const seconds = remainingSeconds % 60;
-                    timerEl.textContent = `${hours}j ${minutes}m ${seconds}s`;
+                    const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, '0');
+                    const minutes = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, '0');
+                    const seconds = String(remainingSeconds % 60).padStart(2, '0');
+                    timerEl.textContent = `${hours} : ${minutes} : ${seconds}`;
                 } else {
                     timerEl.textContent = "Tempoh Tamat";
                     const submitBtn = document.getElementById('submitVoteBtn');
                     if(submitBtn) {
                         submitBtn.disabled = true;
-                        submitBtn.textContent = "Tempoh Undian Tamat";
+                        submitBtn.innerHTML = "Tempoh Undian Tamat";
                     }
                     clearInterval(countdownInterval);
                 }
@@ -278,19 +305,18 @@
         // --- Verification and Voting Logic ---
         verifyIcBtn.addEventListener('click', async () => {
             const icValue = icVerifyInput.value.trim();
-            const cleanedIc = icValue.replace(/\D/g, ''); // Remove non-digit characters
+            const cleanedIc = icValue.replace(/\D/g, '');
 
-            if (cleanedIc.length < 5) { // Loosen validation slightly for demo/testing
+            if (cleanedIc.length < 5) {
                 showFeedback(icVerifyFeedback, "Sila masukkan No. Kad Pengenalan yang sah.", 'error');
                 return;
             }
 
             verifyIcBtn.disabled = true;
-            verifyIcBtn.innerHTML = `<div class="loader mx-auto"></div>`; // Show loader
+            verifyIcBtn.innerHTML = `<div class="loader mx-auto"></div>`;
             icVerifyFeedback.textContent = "";
 
             try {
-                // 1. Verify Exco using the cleaned IC
                 const q = query(excoMembersCol, where("ic", "==", cleanedIc));
                 const querySnapshot = await getDocs(q);
 
@@ -299,7 +325,6 @@
                 }
                 currentVoterData = querySnapshot.docs[0].data();
 
-                // 2. Load Application
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
                 const appSnap = await getDoc(appDocRef);
 
@@ -308,17 +333,14 @@
                 }
                 const appData = appSnap.data();
 
-                // Start the countdown timer as soon as we have the app data
                 if(appData.createdAt?.seconds) {
                     startVoteCountdown(appData.createdAt.seconds);
                 }
 
-                // 3. Check if already voted using the cleaned IC
                 if (appData.votes?.some(vote => vote.voterIc === cleanedIc)) {
                     throw new Error("Anda telah mengundi untuk permohonan ini.");
                 }
 
-                // 4. Check if voting period is expired (48 hours)
                 if(appData.createdAt?.seconds) {
                     const fortyEightHoursInSeconds = 48 * 60 * 60;
                     const nowInSeconds = Math.floor(Date.now() / 1000);
@@ -327,14 +349,13 @@
                     }
                 }
 
-                // 5. Populate and show voting form
-                await populateVotingForm(appData);
+                populateVotingForm(appData);
                 icVerificationSection.classList.add('hidden');
                 votingSection.classList.remove('hidden');
 
             } catch (error) {
                 showFeedback(icVerifyFeedback, error.message, 'error');
-                if (countdownInterval) clearInterval(countdownInterval); // Stop timer on error
+                if (countdownInterval) clearInterval(countdownInterval);
                 const container = document.getElementById('vote-countdown-container');
                 if(container) container.classList.add('hidden');
             } finally {
@@ -343,31 +364,58 @@
             }
         });
 
-        const populateVotingForm = async (app) => {
-            // Populate voter info
+        const populateVotingForm = (app) => {
+            // Populate voter and program info
             document.getElementById('voter-info').innerHTML = `Mengundi sebagai: <span class="font-semibold">${currentVoterData.name} (${currentVoterData.pibgPosition})</span>`;
-            
-            // Populate application details
             document.getElementById('vote-program-name').textContent = app.purpose;
             document.getElementById('vote-program-applicant').textContent = `Oleh: ${app.applicant}`;
-            
-            // =========== START PERUBAHAN DI SINI ===========
-            // Kira jumlah dari sub-kategori
-            const totalMakan = (app.budget.makanMurid || 0) + (app.budget.makanGuru || 0);
-            const totalAngkut = app.budget.pengangkutan?.kos || 0;
-            
-            // Kira jumlah untuk lain-lain dari array
-            let totalLain = 0;
-            if (app.budget.lainLain && Array.isArray(app.budget.lainLain)) {
-                totalLain = app.budget.lainLain.reduce((sum, item) => sum + (item.jumlah || 0), 0);
+
+            // Populate detailed program info
+            let kategori = app.category;
+            if (kategori === 'Lain-lain' && app.kategori_lain) {
+                kategori = `Lain-lain: ${app.kategori_lain}`;
             }
+            document.getElementById('vote-info-kategori').textContent = kategori;
+
+            const programDate = new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('vote-info-tarikh').textContent = programDate;
             
-            // Paparkan nilai yang telah dikira
-            document.getElementById('vote-budget-makan').textContent = `RM ${totalMakan.toFixed(2)}`;
-            document.getElementById('vote-budget-angkut').textContent = `RM ${totalAngkut.toFixed(2)}`;
-            document.getElementById('vote-budget-lain').textContent = `RM ${totalLain.toFixed(2)}`;
-            document.getElementById('vote-budget-total').textContent = `RM ${(app.amount || 0).toFixed(2)}`;
-            // =========== TAMAT PERUBAHAN DI SINI ===========
+            document.getElementById('vote-info-penyertaan').textContent = `${app.muridCount || 0} Murid, ${app.guruCount || 0} Guru`;
+            document.getElementById('vote-info-tempoh').textContent = `${app.programDuration || 1} Hari`;
+            
+            let lokasi = app.location;
+            if (lokasi === 'Luar Sekolah' && app.locationDetails) {
+                lokasi = `Luar Sekolah (${app.locationDetails})`;
+            }
+            document.getElementById('vote-info-lokasi').textContent = lokasi;
+            document.getElementById('vote-info-peringkat').textContent = app.programLevel;
+
+            // Populate detailed budget table
+            const budgetContainer = document.getElementById('vote-budget-details-container');
+            let budgetHTML = '<table class="w-full text-sm"><tbody>';
+            const budgetItems = [];
+
+            if (app.budget.makanMurid > 0) budgetItems.push({ label: 'Makan Minum Murid', value: app.budget.makanMurid });
+            if (app.budget.makanGuru > 0) budgetItems.push({ label: 'Makan Minum Guru', value: app.budget.makanGuru });
+            if (app.budget.pengangkutan?.kos > 0) budgetItems.push({ label: `Pengangkutan (${app.budget.pengangkutan.jenis})`, value: app.budget.pengangkutan.kos });
+
+            if (app.budget.lainLain && Array.isArray(app.budget.lainLain)) {
+                app.budget.lainLain.forEach(item => {
+                    if (item.jumlah > 0) budgetItems.push({ label: item.butiran, value: item.jumlah });
+                });
+            }
+
+            budgetItems.forEach(item => {
+                budgetHTML += `<tr><td class="py-1 text-slate-600">${item.label}</td><td class="py-1 text-slate-800 text-right">RM ${item.value.toFixed(2)}</td></tr>`;
+            });
+
+            budgetHTML += `</tbody><tfoot class="border-t-2 border-slate-300">
+                <tr>
+                    <td class="pt-2 font-bold text-slate-800">JUMLAH</td>
+                    <td class="pt-2 font-bold text-slate-800 text-right">RM ${(app.amount || 0).toFixed(2)}</td>
+                </tr>
+            </tfoot></table>`;
+            budgetContainer.innerHTML = budgetHTML;
 
             // Populate voting stats
             const totalExco = 15; 
@@ -415,20 +463,29 @@
 
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
                 await updateDoc(appDocRef, { votes: arrayUnion(voteData) });
-
-                votingSection.innerHTML = `
-                    <div class="p-8 text-center">
-                        <h2 class="text-2xl font-bold text-green-600">Undian Berjaya Dihantar!</h2>
-                        <p class="mt-2 text-slate-500">Terima kasih atas undian anda. Halaman analisis akan dikemas kini secara automatik.</p>
-                        <a href="semak.html" class="mt-6 inline-block px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">Kembali ke Papan Pemuka</a>
+                
+                // Show success message and hide the form
+                mainContent.innerHTML = `
+                    <div class="p-8 md:p-12 text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-green-700">Undian Berjaya Dihantar!</h2>
+                        <p class="mt-2 text-slate-500 max-w-md mx-auto">Terima kasih atas undian anda. Keputusan akan dimaklumkan setelah tempoh undian tamat.</p>
+                        <a href="semak.html" class="mt-8 inline-block px-8 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-500/50">Kembali ke Papan Pemuka</a>
                     </div>
                 `;
 
             } catch (error) {
                  showToast(error.message, 'error');
-            } finally {
-                submitVoteBtn.disabled = false;
-                submitVoteBtn.textContent = "Hantar Undian";
+                 submitVoteBtn.disabled = false;
+                 submitVoteBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Hantar Undian`;
             }
         });
     </script>
