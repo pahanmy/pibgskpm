@@ -488,7 +488,7 @@
                                 <span class="font-medium text-slate-700 text-sm w-12 text-right">${totalVotes}/${totalMembers}</span>
                             </div>
                              ${(() => {
-                                const voters = votes.map(v => v.name ? v.name.toUpperCase() : '');
+                                const voters = votes.map(v => v.voterName ? v.voterName.toUpperCase() : '');
                                 const votersData = JSON.stringify(voters);
 
                                 return `<button data-voters='${votersData}' class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-slate-100 text-slate-800 font-semibold rounded-md hover:bg-slate-200 text-xs">
@@ -760,11 +760,13 @@
                     if (voters.length > 0) {
                         listHTML = '<ul class="space-y-3">';
                         voters.forEach(name => {
-                            listHTML += `
-                                <li class="flex items-center text-sm text-slate-700">
-                                    <span class="flex items-center justify-center h-6 w-6 rounded-full bg-green-100 text-green-700 text-xs font-semibold mr-3">${name.charAt(0).toUpperCase()}</span>
-                                    ${name.toUpperCase()}
-                                </li>`;
+                            if (name) { // Add a check to ensure name is not an empty string
+                                listHTML += `
+                                    <li class="flex items-center text-sm text-slate-700">
+                                        <span class="flex items-center justify-center h-6 w-6 rounded-full bg-green-100 text-green-700 text-xs font-semibold mr-3">${name.charAt(0).toUpperCase()}</span>
+                                        ${name.toUpperCase()}
+                                    </li>`;
+                            }
                         });
                         listHTML += '</ul>';
                     } else {
