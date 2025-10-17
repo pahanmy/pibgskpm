@@ -402,8 +402,8 @@
                                     </div>
                                      <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
                                         <div class="flex items-start">
-                                            <input type="checkbox" checked disabled class="h-4 w-4 text-blue-600 mt-0.5 border-gray-300 rounded focus:ring-blue-500">
-                                            <label class="ml-2">Saya bersetuju untuk jumlah ini dibuat pertimbangan berdasarkan jumlah kewangan semasa PIBG dan keputusan bersama ahli EXCO PIBG.</label>
+                                            <input type="checkbox" id="consideration-agreement" name="consideration-agreement" class="h-4 w-4 text-blue-600 mt-0.5 border-gray-300 rounded focus:ring-blue-500" required>
+                                            <label for="consideration-agreement" class="ml-2">Saya bersetuju untuk jumlah ini dibuat pertimbangan berdasarkan jumlah kewangan semasa PIBG dan keputusan bersama ahli EXCO PIBG. <span class="text-red-600">*</span></label>
                                         </div>
                                     </div>
                                 </div>
@@ -415,9 +415,12 @@
                                         <input type="text" id="lampiran_drive" name="lampiran_drive" placeholder="https://docs.google.com/document/d/..." class="w-full text-sm text-slate-500 px-3 py-2 border rounded-md"/>
                                     </div>
                                     <div class="pt-4">
-                                        <div class="flex items-center">
-                                            <input id="agreement" name="agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500" required>
-                                            <label for="agreement" class="ml-2 block text-sm text-slate-800">Saya dengan ini mengesahkan bahawa semua maklumat yang diberikan adalah benar dan sahih. <span class="text-red-600">*</span></label>
+                                        <div>
+                                            <label for="agreement" class="block text-sm text-slate-800 mb-2">Saya dengan ini mengesahkan bahawa semua maklumat yang diberikan adalah benar dan sahih. <span class="text-red-600">*</span></label>
+                                            <div class="flex items-center">
+                                                <input id="agreement" name="agreement" type="checkbox" class="h-4 w-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500" required>
+                                                <label for="agreement" class="ml-2 text-sm text-slate-600">Sila tandakan untuk bersetuju.</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -432,7 +435,7 @@
                         <button type="button" id="prevBtn" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed">Kembali</button>
                         <div>
                             <button type="button" id="nextBtn" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm" disabled>Seterusnya</button>
-                            <button type="submit" id="submitBtn" form="applicationForm" class="hidden px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 shadow-sm">Hantar Permohonan</button>
+                            <button type="button" id="previewBtn" class="hidden px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 shadow-sm">Pratonton & Hantar</button>
                         </div>
                     </div>
                 </div>
@@ -455,8 +458,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div id="modal-content" class="p-6 md:p-8 max-h-[70vh] overflow-y-auto">
-                </div>
+            <div id="modal-content" class="p-6 md:p-8 max-h-[70vh] overflow-y-auto"></div>
         </div>
     </div>
 
@@ -476,6 +478,21 @@
         </div>
     </div>
 
+    <div id="preview-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl transform transition-all duration-300 scale-95 opacity-0" id="preview-modal-panel">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
+                <h3 class="text-xl font-bold text-slate-800">Sahkan Maklumat Permohonan</h3>
+                <button id="close-preview-modal-btn" class="text-slate-500 hover:text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div id="preview-content" class="p-6 md:p-8 max-h-[70vh] overflow-y-auto text-sm"></div>
+            <div class="p-4 bg-slate-50 rounded-b-lg flex justify-end items-center space-x-3">
+                <button id="edit-preview-btn" type="button" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Kembali & Edit</button>
+                <button id="submit-from-preview-btn" type="button" class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 shadow-sm">Sahkan & Hantar</button>
+            </div>
+        </div>
+    </div>
 
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
         <p id="toast-message">This is a toast message!</p>
@@ -528,7 +545,7 @@
             const formSteps = document.querySelectorAll('.form-step');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const submitBtn = document.getElementById('submitBtn');
+            const previewBtn = document.getElementById('previewBtn');
             const stepIndicators = document.querySelectorAll('.step-indicator');
             const successMessage = document.getElementById('success-message');
             const icInput = document.getElementById('no_ic_pemohon');
@@ -538,6 +555,9 @@
             const applicantPositionInput = document.getElementById('jawatan');
             const teacherRegOption = document.getElementById('teacher-reg-option');
             const registerTeacherBtn = document.getElementById('register-teacher-btn');
+            const sahkanIcBtn = document.getElementById('sahkan-ic-btn');
+            
+            // --- Modal UI Elements ---
             const keputusanModal = document.getElementById('keputusan-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
             const modalPanel = document.getElementById('modal-panel');
@@ -546,8 +566,13 @@
             const shareModalPanel = document.getElementById('share-modal-panel');
             const closeShareModalBtn = document.getElementById('close-share-modal-btn');
             const copyShareTextBtn = document.getElementById('copy-share-text-btn');
-            const sahkanIcBtn = document.getElementById('sahkan-ic-btn');
-            
+            const previewModal = document.getElementById('preview-modal');
+            const previewModalPanel = document.getElementById('preview-modal-panel');
+            const closePreviewModalBtn = document.getElementById('close-preview-modal-btn');
+            const editPreviewBtn = document.getElementById('edit-preview-btn');
+            const submitFromPreviewBtn = document.getElementById('submit-from-preview-btn');
+            const previewContent = document.getElementById('preview-content');
+
             // --- NEW FORM UI ELEMENTS ---
             const tambahPerkaraBtn = document.getElementById('tambah-perkara-btn');
             const perkaraTambahanContainer = document.getElementById('perkara-tambahan-container');
@@ -570,7 +595,6 @@
             // --- Set Default Date ---
             const setDefaultDate = () => {
                 const dateInput = document.getElementById('tarikh_program');
-                // Set to today's date in local timezone
                 const today = new Date();
                 today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
                 dateInput.valueAsDate = today;
@@ -587,7 +611,6 @@
                  analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
                 onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
                     allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    
                     populateYearFilter();
                     applyFiltersAndRender();
                 });
@@ -607,7 +630,6 @@
 
             const populateYearFilter = () => {
                 const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
-                
                 while(yearFilter.options.length > 1) { yearFilter.remove(1); }
                 years.sort((a,b) => b-a).forEach(year => {
                     const option = document.createElement('option');
@@ -620,7 +642,6 @@
             const applyFiltersAndRender = () => {
                 const selectedMonth = monthFilter.value;
                 const selectedYear = yearFilter.value;
-
                 filteredApps = allApps.filter(app => {
                     const appDate = app.createdAt ? new Date(app.createdAt.seconds * 1000) : null;
                     if (!appDate) return false;
@@ -658,11 +679,9 @@
                 timers.forEach(timer => {
                     const createdAt = parseInt(timer.dataset.createdat, 10);
                     if (isNaN(createdAt)) return;
-                    
                     const now = Math.floor(new Date().getTime() / 1000);
                     const endTime = createdAt + (48 * 60 * 60);
                     const remainingSeconds = endTime - now;
-
                     if (remainingSeconds > 0) {
                         const hours = Math.floor(remainingSeconds / 3600);
                         const minutes = Math.floor((remainingSeconds % 3600) / 60);
@@ -681,12 +700,10 @@
                     updatePaginationControls();
                     return;
                 }
-                
                 const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
                 const startIndex = (currentPage - 1) * itemsPerPage;
                 const endIndex = startIndex + itemsPerPage;
                 const pageItems = filteredApps.slice(startIndex, endIndex);
-
                 pageItems.forEach((app, index) => {
                     const programDateFormatted = app.programDate ? new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Tidak Dinyatakan';
                     const totalMembers = 15;
@@ -708,7 +725,6 @@
                     const votingPercentage = Math.round((totalVotes / totalMembers) * 100);
                     const appIndexInAll = allApps.findIndex(a => a.id === app.id);
                     const applicationNumber = allApps.length - appIndexInAll;
-
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="py-3 px-4 text-xs text-slate-500">${startIndex + index + 1}</td>
@@ -750,11 +766,9 @@
                     `;
                     analysisTableBody.appendChild(row);
                 });
-
                 if (countdownInterval) clearInterval(countdownInterval);
                 countdownInterval = setInterval(updateCountdownTimers, 1000);
                 updateCountdownTimers();
-
                 updatePaginationControls();
             };
             
@@ -874,7 +888,7 @@
                 prevBtn.classList.toggle('opacity-50', formCurrentStep === 1);
                 prevBtn.classList.toggle('cursor-not-allowed', formCurrentStep === 1);
                 nextBtn.classList.toggle('hidden', formCurrentStep === formSteps.length);
-                submitBtn.classList.toggle('hidden', formCurrentStep !== formSteps.length);
+                previewBtn.classList.toggle('hidden', formCurrentStep !== formSteps.length);
             };
             const validateStep = (step) => {
                 const currentFormStep = document.getElementById(`form-step-${step}`);
@@ -887,9 +901,15 @@
                        const radioGroup = document.getElementsByName(input.name);
                        isInputValid = Array.from(radioGroup).some(r => r.checked);
                     }
-                    if (!isInputValid) isValid = false;
+                    if (!isInputValid) {
+                        isValid = false;
+                         // Optional: Add visual feedback for invalid fields
+                        input.classList.add('border-red-500');
+                        setTimeout(() => input.classList.remove('border-red-500'), 2000);
+                    }
                 });
                 if (step === 1 && applicantDetailsFieldset.disabled) isValid = false;
+                if(!isValid) showToast('Sila lengkapkan semua medan yang bertanda *', 'error');
                 return isValid;
             };
             
@@ -937,10 +957,74 @@
                 applicantNameInput.readOnly = true; applicantNameInput.classList.add('bg-slate-100');
                 applicantPositionInput.readOnly = true; applicantPositionInput.classList.add('bg-slate-100');
                 perkaraTambahanContainer.innerHTML = '';
-                // Reset new fields
                 lokasiLuarDetails.classList.add('hidden');
                 document.querySelector('input[name="lokasi"][value="Dalam Sekolah"]').checked = true;
                 calculateTotal();
+            };
+
+            const showPreview = () => {
+                const formData = new FormData(applicationForm);
+                const data = Object.fromEntries(formData.entries());
+
+                const programDate = new Date(data.tarikh_program + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
+                
+                let kategori = data.kategori;
+                if (kategori === 'Lain-lain' && data.kategori_lain) {
+                    kategori = `Lain-lain: ${data.kategori_lain}`;
+                }
+
+                let lokasi = data.lokasi;
+                if (lokasi === 'Luar Sekolah' && data.lokasi_luar_details) {
+                    lokasi = `Luar Sekolah: ${data.lokasi_luar_details}`;
+                }
+                
+                const driveLink = data.lampiran_drive ? `<a href="${data.lampiran_drive}" target="_blank" class="text-indigo-600 hover:underline break-all">${data.lampiran_drive}</a>` : 'Tiada';
+                
+                const previewHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-3">Maklumat Pemohon</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                                <div><strong class="font-medium text-slate-500">Nama:</strong> ${data.nama_pemohon}</div>
+                                <div><strong class="font-medium text-slate-500">Jawatan:</strong> ${data.jawatan}</div>
+                                <div><strong class="font-medium text-slate-500">No. Telefon:</strong> ${data.no_telefon}</div>
+                                <div><strong class="font-medium text-slate-500">Bank:</strong> ${data.nama_bank} (${data.no_akaun})</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-3">Maklumat Program</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                                <div class="md:col-span-2"><strong class="font-medium text-slate-500">Nama Program:</strong> ${data.tujuan}</div>
+                                <div><strong class="font-medium text-slate-500">Tarikh Mula:</strong> ${programDate}</div>
+                                <div><strong class="font-medium text-slate-500">Tempoh:</strong> ${data.tempoh_program} Hari</div>
+                                <div><strong class="font-medium text-slate-500">Kategori:</strong> ${kategori}</div>
+                                <div><strong class="font-medium text-slate-500">Peringkat:</strong> ${data.peringkat}</div>
+                                <div><strong class="font-medium text-slate-500">Lokasi:</strong> ${lokasi}</div>
+                                <div><strong class="font-medium text-slate-500">Penyertaan:</strong> ${data.jumlah_murid} Murid, ${data.jumlah_guru} Guru</div>
+                                <div class="md:col-span-2"><strong class="font-medium text-slate-500">Pautan Kertas Kerja:</strong> ${driveLink}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-3">Perincian & Ringkasan Bajet</h4>
+                            <div class="bg-slate-50 p-4 rounded-md border">
+                                <table class="min-w-full">
+                                    <tbody>${ringkasanTableBody.innerHTML}</tbody>
+                                    <tfoot class="border-t-2 border-slate-300">
+                                        <tr>
+                                            <td class="py-2 font-bold text-slate-800">JUMLAH KESELURUHAN</td>
+                                            <td class="py-2 font-bold text-slate-800 text-right">${jumlahKeseluruhanDisplay.textContent}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                previewContent.innerHTML = previewHTML;
+                openModal(previewModal, previewModalPanel);
             };
 
             // --- Authentication & Initial Load ---
@@ -956,11 +1040,13 @@
             })();
 
             // --- Event Listeners ---
-            setDefaultDate(); // Set default date on initial load
-            switchTab('tab-analysis-btn'); resetApplicationForm();
+            setDefaultDate(); 
+            switchTab('tab-analysis-btn'); 
+            resetApplicationForm();
             tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
             if(newApplicationBtnInAnalysis) newApplicationBtnInAnalysis.addEventListener('click', () => { switchTab('tab-form-btn'); resetApplicationForm(); });
-            monthFilter.addEventListener('change', applyFiltersAndRender); yearFilter.addEventListener('change', applyFiltersAndRender);
+            monthFilter.addEventListener('change', applyFiltersAndRender); 
+            yearFilter.addEventListener('change', applyFiltersAndRender);
             itemsPerPageSelect.addEventListener('change', () => { currentPage = 1; renderTable(); });
             prevPageBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); } });
             nextPageBtn.addEventListener('click', () => {
@@ -968,10 +1054,16 @@
                 const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
                 if(currentPage < totalPages){ currentPage++; renderTable(); }
             });
+
+            // Modal Event Listeners
             closeModalBtn.addEventListener('click', () => closeModal(keputusanModal, modalPanel));
             keputusanModal.addEventListener('click', (e) => { if(e.target === keputusanModal) closeModal(keputusanModal, modalPanel); });
             closeShareModalBtn.addEventListener('click', () => closeModal(shareModal, shareModalPanel));
             shareModal.addEventListener('click', (e) => { if(e.target === shareModal) closeModal(shareModal, shareModalPanel); });
+            closePreviewModalBtn.addEventListener('click', () => closeModal(previewModal, previewModalPanel));
+            previewModal.addEventListener('click', (e) => { if(e.target === previewModal) closeModal(previewModal, previewModalPanel); });
+            editPreviewBtn.addEventListener('click', () => closeModal(previewModal, previewModalPanel));
+            
             copyShareTextBtn.addEventListener('click', () => {
                 const shareTextArea = document.getElementById('share-text-area');
                 shareTextArea.select(); navigator.clipboard.writeText(shareTextArea.value);
@@ -1058,7 +1150,7 @@
             if(nextBtn) nextBtn.addEventListener('click', () => { if (validateStep(formCurrentStep) && formCurrentStep < formSteps.length) { formCurrentStep++; updateFormSteps(); updateProgressBar(); updateButtons(); }});
             if(prevBtn) prevBtn.addEventListener('click', () => { if (formCurrentStep > 1) { formCurrentStep--; updateFormSteps(); updateProgressBar(); updateButtons(); }});
             
-            // --- NEW Event Listeners for Dynamic Budget and Location Form ---
+            // --- NEW Event Listeners for Dynamic Budget, Location, and Preview Form ---
             tambahPerkaraBtn.addEventListener('click', () => {
                 const newEntry = document.createElement('div');
                 newEntry.className = 'perkara-tambahan-entry flex items-end gap-4 mt-2';
@@ -1097,12 +1189,20 @@
 
             budgetDetailsContainer.addEventListener('input', calculateTotal);
 
+            previewBtn.addEventListener('click', (e) => {
+                if (!validateStep(formCurrentStep)) return;
+                showPreview();
+            });
+
+            submitFromPreviewBtn.addEventListener('click', () => {
+                applicationForm.requestSubmit();
+            });
+
             applicationForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                if (!validateStep(formCurrentStep)) return;
-                submitBtn.disabled = true; submitBtn.textContent = 'Menghantar...';
+                submitFromPreviewBtn.disabled = true; 
+                submitFromPreviewBtn.textContent = 'Menghantar...';
                 
-                // Collect dynamic items
                 const lainLainItems = [];
                 document.querySelectorAll('.perkara-tambahan-entry').forEach(entry => {
                     const butiran = entry.querySelector('input[name="butiran_tambahan[]"]').value.trim();
@@ -1111,10 +1211,8 @@
                         lainLainItems.push({ butiran, jumlah });
                     }
                 });
-
                 let total = 0;
                 document.querySelectorAll('.cost-input').forEach(input => { total += parseFloat(input.value) || 0; });
-
                 try {
                     const newApplication = {
                         applicant: applicantNameInput.value, applicantIC: icInput.value,
@@ -1142,6 +1240,7 @@
                         status: 'Dalam Proses', votes: [], createdAt: serverTimestamp()
                     };
                     await addDoc(applicationsCol, newApplication);
+                    closeModal(previewModal, previewModalPanel);
                     document.getElementById('form-steps-container').style.display = 'none';
                     successMessage.classList.remove('hidden');
                     setTimeout(() => { switchTab('tab-analysis-btn'); resetApplicationForm(); }, 4000);
@@ -1149,8 +1248,8 @@
                     console.error("Error submitting application:", error);
                     showToast('Gagal menghantar permohonan.', 'error');
                 } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Hantar Permohonan';
+                    submitFromPreviewBtn.disabled = false;
+                    submitFromPreviewBtn.textContent = 'Sahkan & Hantar';
                 }
             });
         });
