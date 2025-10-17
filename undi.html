@@ -11,7 +11,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: #f8fafc; /* slate-50 */
         }
         .loader {
             border: 4px solid #f3f3f3; border-top: 4px solid #4f46e5; border-radius: 50%;
@@ -28,42 +28,57 @@
             background-color: #eef2ff;
             box-shadow: 0 0 0 2px #a5b4fc;
         }
+        
+        /* Animation and new styles */
+        @keyframes fade-in-up {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.6s ease-out forwards;
+        }
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 flex items-center justify-center min-h-screen p-4">
+<body class="bg-slate-900 text-slate-800 flex items-center justify-center min-h-screen p-4">
 
     <main class="container mx-auto">
-        <div id="main-content" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-4xl mx-auto">
+        <div id="main-content" class="bg-white rounded-xl shadow-xl border border-slate-700 w-full max-w-4xl mx-auto overflow-hidden">
             
-            <div id="ic-verification-section" class="p-8 md:p-12 flex flex-col items-center text-center">
-                <img src="https://i.imgur.com/VfEOv80.png" alt="Logo PIBG SK Pulau Melayu" class="h-28 w-28 rounded-full mb-6 shadow-lg">
+            <div id="ic-verification-section" class="relative p-8 md:p-12 flex flex-col items-center justify-center text-center bg-slate-800">
+                <div class="absolute inset-0 w-full h-full bg-grid-pattern opacity-40"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-slate-800/50"></div>
+                
+                <div class="relative z-10 animate-fade-in-up" style="animation-delay: 100ms;">
+                    <img src="https://i.imgur.com/VfEOv80.png" alt="Logo PIBG SK Pulau Melayu" class="h-24 w-24 rounded-full mb-6 shadow-lg mx-auto border-2 border-indigo-400/50">
+                    <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">Pengesahan Exco</h2>
+                    <p class="text-slate-400 mb-8 max-w-sm">Akses undian adalah terhad. Sila sahkan identiti anda.</p>
+                </div>
 
-                <h2 class="text-3xl font-bold text-slate-900 mb-2">Sistem Undian Rasmi PIBG</h2>
-                <p class="text-slate-500 mb-8 max-w-sm">Sila sahkan identiti anda sebagai Ahli Jawatankuasa PIBG untuk meneruskan.</p>
-
-                <div class="w-full max-w-sm space-y-4">
+                <div class="w-full max-w-sm space-y-4 relative z-10 animate-fade-in-up" style="animation-delay: 200ms;">
                     <div class="relative w-full">
                         <label for="voter-ic-verify" class="sr-only">No. Kad Pengenalan</label>
-                        <input type="password" id="voter-ic-verify" placeholder="Masukkan No. Kad Pengenalan" class="w-full text-center px-4 py-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg pr-12" autocomplete="off">
-                        <button type="button" id="toggle-ic-visibility" class="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 hover:text-indigo-600 focus:outline-none">
-                            <svg id="icon-show" xmlns="http://www.w.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            <svg id="icon-hide" xmlns="http://www.w.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                            </svg>
-                        </button>
+                        <input type="tel" id="voter-ic-verify" placeholder="Hanya 12 digit nombor" maxlength="12" oninput="this.value=this.value.replace(/\D/g,'')" class="w-full text-center tracking-widest px-4 py-3 bg-slate-900/70 border border-slate-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg" autocomplete="off">
                     </div>
-                    <button id="verify-ic-btn" class="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm transition-transform transform hover:scale-105">
-                        Sahkan & Teruskan
+                    <button id="verify-ic-btn" class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 transition-all transform hover:scale-105">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+                        </svg>
+                        Sahkan Identiti
                     </button>
                 </div>
-                <p id="ic-verify-feedback" class="text-sm mt-4 text-center h-5"></p>
+                <p id="ic-verify-feedback" class="text-sm mt-4 text-center h-5 relative z-10"></p>
             </div>
-
-
-            <div id="voting-section" class="hidden">
+            <div id="voting-section" class="hidden bg-white">
                  <div class="p-6 border-b border-slate-200 bg-slate-50/50 rounded-t-xl">
                     <h2 class="text-2xl font-bold text-slate-900" id="vote-program-name">Borang Undian Permohonan</h2>
                     <p class="mt-1 text-slate-500" id="vote-program-applicant">Oleh: Nama Pemohon</p>
@@ -156,7 +171,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-6 -mx-6 -mb-8 mt-8 border-t flex-shrink-0 flex justify-center items-center bg-slate-50/50 rounded-b-xl">
+                        <div class="p-6 -mx-6 md:-mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-center items-center bg-slate-50/50 rounded-b-xl">
                             <button type="submit" id="submitVoteBtn" class="w-full md:w-auto text-lg flex items-center justify-center gap-3 px-8 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/50 transition-all transform hover:scale-105">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -224,7 +239,7 @@
 
         const showFeedback = (element, message, type) => {
             element.textContent = message;
-            element.className = `text-sm mt-4 text-center h-5 ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
+            element.className = `text-sm mt-4 text-center h-5 relative z-10 ${type === 'error' ? 'text-red-500' : 'text-green-500'}`;
         };
 
         const startVoteCountdown = (createdAtSeconds) => {
@@ -282,33 +297,13 @@
             }
         });
 
-        // --- UI Interactivity ---
-        const toggleIcBtn = document.getElementById('toggle-ic-visibility');
-        const iconShow = document.getElementById('icon-show');
-        const iconHide = document.getElementById('icon-hide');
-
-        if (toggleIcBtn) {
-            toggleIcBtn.addEventListener('click', () => {
-                if (icVerifyInput.type === 'password') {
-                    icVerifyInput.type = 'text';
-                    iconShow.classList.add('hidden');
-                    iconHide.classList.remove('hidden');
-                } else {
-                    icVerifyInput.type = 'password';
-                    iconShow.classList.remove('hidden');
-                    iconHide.classList.add('hidden');
-                }
-            });
-        }
-
-
         // --- Verification and Voting Logic ---
         verifyIcBtn.addEventListener('click', async () => {
             const icValue = icVerifyInput.value.trim();
             const cleanedIc = icValue.replace(/\D/g, '');
 
-            if (cleanedIc.length < 5) {
-                showFeedback(icVerifyFeedback, "Sila masukkan No. Kad Pengenalan yang sah.", 'error');
+            if (cleanedIc.length !== 12) {
+                showFeedback(icVerifyFeedback, "Sila masukkan 12 digit No. Kad Pengenalan.", 'error');
                 return;
             }
 
@@ -360,7 +355,11 @@
                 if(container) container.classList.add('hidden');
             } finally {
                 verifyIcBtn.disabled = false;
-                verifyIcBtn.textContent = "Sahkan & Teruskan";
+                verifyIcBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+                    </svg>
+                    Sahkan Identiti`;
             }
         });
 
@@ -395,11 +394,11 @@
             let budgetHTML = '<table class="w-full text-sm"><tbody>';
             const budgetItems = [];
 
-            if (app.budget.makanMurid > 0) budgetItems.push({ label: 'Makan Minum Murid', value: app.budget.makanMurid });
-            if (app.budget.makanGuru > 0) budgetItems.push({ label: 'Makan Minum Guru', value: app.budget.makanGuru });
-            if (app.budget.pengangkutan?.kos > 0) budgetItems.push({ label: `Pengangkutan (${app.budget.pengangkutan.jenis})`, value: app.budget.pengangkutan.kos });
+            if (app.budget?.makanMurid > 0) budgetItems.push({ label: 'Makan Minum Murid', value: app.budget.makanMurid });
+            if (app.budget?.makanGuru > 0) budgetItems.push({ label: 'Makan Minum Guru', value: app.budget.makanGuru });
+            if (app.budget?.pengangkutan?.kos > 0) budgetItems.push({ label: `Pengangkutan (${app.budget.pengangkutan.jenis})`, value: app.budget.pengangkutan.kos });
 
-            if (app.budget.lainLain && Array.isArray(app.budget.lainLain)) {
+            if (app.budget?.lainLain && Array.isArray(app.budget.lainLain)) {
                 app.budget.lainLain.forEach(item => {
                     if (item.jumlah > 0) budgetItems.push({ label: item.butiran, value: item.jumlah });
                 });
@@ -464,9 +463,8 @@
                 const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
                 await updateDoc(appDocRef, { votes: arrayUnion(voteData) });
                 
-                // Show success message and hide the form
                 mainContent.innerHTML = `
-                    <div class="p-8 md:p-12 text-center">
+                    <div class="p-8 md:p-12 text-center bg-white rounded-xl">
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-10 h-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
