@@ -536,42 +536,54 @@
                 const decisionDate = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
                 const contentHtml = `
                     <div id="notice-content-to-capture" class="p-6 md:p-8">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-bold text-slate-900">📢 NOTIS RASMI KEPUTUSAN PERMOHONAN DANA PIBG</h3>
+                        </div>
                         <div class="text-sm text-slate-700 space-y-4 leading-relaxed">
-                            <p>Assalamualaikum dan salam sejahtera,</p>
+                            <p>Perhatian kepada semua yang berkenaan,</p>
                             <p>
-                                Merujuk kepada keputusan yang telah dibuat melalui undian 2/3 ahli Exco PIBG pada <strong>${decisionDate}</strong> berhubung 
-                                <strong>Permohonan ${app.id.substring(0, 5).toUpperCase()} : ${app.purpose.toUpperCase()}</strong>, dengan ini dimaklumkan bahawa Exco PIBG telah 
-                                bersetuju untuk <strong>MELULUSKAN</strong> pengeluaran dana berjumlah 
-                                <strong class="text-green-700">RM ${parseFloat(app.amount).toFixed(2)}</strong>.
+                                Merujuk kepada keputusan undian majoriti 2/3 ahli Exco PIBG yang telah dijalankan pada <strong>${decisionDate}</strong>, permohonan bagi:
+                                <br>
+                                <strong class="text-indigo-700 text-base my-2 block text-center bg-indigo-50 p-3 rounded-lg">${app.purpose.toUpperCase()} (ID: ${app.id.substring(0, 5).toUpperCase()})</strong>
+                                Dengan ini dimaklumkan bahawa Jawatankuasa Eksekutif PIBG telah bersetuju untuk <strong>✅ MELULUSKAN</strong> peruntukan dana berjumlah:
+                                <br>
+                                <strong class="text-green-700 text-lg my-2 block text-center bg-green-50 p-3 rounded-lg">💰 RM ${parseFloat(app.amount).toFixed(2)}</strong>
                             </p>
-                            <p class="font-semibold text-slate-800">Sehubungan itu, berikut adalah tindakan yang perlu diambil oleh pihak berkaitan:</p>
+                            <p class="font-bold text-slate-800">Sehubungan dengan itu, pihak yang terlibat DIARAHKAN untuk mengambil tindakan segera seperti berikut:</p>
                             <div class="space-y-4">
                                 <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                    <h4 class="font-bold text-slate-800">1. Bendahari</h4>
+                                    <h4 class="font-bold text-slate-800">1. Bendahari PIBG</h4>
                                     <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600">
-                                        <li>Menguruskan pengeluaran dana sebanyak <strong class="font-semibold">RM ${parseFloat(app.amount).toFixed(2)}</strong> daripada bank Islam PIBG dalam tempoh 14 hari dari tarikh keputusan ini.</li>
-                                        <li>Memastikan semua dokumen sokongan berkaitan pengeluaran, termasuk resit rasmi, disimpan dengan teliti untuk tujuan rekod dan rujukan pada masa hadapan.</li>
+                                        <li>Menyegerakan pengeluaran dana sebanyak <strong class="font-semibold">RM ${parseFloat(app.amount).toFixed(2)}</strong> dalam tempoh 14 hari bekerja dari tarikh notis ini dikeluarkan.</li>
+                                        <li>Memastikan segala urusan direkodkan dengan teliti dan menyimpan semua dokumen sokongan (resit rasmi) untuk tujuan audit.</li>
                                     </ul>
                                 </div>
                                 <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
                                     <h4 class="font-bold text-slate-800">2. Pemohon (${app.applicant})</h4>
                                     <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600">
-                                        <li>Berhubung dengan bendahari bagi urusan penerimaan dana.</li>
-                                        <li>Setelah menerima dana, sila:
+                                        <li>Berhubung terus dengan Bendahari PIBG bagi proses tuntutan dana.</li>
+                                        <li>Setelah dana diterima, pemohon <strong class="text-red-600">diwajibkan</strong> untuk:
                                             <ul class="list-[circle] list-inside ml-4 mt-1">
-                                                <li>Menandatangani Akuan Penerimaan Dana sebagai bukti rasmi penerimaan.</li>
-                                                <li>Menyerahkan resit perbelanjaan kepada bendahari dan timbalan bendahari selepas pembelanjaan selesai.</li>
-                                                <li>Menyediakan laporan aktiviti dan menyerahkannya kepada setiausaha PIBG untuk tujuan dokumentasi rasmi.</li>
+                                                <li>Menandatangani Akuan Penerimaan Dana.</li>
+                                                <li>Menyerahkan salinan resit perbelanjaan kepada Bendahari.</li>
+                                                <li>Menyediakan laporan ringkas aktiviti kepada Setiausaha PIBG untuk rekod rasmi.</li>
                                             </ul>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg">
-                                <h5 class="font-bold">Peringatan Penting</h5>
-                                <p class="mt-1">Semua pihak yang terlibat dimohon untuk melaksanakan tanggungjawab masing-masing dengan telus dan teratur bagi memastikan kelancaran proses ini. Kerjasama dan perhatian semua pihak amat dihargai.</p>
+                                <h5 class="font-bold">📌 Peringatan Tegas</h5>
+                                <p class="mt-1">Semua pihak diwajibkan untuk melaksanakan tanggungjawab masing-masing dengan penuh amanah, telus, dan teratur. Kegagalan mematuhi arahan ini boleh menjejaskan permohonan pada masa hadapan. Kerjasama semua pihak amat dihargai.</p>
                             </div>
-                            <p class="pt-4">Sekian, terima kasih.</p>
+                            <div class="pt-8">
+                                <p>Yang menjalankan amanah,</p>
+                                <br>
+                                <p class="font-bold text-slate-800">MUHAMMAD FARHAN BIN SARKAWI</p>
+                                <p class="font-medium text-slate-600">Yang Dipertua PIBG</p>
+                                <p class="font-medium text-slate-600">SK Pulau Melayu</p>
+                            </div>
+                            <p class="pt-4">Sekian, harap maklum.</p>
                         </div>
                     </div>
                     <div id="modal-actions" class="p-4 bg-slate-100 border-t rounded-b-lg flex flex-col sm:flex-row items-center justify-end space-y-2 sm:space-y-0 sm:space-x-3">
@@ -694,7 +706,7 @@
                 if (whatsappBtn) {
                     const purpose = whatsappBtn.dataset.appPurpose;
                     const amount = parseFloat(whatsappBtn.dataset.appAmount).toFixed(2);
-                    const message = `*Notis Keputusan Permohonan Dana PIBG*\n\nAssalamualaikum,\n\nDimaklumkan permohonan dana bagi tujuan *${purpose.toUpperCase()}* telah *DILULUSKAN* sebanyak *RM ${amount}*.\n\nSila rujuk notis rasmi untuk tindakan lanjut.\n\nSekian, terima kasih.`;
+                    const message = `📢 *NOTIS KELULUSAN PERUNTUKAN PIBG* 📢\n\nPerhatian,\n\nPermohonan dana bagi program *${purpose.toUpperCase()}* telah *✅ DILULUSKAN* dengan jumlah peruntukan sebanyak *💰 RM ${amount}*.\n\nSila rujuk notis rasmi yang akan diedarkan untuk tindakan selanjutnya oleh pihak pemohon dan bendahari.\n\nHarap maklum.`;
                     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
                     window.open(whatsappUrl, '_blank');
                 }
