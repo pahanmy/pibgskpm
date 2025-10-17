@@ -380,7 +380,13 @@
             
             (async () => {
                 try {
-                    await signInAnonymously(auth);
+                    // This block is corrected
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
                     const excoSnapshot = await getDocs(collection(db, excoMembersCol));
                     excoMembersList = excoSnapshot.docs.map(doc => doc.data().name);
 
