@@ -251,7 +251,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -269,22 +269,15 @@
         const auth = getAuth(app);
 
         const applicationsCol = collection(db, `/artifacts/${appId}/public/data/applications`);
-        
+        const excoMembersColPath = `/artifacts/${appId}/public/data/exco_members`;
+
         document.addEventListener('DOMContentLoaded', () => {
             // --- State Variables ---
             let allApps = [];
             let filteredApps = [];
             let currentPage = 1;
             let countdownInterval = null;
-
-            // --- Senarai Ahli EXCO ---
-            const EXCO_MEMBERS = [
-                'En. Ahmad (Pengerusi)', 'Pn. Siti (Naib Pengerusi)', 'En. Badrul (Setiausaha)', 
-                'Pn. Fatimah (Bendahari)', 'En. Kamal (AJK Ibu Bapa 1)', 'Pn. Aisyah (AJK Ibu Bapa 2)',
-                'En. Razak (AJK Ibu Bapa 3)', 'Pn. Norita (AJK Ibu Bapa 4)', 'En. Lee (AJK Ibu Bapa 5)',
-                'Pn. Zaleha (AJK Guru 1)', 'En. Hafiz (AJK Guru 2)', 'Cik. Maria (AJK Guru 3)',
-                'En. Suresh (AJK Guru 4)', 'Pn. Diana (Pemeriksa Kira-Kira 1)', 'En. Ong (Pemeriksa Kira-Kira 2)'
-            ];
+            let excoMembersList = []; // Senarai Exco akan diisi dari DB
 
             // --- UI Elements ---
             const monthFilter = document.getElementById('month-filter');
@@ -319,8 +312,26 @@
             };
             
             // --- Data Fetching and Processing ---
+
+            // Fungsi untuk memuat turun senarai Exco dari Firestore
+            const fetchExcoMembers = async () => {
+                try {
+                    const snapshot = await getDocs(collection(db, excoMembersColPath));
+                    if (snapshot.empty) {
+                        console.warn("Tiada ahli Exco dijumpai dalam pangkalan data.");
+                        excoMembersList = []; // Pastikan ia array kosong
+                    } else {
+                        // Ambil hanya nama dari setiap dokumen Exco
+                        excoMembersList = snapshot.docs.map(doc => doc.data().name);
+                    }
+                } catch (error) {
+                    console.error("Gagal memuat turun senarai Exco:", error);
+                    showToast('Gagal memuat turun senarai Exco.', 'error');
+                }
+            };
+
             const fetchApplications = () => {
-                 analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data...</td></tr>`;
+                 analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data permohonan...</td></tr>`;
                 onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
                     allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     populateYearFilter();
@@ -418,7 +429,7 @@
                 const pageItems = filteredApps.slice(startIndex, endIndex);
 
                 pageItems.forEach((app, index) => {
-                    const totalMembers = 15;
+                    const totalMembers = excoMembersList.length > 0 ? excoMembersList.length : 15; // Guna kiraan dinamik, fallback ke 15
                     const approvalThreshold = 10;
                     const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
                     const approvalVotes = votes.filter(v => v.vote === 'approve').length;
@@ -436,7 +447,7 @@
                         showKeputusanBtn = true; 
                     }
                     
-                    const votingPercentage = Math.round((totalVotes / totalMembers) * 100);
+                    const votingPercentage = totalMembers > 0 ? Math.round((totalVotes / totalMembers) * 100) : 0;
                     const appIndexInAll = allApps.findIndex(a => a.id === app.id);
                     const applicationNumber = allApps.length - appIndexInAll;
                     const row = document.createElement('tr');
@@ -445,16 +456,17 @@
                         <td class="py-3 px-4 text-xs text-slate-500">${startIndex + index + 1}</td>
                         <td class="py-3 px-4">
                             <div class="flex items-start space-x-3">
-                                <div class="bg-indigo-100 text-indigo-600 p-2 rounded-full mt-1">
+                                <div class="bg-indigo-100 text-indigo-600 p-2 rounded-full mt-1 flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-800 uppercase">${app.applicant}</p>
-                                    <p class="text-xs text-slate-600 font-medium uppercase">${app.purpose}</p>
-                                    <p class="text-xs text-slate-500 mt-1">
-                                        ${new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}
+                                    <p class="text-lg font-bold text-slate-800">${app.purpose}</p>
+                                    <p class="text-xs text-slate-600 font-medium uppercase mt-1">PEMOHON: ${app.applicant}</p>
+                                    <p class="text-xs text-slate-500 uppercase">
+                                        TARIKH: ${new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}
                                     </p>
                                 </div>
                             </div>
@@ -476,8 +488,8 @@
                             </div>
                         </td>
                         ${(() => {
-                            const voters = votes.map(v => v.name); // Pastikan data undian anda mempunyai `name`
-                            const nonVoters = EXCO_MEMBERS.filter(member => !voters.includes(member));
+                            const voters = votes.map(v => v.name);
+                            const nonVoters = excoMembersList.filter(member => !voters.includes(member));
                             const nonVotersCount = nonVoters.length;
                             const nonVotersData = JSON.stringify(nonVoters);
 
@@ -521,7 +533,7 @@
                     analysisTableBody.appendChild(row);
                 });
                 if (countdownInterval) clearInterval(countdownInterval);
-                countdownInterval = setInterval(updateCountdownTimers, 1000);
+                countdownInterval = setInterval(updateCountdownTimers, 60000); // Check every minute
                 updateCountdownTimers();
                 updatePaginationControls();
             };
@@ -629,9 +641,15 @@
                 try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
                     else await signInAnonymously(auth);
+
+                    // Muat turun senarai Exco dahulu
+                    await fetchExcoMembers();
+                    
+                    // Kemudian, muat turun senarai permohonan
                     fetchApplications();
+
                 } catch (error) {
-                    console.error("Firebase authentication failed:", error);
+                    console.error("Gagal menyambung ke pangkalan data atau memuatkan data awal:", error);
                     analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
                 }
             })();
