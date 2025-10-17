@@ -165,11 +165,11 @@
                                     <thead class="bg-slate-50">
                                         <tr>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">No.</th>
-                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Pemohon</th>
-                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tujuan & Tarikh Program</th>
+                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Pemohon & Tujuan</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jumlah (RM)</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                                             <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Peratus Mengundi</th>
+                                            <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status Undian</th>
                                             <th class="py-3 px-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
                                         </tr>
                                     </thead>
@@ -195,13 +195,6 @@
             </div>
         </div>
     </main>
-
-    <footer class="bg-gray-800 text-gray-300">
-        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center text-xs font-medium">
-            <p class="mb-2 sm:mb-0">© 2025 PIBG SK PULAU MELAYU. HAK CIPTA TERPELIHARA.</p>
-            <p>DIREKA OLEH KOMUNITI SK PULAU MELAYU</p>
-        </div>
-    </footer>
 
     <div id="keputusan-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0" id="modal-panel">
@@ -231,9 +224,29 @@
         </div>
     </div>
 
+    <div id="non-voters-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="non-voters-modal-panel">
+            <div class="p-4 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
+                <h3 class="text-lg font-bold text-slate-800">Senarai EXCO Belum Mengundi</h3>
+                <button id="close-non-voters-modal-btn" class="text-slate-500 hover:text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div id="non-voters-list" class="p-6 max-h-[60vh] overflow-y-auto">
+                </div>
+        </div>
+    </div>
+
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
         <p id="toast-message">This is a toast message!</p>
     </div>
+
+    <footer class="bg-gray-800 text-gray-300">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center text-xs font-medium">
+            <p class="mb-2 sm:mb-0">© 2025 PIBG SK PULAU MELAYU. HAK CIPTA TERPELIHARA.</p>
+            <p>DIREKA OLEH KOMUNITI SK PULAU MELAYU</p>
+        </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -264,6 +277,15 @@
             let currentPage = 1;
             let countdownInterval = null;
 
+            // --- Senarai Ahli EXCO ---
+            const EXCO_MEMBERS = [
+                'En. Ahmad (Pengerusi)', 'Pn. Siti (Naib Pengerusi)', 'En. Badrul (Setiausaha)', 
+                'Pn. Fatimah (Bendahari)', 'En. Kamal (AJK Ibu Bapa 1)', 'Pn. Aisyah (AJK Ibu Bapa 2)',
+                'En. Razak (AJK Ibu Bapa 3)', 'Pn. Norita (AJK Ibu Bapa 4)', 'En. Lee (AJK Ibu Bapa 5)',
+                'Pn. Zaleha (AJK Guru 1)', 'En. Hafiz (AJK Guru 2)', 'Cik. Maria (AJK Guru 3)',
+                'En. Suresh (AJK Guru 4)', 'Pn. Diana (Pemeriksa Kira-Kira 1)', 'En. Ong (Pemeriksa Kira-Kira 2)'
+            ];
+
             // --- UI Elements ---
             const monthFilter = document.getElementById('month-filter');
             const yearFilter = document.getElementById('year-filter');
@@ -283,6 +305,10 @@
             const shareModalPanel = document.getElementById('share-modal-panel');
             const closeShareModalBtn = document.getElementById('close-share-modal-btn');
             const copyShareTextBtn = document.getElementById('copy-share-text-btn');
+            const nonVotersModal = document.getElementById('non-voters-modal');
+            const nonVotersModalPanel = document.getElementById('non-voters-modal-panel');
+            const closeNonVotersModalBtn = document.getElementById('close-non-voters-modal-btn');
+            const nonVotersList = document.getElementById('non-voters-list');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -390,8 +416,8 @@
                 const startIndex = (currentPage - 1) * itemsPerPage;
                 const endIndex = startIndex + itemsPerPage;
                 const pageItems = filteredApps.slice(startIndex, endIndex);
+
                 pageItems.forEach((app, index) => {
-                    const programDateFormatted = app.programDate ? new Date(app.programDate + 'T00:00:00').toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Tidak Dinyatakan';
                     const totalMembers = 15;
                     const approvalThreshold = 10;
                     const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
@@ -399,6 +425,7 @@
                     const totalVotes = votes.length;
                     const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
                     const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
+                    
                     let finalStatus = 'Dalam Proses'; 
                     let showKeputusanBtn = false;
                     if (approvalVotes >= approvalThreshold) {
@@ -408,18 +435,31 @@
                         finalStatus = 'Ditolak';
                         showKeputusanBtn = true; 
                     }
+                    
                     const votingPercentage = Math.round((totalVotes / totalMembers) * 100);
                     const appIndexInAll = allApps.findIndex(a => a.id === app.id);
                     const applicationNumber = allApps.length - appIndexInAll;
                     const row = document.createElement('tr');
+
                     row.innerHTML = `
                         <td class="py-3 px-4 text-xs text-slate-500">${startIndex + index + 1}</td>
-                        <td class="py-3 px-4 text-xs font-medium text-slate-900">${app.applicant}</td>
                         <td class="py-3 px-4">
-                            <div class="font-medium text-xs text-slate-900">${app.purpose}</div>
-                            <div class="text-xs text-slate-500 mt-1">${programDateFormatted}</div>
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-indigo-100 text-indigo-600 p-2 rounded-full mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800 uppercase">${app.applicant}</p>
+                                    <p class="text-xs text-slate-600 font-medium uppercase">${app.purpose}</p>
+                                    <p class="text-xs text-slate-500 mt-1">
+                                        ${new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}
+                                    </p>
+                                </div>
+                            </div>
                         </td>
-                        <td class="py-3 px-4 text-xs text-slate-500">${parseFloat(app.amount).toFixed(2)}</td>
+                        <td class="py-3 px-4 text-xs text-slate-500 font-medium">${parseFloat(app.amount).toFixed(2)}</td>
                         <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex flex-col items-start space-y-1">
                                 ${renderStatusDisplay(finalStatus)}
@@ -435,6 +475,34 @@
                                 <span class="font-medium text-slate-700 text-xs w-10 text-right">${totalVotes}/${totalMembers}</span>
                             </div>
                         </td>
+                        ${(() => {
+                            const voters = votes.map(v => v.name); // Pastikan data undian anda mempunyai `name`
+                            const nonVoters = EXCO_MEMBERS.filter(member => !voters.includes(member));
+                            const nonVotersCount = nonVoters.length;
+                            const nonVotersData = JSON.stringify(nonVoters);
+
+                            if (finalStatus !== 'Dalam Proses' || nonVotersCount === 0) {
+                                return `
+                                    <td class="py-3 px-4 text-xs text-slate-500">
+                                        <div class="flex items-center text-green-600 font-semibold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span>Selesai</span>
+                                        </div>
+                                    </td>
+                                `;
+                            }
+
+                            return `
+                                <td class="py-3 px-4 text-xs text-slate-500">
+                                    <button data-non-voters='${nonVotersData}' class="view-non-voters-btn flex items-center justify-between w-full px-2 py-1 bg-yellow-100 text-yellow-800 font-semibold rounded-md hover:bg-yellow-200">
+                                        <span>${nonVotersCount} blm undi</span>
+                                        <span class="font-bold">Lihat</span>
+                                    </button>
+                                </td>
+                            `;
+                        })()}
                         <td class="py-3 px-4 text-xs text-slate-500">
                             <div class="flex items-center justify-center space-x-2">
                                 <a href="undi.html?id=${app.id}" title="Undi Permohonan" class="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700 transition-colors">
@@ -584,6 +652,8 @@
             keputusanModal.addEventListener('click', (e) => { if(e.target === keputusanModal) closeModal(keputusanModal, modalPanel); });
             closeShareModalBtn.addEventListener('click', () => closeModal(shareModal, shareModalPanel));
             shareModal.addEventListener('click', (e) => { if(e.target === shareModal) closeModal(shareModal, shareModalPanel); });
+            closeNonVotersModalBtn.addEventListener('click', () => closeModal(nonVotersModal, nonVotersModalPanel));
+            nonVotersModal.addEventListener('click', (e) => { if(e.target === nonVotersModal) closeModal(nonVotersModal, nonVotersModalPanel); });
             
             copyShareTextBtn.addEventListener('click', () => {
                 const shareTextArea = document.getElementById('share-text-area');
@@ -594,6 +664,7 @@
 
             analysisTableBody.addEventListener('click', (e) => {
                 const targetBtn = e.target.closest('button, a'); if (!targetBtn) return;
+                
                 if (targetBtn.matches('.keputusan-btn')) {
                     const appId = targetBtn.dataset.id;
                     const appData = filteredApps.find(app => app.id === appId);
@@ -602,6 +673,29 @@
                     shareApplication(targetBtn.dataset.id, targetBtn.dataset.purpose, targetBtn.dataset.amount, targetBtn.dataset.appNumber);
                 } else if (targetBtn.matches('.delete-btn')) {
                     deleteApplication(targetBtn.dataset.id);
+                } else if (targetBtn.matches('.view-non-voters-btn')) {
+                    const nonVoters = JSON.parse(targetBtn.dataset.nonVoters);
+                    nonVotersList.innerHTML = ''; // Kosongkan senarai lama
+                    
+                    if(nonVoters.length > 0) {
+                        const listElement = document.createElement('ul');
+                        listElement.className = 'space-y-3';
+                        nonVoters.forEach(name => {
+                            const item = document.createElement('li');
+                            item.className = 'flex items-center text-sm text-slate-700';
+                            item.innerHTML = `
+                                <span class="flex items-center justify-center h-6 w-6 rounded-full bg-slate-200 text-slate-600 text-xs font-semibold mr-3">
+                                    ${name.charAt(0)}
+                                </span>
+                                ${name}
+                            `;
+                            listElement.appendChild(item);
+                        });
+                        nonVotersList.appendChild(listElement);
+                    } else {
+                        nonVotersList.innerHTML = '<p class="text-slate-500">Semua ahli telah mengundi.</p>';
+                    }
+                    openModal(nonVotersModal, nonVotersModalPanel);
                 }
             });
         });
