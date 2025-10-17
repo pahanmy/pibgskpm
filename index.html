@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisis Permohonan PIBG | SK Pulau Melayu</title>
+    <title>PIBG SK Pulau Melayu | Portal Rasmi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,245 +13,379 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc; /* slate-50 */
         }
-        .tab-button {
-            border-bottom-width: 2px;
-            border-color: transparent;
-            transition: all 0.2s ease-in-out;
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
         }
-        .tab-button.active-tab {
-            border-color: #4f46e5;
-            color: #4f46e5;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4f46e5; /* indigo-600 */
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .fade-in {
+            animation: fadeInAnimation 1s ease-in-out forwards;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #4f46e5, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        @keyframes fadeInAnimation {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800">
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
-                <img src="https://placehold.co/40x40/4f46e5/ffffff?text=SKPM" alt="Logo SK Pulau Melayu" class="h-10 w-10 rounded-md">
+                <img src="https://i.imgur.com/VfEOv80.png" alt="Logo PIBG SK Pulau Melayu" class="h-10 w-10 rounded-full">
                 <span class="text-xl font-bold text-slate-900">PIBG SK Pulau Melayu</span>
             </a>
-            <div class="flex space-x-8">
-                <a href="index.html" title="Kembali ke Halaman Utama" class="text-slate-600 hover:text-indigo-600 p-2 rounded-full hover:bg-slate-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                </a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#utama" class="nav-link text-slate-600 hover:text-indigo-600 active">Utama</a>
+                <a href="#tentang-kami" class="nav-link text-slate-600 hover:text-indigo-600">Tentang Kami</a>
+                <a href="#jawatankuasa" class="nav-link text-slate-600 hover:text-indigo-600">Jawatankuasa</a>
+                <a href="program.html" class="nav-link text-slate-600 hover:text-indigo-600">Program</a>
+                <a href="#hubungi-kami" class="nav-link text-slate-600 hover:text-indigo-600">Hubungi Kami</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-slate-600 hover:text-indigo-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
             </div>
         </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#utama" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Utama</a>
+            <a href="#tentang-kami" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Tentang Kami</a>
+            <a href="#jawatankuasa" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Jawatankuasa</a>
+            <a href="program.html" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Program</a>
+            <a href="#hubungi-kami" class="block py-2 px-6 text-sm text-slate-600 hover:bg-slate-100">Hubungi Kami</a>
+        </div>
     </header>
 
-    <main class="container mx-auto px-6 py-12 flex-grow">
-        <div class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-7xl mx-auto">
-            <div class="p-6 border-b border-slate-200">
-                <h2 class="text-3xl font-bold text-slate-900">Sistem Peruntukan PIBG</h2>
-                <p class="mt-1 text-slate-500">Urus permohonan peruntukan, undian, dan analisis secara digital.</p>
-                <nav class="mt-6 -mb-6 -mx-6 px-6 border-b border-slate-200">
-                    <div class="flex space-x-8">
-                        <span class="tab-button active-tab pb-4 font-medium">Analisis Permohonan</span>
-                        <a href="mohon.html" class="tab-button pb-4 font-medium text-slate-600 hover:text-indigo-600">Borang Permohonan</a>
-                    </div>
-                </nav>
+    <main>
+        <section id="utama" class="relative text-white text-center py-24 md:py-40 bg-cover bg-center" style="background-image: url('https://i.imgur.com/ytNlqmA.jpg')">
+            <div class="absolute inset-0 bg-slate-900 opacity-60 backdrop-blur-sm"></div>
+            <div class="relative z-10 container mx-auto px-6 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight drop-shadow-lg">Portal Rasmi PIBG SK Pulau Melayu</h1>
+                <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto text-slate-200">Mengeratkan kerjasama antara ibu bapa dan guru demi kecemerlangan anak-anak kita.</p>
+                <div class="mt-8 flex justify-center gap-4">
+                    <a href="program.html" class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 shadow-lg">Lihat Program Kami</a>
+                    <a href="#hubungi-kami" class="px-8 py-3 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition-transform transform hover:scale-105">Hubungi Kami</a>
+                </div>
             </div>
+        </section>
 
-            <div class="overflow-y-auto">
-                <div id="tab-analysis-content" class="tab-content">
-                    <div class="p-6 md:p-8">
-                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
-                            <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-indigo-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-indigo-100 text-indigo-600 p-2 rounded-full">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500">Jumlah Permohonan</p>
-                                        <p id="total-apps" class="text-xl font-bold text-slate-900">0</p>
-                                    </div>
-                                </div>
-                            </div>
-                             <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-green-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-green-100 text-green-600 p-2 rounded-full">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500">Diluluskan</p>
-                                        <p id="total-approved" class="text-xl font-bold text-slate-900">0</p>
-                                    </div>
-                                </div>
-                            </div>
-                             <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-yellow-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-yellow-100 text-yellow-600 p-2 rounded-full">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500">Dalam Proses</p>
-                                        <p id="total-pending" class="text-xl font-bold text-slate-900">0</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-red-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-red-100 text-red-600 p-2 rounded-full">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500">Ditolak</p>
-                                        <p id="total-rejected" class="text-xl font-bold text-slate-900">0</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-blue-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-blue-100 text-blue-600 p-2 rounded-full">
-                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500">Dana Diluluskan</p>
-                                        <p id="total-amount" class="text-xl font-bold text-slate-900">RM 0.00</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="container mx-auto px-6 py-16">
+            <div class="lg:flex lg:space-x-12">
+                <div class="lg:w-2/3">
+                    <section id="tentang-kami" class="mb-16 fade-in">
+                        <h2 class="text-3xl font-bold mb-2 text-center gradient-text">Misi & Visi PIBG</h2>
+                        <p class="text-center text-slate-500 mb-12 max-w-2xl mx-auto">Kami komited untuk menjadi jambatan antara ibu bapa dan pihak sekolah bagi merealisasikan potensi penuh setiap pelajar.</p>
                         
-                        <div class="flex justify-between items-center mb-6 mt-8">
-                            <h2 class="text-2xl font-bold text-slate-800">Senarai Permohonan</h2>
-                            <a href="mohon.html" id="newApplicationBtnInAnalysis" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 shadow-sm flex items-center space-x-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                                <span>Mohon Peruntukan Baru</span>
-                            </a>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200">
-                             <div class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
-                                <div class="flex items-center space-x-4">
-                                    <div>
-                                        <label for="month-filter" class="text-sm font-medium text-slate-700">Bulan:</label>
-                                        <select id="month-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                            <option value="all">Semua</option>
-                                            <option value="0">Januari</option>
-                                            <option value="1">Februari</option>
-                                            <option value="2">Mac</option>
-                                            <option value="3">April</option>
-                                            <option value="4">Mei</option>
-                                            <option value="5">Jun</option>
-                                            <option value="6">Julai</option>
-                                            <option value="7">Ogos</option>
-                                            <option value="8">September</option>
-                                            <option value="9">Oktober</option>
-                                            <option value="10">November</option>
-                                            <option value="11">Disember</option>
-                                        </select>
-                                    </div>
-                                     <div>
-                                        <label for="year-filter" class="text-sm font-medium text-slate-700">Tahun:</label>
-                                        <select id="year-filter" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                            <option value="all">Semua</option>
-                                        </select>
-                                    </div>
+                        <div class="grid md:grid-cols-3 gap-8 text-center">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200 card-hover transition-all duration-300">
+                                <div class="flex justify-center items-center mb-4 bg-indigo-100 rounded-full h-16 w-16 mx-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
                                 </div>
-                                <div>
-                                    <label for="items-per-page" class="text-sm font-medium text-slate-700">Papar:</label>
-                                    <select id="items-per-page" class="mt-1 block pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                        <option>10</option>
-                                        <option>20</option>
-                                        <option>30</option>
-                                    </select>
-                                </div>
+                                <h3 class="text-xl font-bold mb-2">Kerjasama Erat</h3>
+                                <p class="text-slate-600">Membina hubungan kukuh antara ibu bapa dan guru untuk mewujudkan persekitaran pembelajaran yang positif.</p>
                             </div>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full w-full bg-white">
-                                    <thead class="bg-slate-100">
-                                        <tr>
-                                            <th class="py-4 px-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">No.</th>
-                                            <th class="py-4 px-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Pemohon & Tujuan</th>
-                                            <th class="py-4 px-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jumlah (RM)</th>
-                                            <th class="py-4 px-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                                            <th class="py-4 px-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Peratus Mengundi</th>
-                                            <th class="py-4 px-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status Undian</th>
-                                            <th class="py-4 px-6 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Tindakan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="analysis-table-body" class="divide-y divide-slate-100">
-                                        </tbody>
-                                </table>
+                            <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200 card-hover transition-all duration-300">
+                                <div class="flex justify-center items-center mb-4 bg-indigo-100 rounded-full h-16 w-16 mx-auto">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20M12 12L8 10l4-2 4 2-4 2z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Kecemerlangan Pelajar</h3>
+                                <p class="text-slate-600">Menyokong program akademik dan kokurikulum untuk memastikan setiap pelajar mencapai prestasi terbaik.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200 card-hover transition-all duration-300">
+                                <div class="flex justify-center items-center mb-4 bg-indigo-100 rounded-full h-16 w-16 mx-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Kebajikan & Sokongan</h3>
+                                <p class="text-slate-600">Menjaga kebajikan pelajar dan menyediakan bantuan serta sumber yang diperlukan untuk pembangunan mereka.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="jawatankuasa" class="mb-16 fade-in">
+                        <h2 class="text-3xl font-bold mb-8 text-center gradient-text">Ahli Jawatankuasa Exco PIBG SK Pulau Melayu 2024/2026</h2>
+                        
+                        <div class="bg-white p-8 rounded-lg shadow-lg border border-slate-200">
+                            <div class="text-center mb-10">
+                                <div class="inline-block bg-white p-5">
+                                    <h4 class="font-bold text-lg text-indigo-700">Penasihat</h4>
+                                    <p class="text-slate-800 font-semibold text-xl mt-1">Pn. Zuraidah Binti Ahmat</p>
+                                    <p class="text-sm text-slate-500">Guru Besar SK Pulau Melayu</p>
+                                </div>
                             </div>
                             
-                            <div class="flex justify-between items-center mt-4">
-                                <div>
-                                    <p class="text-sm text-slate-600">
-                                        Memaparkan <span id="page-info-start">0</span> ke <span id="page-info-end">0</span> daripada <span id="page-info-total">0</span> keputusan
-                                    </p>
+                            <div class="text-center mb-6">
+                                <div class="bg-slate-50 p-5 rounded-lg text-center border border-slate-200 inline-block">
+                                    <h4 class="font-bold text-md text-indigo-600">Yang Dipertua</h4>
+                                    <p class="text-slate-800 font-semibold text-lg mt-1">En. Muhd. Farhan Bin Sarkawi</p>
                                 </div>
-                                <div class="flex space-x-2">
-                                    <button id="prev-page-btn" class="px-3 py-1 bg-white border border-slate-300 text-sm font-medium rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
-                                    <button id="next-page-btn" class="px-3 py-1 bg-white border border-slate-300 text-sm font-medium rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Seterusnya</button>
+                            </div>
+
+                            <div class="text-center mb-10">
+                                <div class="bg-slate-50 p-5 rounded-lg text-center border border-slate-200 inline-block">
+                                    <h4 class="font-bold text-md text-indigo-600">Naib Yang Dipertua</h4>
+                                    <p class="text-slate-800 font-semibold text-lg mt-1">Pn. Hazniza Binti Abdul Rahman</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-center">
+                                    <h5 class="font-semibold text-slate-600">Setiausaha</h5>
+                                    <p class="text-slate-800">Pn. Jolly Labo</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-center">
+                                    <h5 class="font-semibold text-slate-600">Penolong Setiausaha</h5>
+                                    <p class="text-slate-800">Pn. Nor Izzati Binti Abdullah</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                 <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-center">
+                                    <h5 class="font-semibold text-slate-600">Bendahari</h5>
+                                    <p class="text-slate-800">En. Taib Anak Brown</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-center">
+                                    <h5 class="font-semibold text-slate-600">Penolong Bendahari</h5>
+                                    <p class="text-slate-800">Pn. Hellen Lihan</p>
+                                </div>
+                            </div>
+
+
+                            <div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Ahli-ahli Jawatankuasa</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Dayang Mawarhida Binti Abang Mansor</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Sharifah Muhaini Binti Wan Abidin</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Noraini Raut</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Mohd Aswadi Bin Wan Abidin</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Mohd Shafeyk Bin Ahmad</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Iskarnain Bin Dillah</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Suriya Binti Morni</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">Pn. Elizabeth Binti Lai</div>
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-medium">En. Desmond Jok Ipui</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
+
+                     <section id="hubungi-kami" class="fade-in bg-white p-8 rounded-lg shadow-lg border border-slate-200">
+                        <div class="text-center">
+                             <div class="flex justify-center items-center mb-4 bg-indigo-100 rounded-full h-16 w-16 mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-3xl font-bold mb-4 gradient-text">Hubungi Kami</h2>
+                            <p class="text-slate-600 text-lg mb-4">Untuk sebarang pertanyaan atau cadangan, sila hubungi kami melalui e-mel.</p>
+                            <a href="mailto:pibg.skpulau.melayu@gmail.com" class="text-indigo-600 font-semibold text-lg hover:underline">pibg.skpulau.melayu@gmail.com</a>
+                        </div>
+                    </section>
                 </div>
+
+                <aside class="lg:w-1/3 mt-12 lg:mt-0">
+                    <div class="sticky top-28 bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-3 mb-4">Akses Pantas</h3>
+                        <div class="space-y-3">
+                            <a href="program.html" class="w-full flex items-center space-x-3 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                                <span>Takwim & Program</span>
+                            </a>
+                            <a href="semak.html" class="w-full flex items-center space-x-3 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 shadow">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" /></svg>
+                                <span>Sistem Peruntukan & Analisis</span>
+                            </a>
+                             <a href="#" id="kewangan-link" class="w-full flex items-center space-x-3 px-4 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M8.433 7.418c.158-.103.346-.195.574-.277a6.99 6.99 0 01.573-.277c.228-.082.468-.152.717-.208a7.024 7.024 0 01.717-.208c.248-.055.508-.098.774-.129a7.14 7.14 0 01.774-.129c.266-.03.543-.049.828-.056a6.999 6.999 0 01.828-.056c.285.006.562.025.828.056.266.03.526.073.774.13.248.055.488.125.717.207a7.025 7.025 0 01.717.208c.228.082.416.174.574.277.158.103.296.22.413.348.117.128.214.264.29.408.076.144.13.29.162.443.032.152.043.305.033.458a4.992 4.992 0 01-.033.458c-.01.152-.064.299-.162.443a2.992 2.992 0 01-.29.408c-.117.128-.255.245-.413.348-.158.103-.346.195-.574.277a6.99 6.99 0 01-.573.277c-.228.082-.468-.152-.717.208a7.024 7.024 0 01-.717.208c-.248.055-.508.098-.774.129a7.14 7.14 0 01-.774.129c-.266.03-.543.049-.828-.056a6.999 6.999 0 01-.828-.056c-.285-.006-.562-.025-.828-.056s-.526-.073-.774-.13a7.14 7.14 0 01-.774-.129 7.024 7.024 0 01-.717-.208c-.228-.082-.416-.174-.574-.277a2.84 2.84 0 01-.413-.348c-.117-.128-.214-.264-.29-.408a2.929 2.929 0 01-.162-.443c-.032-.152-.043-.305-.033-.458a4.992 4.992 0 01.033-.458c.01-.152.064-.299.162-.443.076-.144.173-.28.29-.408.117-.128.255-.245.413-.348z" />
+                                  <path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM3 10a7 7 0 1114 0 7 7 0 01-14 0z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Penyata Kewangan</span>
+                            </a>
+                            <a href="#" id="openExcoModalBtn" class="w-full flex items-center space-x-3 px-4 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4a1 1 0 00-1 1v1a1 1 0 002 0V5a1 1 0 00-1-1zm12 0a1 1 0 00-1 1v1a1 1 0 002 0V5a1 1 0 00-1-1zM2 10a1 1 0 001 1h1a1 1 0 100-2H3a1 1 0 00-1 1zm14 0a1 1 0 001 1h1a1 1 0 100-2h-1a1 1 0 00-1 1zM4 16a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm12 0a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1z" /><path fill-rule="evenodd" d="M10 5a5 5 0 100 10 5 5 0 000-10zm0 8a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
+                                <span>Daftar Exco PIBG</span>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </div>
     </main>
 
-    <div id="keputusan-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0" id="modal-panel">
-            <div class="p-4 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
-                <h3 class="text-lg font-bold text-slate-800">Notis Keputusan Permohonan Dana PIBG</h3>
-                <button id="close-modal-btn" class="text-slate-500 hover:text-slate-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
+    <div id="excoListModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Senarai Exco PIBG Berdaftar</h3>
+                <button id="closeExcoListModal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
             </div>
-            <div id="modal-content" class="p-6 md:p-8 max-h-[70vh] overflow-y-auto"></div>
-        </div>
-    </div>
-
-    <div id="share-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0" id="share-modal-panel">
-            <div class="p-4 border-b flex justify-between items-center">
-                <h3 class="text-lg font-bold text-slate-800">Kongsi Pautan Undian</h3>
-                <button id="close-share-modal-btn" class="text-slate-400 hover:text-slate-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-            <div class="p-6 space-y-4">
-                <p class="text-sm text-slate-600">Salin dan kongsi mesej di bawah untuk menjemput ahli lain mengundi.</p>
-                <textarea id="share-text-area" readonly class="w-full h-56 p-3 border rounded-md bg-slate-50 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none whitespace-pre-wrap"></textarea>
-                <button id="copy-share-text-btn" class="w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Salin Mesej</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="non-voters-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="non-voters-modal-panel">
-            <div class="p-4 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
-                <h3 class="text-lg font-bold text-slate-800">Senarai EXCO Belum Mengundi</h3>
-                <button id="close-non-voters-modal-btn" class="text-slate-500 hover:text-slate-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-            <div id="non-voters-list" class="p-6 max-h-[60vh] overflow-y-auto">
+            <div class="overflow-y-auto p-6 md:p-8">
+                <div class="flex justify-end mb-6">
+                    <button id="goToRegisterBtn" class="flex items-center space-x-2 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Daftar Nama</span>
+                    </button>
                 </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Bil.</th>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nama</th>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Jawatan PIBG</th>
+                                <th class="py-3 px-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Sesi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="excoListBody" class="divide-y divide-slate-200">
+                             <tr>
+                                <td colspan="4" class="text-center py-10">
+                                    <div class="flex justify-center items-center text-slate-500">
+                                        <span>Memuatkan data...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+
+    <div id="registrationModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black bg-opacity-60 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-6 border-b flex-shrink-0 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Pendaftaran Exco PIBG</h3>
+                <button id="closeRegistrationModal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
+            </div>
+            <div class="overflow-y-auto p-6 md:p-8">
+                 <div id="registration-feedback-message" class="hidden text-center p-4 mb-6 rounded-lg"></div>
+                <form id="registrationForm" class="space-y-6">
+                    <div>
+                        <p class="text-sm text-red-600 mb-4">* Semua bahagian bertanda adalah wajib diisi.</p>
+                        <label for="reg-nama" class="block text-sm font-medium text-slate-700 mb-1">Nama Penuh <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-nama" name="reg-nama" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label for="reg-ic" class="block text-sm font-medium text-slate-700 mb-1">No. Kad Pengenalan <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-ic" name="reg-ic" placeholder="cth: 801010-01-xxxx" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label for="reg-pekerjaan" class="block text-sm font-medium text-slate-700 mb-1">Pekerjaan <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-pekerjaan" name="reg-pekerjaan" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                           <label for="reg-jawatan" class="block text-sm font-medium text-slate-700 mb-1">Jawatan (dalam PIBG) <span class="text-red-600">*</span></label>
+                           <select id="reg-jawatan" name="reg-jawatan" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                               <option value="">-- Sila Pilih --</option>
+                               <option value="YDP">Yang Dipertua (YDP)</option>
+                               <option value="NYDP">Naib Yang Dipertua (NYDP)</option>
+                               <option value="Setiausaha">Setiausaha</option>
+                               <option value="Penolong Setiausaha">Penolong Setiausaha</option>
+                               <option value="Bendahari">Bendahari</option>
+                               <option value="Penolong Bendahari">Penolong Bendahari</option>
+                               <option value="AJK Ibu Bapa">AJK Ibu Bapa</option>
+                               <option value="AJK Guru">AJK Guru</option>
+                           </select>
+                       </div>
+                        <div>
+                            <label for="reg-telefon" class="block text-sm font-medium text-slate-700 mb-1">No. Telefon <span class="text-red-600">*</span></label>
+                            <input type="tel" id="reg-telefon" name="reg-telefon" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                        </div>
+                    </div>
+                     <div>
+                        <label for="reg-sesi" class="block text-sm font-medium text-slate-700 mb-1">Sesi <span class="text-red-600">*</span></label>
+                        <input type="text" id="reg-sesi" name="reg-sesi" value="2024-2026" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-100" required>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h4 class="font-medium text-slate-800 mb-4">Maklumat Anak (Tidak Wajib)</h4>
+                        <div id="children-container" class="space-y-4">
+                            <div class="child-entry grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Anak</label>
+                                    <input type="text" name="reg-nama-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
+                                    <input type="text" name="reg-kelas-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="addChildBtn" class="mt-4 text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Tambah Anak</button>
+                    </div>
+
+                     <div class="p-6 -mx-8 -mb-8 mt-8 border-t flex-shrink-0 flex justify-end items-center space-x-4 bg-slate-50 rounded-b-xl">
+                        <button type="button" id="cancelRegistrationBtn" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300">Batal</button>
+                        <button type="submit" class="px-6 py-2 bg-slate-700 text-white font-semibold rounded-md hover:bg-slate-800 shadow-sm">Daftar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-slate-800 text-slate-300 mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+                <div class="flex items-center space-x-4">
+                    <img src="https://i.imgur.com/VfEOv80.png" alt="Logo PIBG SK Pulau Melayu" class="h-10 w-10 rounded-full">
+                    <div>
+                        <p class="font-bold text-white text-lg">PIBG SK Pulau Melayu</p>
+                        <p class="text-sm text-slate-400">Membina Masa Depan Bersama</p>
+                    </div>
+                </div>
+                <div class="flex space-x-6 font-medium">
+                    <a href="#utama" class="hover:text-indigo-400 transition-colors">Utama</a>
+                    <a href="#tentang-kami" class="hover:text-indigo-400 transition-colors">Tentang Kami</a>
+                    <a href="#hubungi-kami" class="hover:text-indigo-400 transition-colors">Hubungi Kami</a>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-700 text-center text-slate-400 text-sm">
+                <p>&copy; 2025 Persatuan Ibu Bapa & Guru (PIBG) SK Pulau Melayu. Hak Cipta Terpelihara.</p>
+            </div>
+        </div>
+    </footer>
 
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white py-3 px-5 rounded-lg shadow-lg opacity-0 transform translate-y-10 transition-all duration-300">
         <p id="toast-message">This is a toast message!</p>
     </div>
 
-    <footer class="bg-gray-800 text-gray-300">
-        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center text-xs font-medium">
-            <p class="mb-2 sm:mb-0">© 2025 PIBG SK PULAU MELAYU. HAK CIPTA TERPELIHARA.</p>
-            <p>DIREKA OLEH KOMUNITI SK PULAU MELAYU</p>
-        </div>
-    </footer>
-
     <script type="module">
+        // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, addDoc, collection, query, where, getDocs, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -268,442 +402,256 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const applicationsCol = collection(db, `/artifacts/${appId}/public/data/applications`);
-        const excoMembersColPath = `/artifacts/${appId}/public/data/exco_members`;
+        const excoMembersCol = collection(db, `/artifacts/${appId}/public/data/exco_members`);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- State Variables ---
-            let allApps = [];
-            let filteredApps = [];
-            let currentPage = 1;
-            let countdownInterval = null;
-            let excoMembersList = []; // Senarai Exco akan diisi dari DB
+        // --- UI Elements ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const registrationModal = document.getElementById('registrationModal');
+        const closeRegistrationModalBtn = document.getElementById('closeRegistrationModal');
+        const cancelRegistrationBtn = document.getElementById('cancelRegistrationBtn');
+        const registrationForm = document.getElementById('registrationForm');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const kewanganLink = document.getElementById('kewangan-link');
+        
+        // Exco List Modal Elements
+        const excoListModal = document.getElementById('excoListModal');
+        const openExcoModalBtn = document.getElementById('openExcoModalBtn');
+        const closeExcoListModalBtn = document.getElementById('closeExcoListModal');
+        const goToRegisterBtn = document.getElementById('goToRegisterBtn');
+        const excoListBody = document.getElementById('excoListBody');
 
-            // --- UI Elements ---
-            const monthFilter = document.getElementById('month-filter');
-            const yearFilter = document.getElementById('year-filter');
-            const itemsPerPageSelect = document.getElementById('items-per-page');
-            const analysisTableBody = document.getElementById('analysis-table-body');
-            const prevPageBtn = document.getElementById('prev-page-btn');
-            const nextPageBtn = document.getElementById('next-page-btn');
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            
-            // --- Modal UI Elements ---
-            const keputusanModal = document.getElementById('keputusan-modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const modalPanel = document.getElementById('modal-panel');
-            const modalContent = document.getElementById('modal-content');
-            const shareModal = document.getElementById('share-modal');
-            const shareModalPanel = document.getElementById('share-modal-panel');
-            const closeShareModalBtn = document.getElementById('close-share-modal-btn');
-            const copyShareTextBtn = document.getElementById('copy-share-text-btn');
-            const nonVotersModal = document.getElementById('non-voters-modal');
-            const nonVotersModalPanel = document.getElementById('non-voters-modal-panel');
-            const closeNonVotersModalBtn = document.getElementById('close-non-voters-modal-btn');
-            const nonVotersList = document.getElementById('non-voters-list');
-
-            // --- General Functions ---
-            const showToast = (message, type = 'success') => {
-                toastMessage.textContent = message;
-                toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
-                toast.classList.remove('opacity-0', 'translate-y-10');
-                setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
-            };
-            
-            // --- Data Fetching and Processing ---
-            const fetchExcoMembers = async () => {
-                try {
-                    const snapshot = await getDocs(collection(db, excoMembersColPath));
-                    if (snapshot.empty) {
-                        console.warn("Tiada ahli Exco dijumpai dalam pangkalan data.");
-                        excoMembersList = [];
-                    } else {
-                        excoMembersList = snapshot.docs.map(doc => doc.data().name);
-                    }
-                } catch (error) {
-                    console.error("Gagal memuat turun senarai Exco:", error);
-                    showToast('Gagal memuat turun senarai Exco.', 'error');
+        // Authenticate user and set up listeners
+        (async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
                 }
-            };
+                console.log("Firebase authentication successful.");
+                listenForExcoMembers(); // Start listening for exco members
+            } catch (error) {
+                console.error("Firebase authentication failed:", error);
+                showToast("Gagal menyambung ke pangkalan data.", 'error');
+            }
+        })();
 
-            const fetchApplications = () => {
-                 analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10">Memuatkan data permohonan...</td></tr>`;
-                onSnapshot(query(applicationsCol, orderBy("createdAt", "desc")), (snapshot) => {
-                    allApps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    populateYearFilter();
-                    applyFiltersAndRender();
-                });
-            };
+        // --- General Functions ---
+        const showToast = (message, type = 'success') => {
+            toastMessage.textContent = message;
+            toast.className = toast.className.replace(/bg-\w+-\d+/, type === 'error' ? 'bg-red-600' : 'bg-slate-900');
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+            }, 3000);
+        };
+
+        const closeModal = (modalElement) => {
+            modalElement.classList.replace('flex', 'hidden');
+            const isAnyModalOpen = document.querySelector('.fixed.inset-0.flex');
+            if (!isAnyModalOpen) {
+                 document.body.style.overflow = 'auto';
+            }
+        };
+
+        const openModal = (modalElement) => {
+            modalElement.classList.replace('hidden', 'flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        // --- Mobile Menu ---
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // --- Password Prompt for Kewangan Link ---
+        kewanganLink.addEventListener('click', (event) => {
+            event.preventDefault(); // Stop the link from navigating immediately
+            const password = prompt("Sila masukkan kata laluan untuk mengakses Penyata Kewangan:");
             
-            const calculateStats = () => {
-                document.getElementById('total-apps').textContent = allApps.length;
-                const approvedApps = allApps.filter(app => app.status === 'Diluluskan');
-                const pendingApps = allApps.filter(app => app.status === 'Dalam Proses');
-                const rejectedApps = allApps.filter(app => app.status === 'Ditolak');
-                document.getElementById('total-approved').textContent = approvedApps.length;
-                document.getElementById('total-pending').textContent = pendingApps.length;
-                document.getElementById('total-rejected').textContent = rejectedApps.length;
-                const totalAmount = approvedApps.reduce((sum, app) => sum + parseFloat(app.amount), 0);
-                document.getElementById('total-amount').textContent = `RM ${totalAmount.toFixed(2)}`;
-            };
+            if (password === "pibgskpm") {
+                window.location.href = "kewangan.html";
+            } else if (password !== null) { // User entered something but it was wrong
+                alert("Kata laluan salah. Sila cuba lagi.");
+            }
+            // If user clicks "Cancel", password will be null and nothing happens.
+        });
 
-            const populateYearFilter = () => {
-                const years = [...new Set(allApps.map(app => app.createdAt?.toDate().getFullYear()).filter(y => y))];
-                while(yearFilter.options.length > 1) { yearFilter.remove(1); }
-                years.sort((a,b) => b-a).forEach(year => {
-                    const option = document.createElement('option');
-                    option.value = year;
-                    option.textContent = year;
-                    yearFilter.appendChild(option);
-                });
-            };
 
-            const applyFiltersAndRender = () => {
-                const selectedMonth = monthFilter.value;
-                const selectedYear = yearFilter.value;
-                filteredApps = allApps.filter(app => {
-                    const appDate = app.createdAt ? new Date(app.createdAt.seconds * 1000) : null;
-                    if (!appDate) return false;
-                    const monthMatch = selectedMonth === 'all' || appDate.getMonth() == selectedMonth;
-                    const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
-                    return monthMatch && yearMatch;
-                });
-                currentPage = 1;
-                renderTable();
-                calculateStats(); 
-            };
-            
-            const renderStatusDisplay = (status) => {
-                let icon = '';
-                let colors = '';
-                switch (status) {
-                    case 'Diluluskan':
-                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
-                        colors = 'bg-green-100 text-green-800';
-                        break;
-                    case 'Ditolak':
-                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>`;
-                        colors = 'bg-red-100 text-red-800';
-                        break;
-                    default: // Dalam Proses
-                        icon = `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>`;
-                        colors = 'bg-yellow-100 text-yellow-800';
-                        break;
-                }
-                return `<span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${colors}">${icon} ${status}</span>`;
-            };
-
-            const updateCountdownTimers = () => {
-                const timers = document.querySelectorAll('.countdown-timer');
-                timers.forEach(timer => {
-                    const createdAt = parseInt(timer.dataset.createdat, 10);
-                    if (isNaN(createdAt)) return;
-                    const now = Math.floor(new Date().getTime() / 1000);
-                    const endTime = createdAt + (48 * 60 * 60);
-                    const remainingSeconds = endTime - now;
-                    if (remainingSeconds > 0) {
-                        const hours = Math.floor(remainingSeconds / 3600);
-                        const minutes = Math.floor((remainingSeconds % 3600) / 60);
-                        timer.innerHTML = `Tamat dalam: <strong>${hours}j ${minutes}m</strong>`;
-                    } else {
-                        timer.innerHTML = `<span class="text-slate-500 font-normal">Tempoh Undian Tamat</span>`;
-                        timer.classList.remove('countdown-timer', 'text-red-500'); 
-                    }
-                });
-            };
-
-            const renderTable = () => {
-                analysisTableBody.innerHTML = '';
-                if (filteredApps.length === 0) {
-                    analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-500">Tiada permohonan dijumpai.</td></tr>`;
-                    updatePaginationControls();
+        // --- Exco List Modal Logic ---
+        const listenForExcoMembers = () => {
+            onSnapshot(excoMembersCol, (snapshot) => {
+                excoListBody.innerHTML = ''; // Clear previous data
+                if (snapshot.empty) {
+                    excoListBody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-500">Tiada Exco yang berdaftar buat masa ini.</td></tr>`;
                     return;
                 }
-                const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
-                const startIndex = (currentPage - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
-                const pageItems = filteredApps.slice(startIndex, endIndex);
 
-                pageItems.forEach((app, index) => {
-                    const totalMembers = excoMembersList.length > 0 ? excoMembersList.length : 15;
-                    const approvalThreshold = 10;
-                    const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
-                    const approvalVotes = votes.filter(v => v.vote === 'approve').length;
-                    const totalVotes = votes.length;
-                    const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
-                    const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
-                    
-                    let finalStatus = 'Dalam Proses'; 
-                    let showKeputusanBtn = false;
-                    if (approvalVotes >= approvalThreshold) {
-                        finalStatus = 'Diluluskan';
-                        showKeputusanBtn = true;
-                    } else if (votingPeriodEnded) {
-                        finalStatus = 'Ditolak';
-                        showKeputusanBtn = true; 
-                    }
-                    
-                    const votingPercentage = totalMembers > 0 ? Math.round((totalVotes / totalMembers) * 100) : 0;
-                    const appIndexInAll = allApps.findIndex(a => a.id === app.id);
-                    const applicationNumber = allApps.length - appIndexInAll;
-                    const row = document.createElement('tr');
-                    row.className = "hover:bg-slate-50 transition-colors duration-150";
-
-                    row.innerHTML = `
-                        <td class="py-4 px-6 text-sm text-slate-500">${startIndex + index + 1}</td>
-                        <td class="py-4 px-6">
-                            <div>
-                                <p class="text-base font-bold text-slate-800">${app.purpose}</p>
-                                <p class="text-xs text-slate-600 font-medium uppercase mt-1">PEMOHON: ${app.applicant}</p>
-                                <div class="flex items-center space-x-1.5 text-xs text-slate-500 uppercase mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                                    </svg>
-                                    <span>${new Date(app.createdAt.seconds * 1000).toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-4 px-6 text-base font-semibold text-slate-800">${parseFloat(app.amount).toFixed(2)}</td>
-                        <td class="py-4 px-6 text-sm text-slate-500">
-                            <div class="flex flex-col items-start space-y-1">
-                                ${renderStatusDisplay(finalStatus)}
-                                ${finalStatus === 'Dalam Proses' ? `<div class="countdown-timer text-red-500 font-normal text-xs" data-createdat="${app.createdAt?.seconds || 0}"></div>` : ''}
-                                ${showKeputusanBtn && finalStatus === 'Diluluskan' ? `<button data-id="${app.id}" class="keputusan-btn px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-200">Lihat Keputusan</button>` : ''}
-                            </div>
-                        </td>
-                         <td class="py-4 px-6 text-sm text-slate-500">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-full bg-slate-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: ${votingPercentage}%"></div>
-                                </div>
-                                <span class="font-medium text-slate-700 text-sm w-12 text-right">${totalVotes}/${totalMembers}</span>
-                            </div>
-                        </td>
-                        ${(() => {
-                            const voters = votes.map(v => v.name);
-                            const nonVoters = excoMembersList.filter(member => !voters.includes(member));
-                            const nonVotersCount = nonVoters.length;
-                            const nonVotersData = JSON.stringify(nonVoters);
-
-                            if (finalStatus !== 'Dalam Proses' || nonVotersCount === 0) {
-                                return `
-                                    <td class="py-4 px-6 text-sm text-slate-500">
-                                        <div class="flex items-center text-green-600 font-semibold">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                            <span>Selesai</span>
-                                        </div>
-                                    </td>
-                                `;
-                            }
-
-                            return `
-                                <td class="py-4 px-6 text-sm text-slate-500">
-                                    <button data-non-voters='${nonVotersData}' class="view-non-voters-btn flex items-center justify-between w-full px-2 py-1 bg-yellow-100 text-yellow-800 font-semibold rounded-md hover:bg-yellow-200">
-                                        <span>${nonVotersCount} blm undi</span>
-                                        <span class="font-bold">Lihat</span>
-                                    </button>
-                                </td>
-                            `;
-                        })()}
-                        <td class="py-4 px-6 text-sm text-slate-500">
-                            <div class="flex items-center justify-center space-x-2">
-                                <a href="undi.html?id=${app.id}" title="Undi Permohonan" class="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                                    <span>Undi</span>
-                                </a>
-                                <button data-id="${app.id}" data-purpose="${app.purpose}" data-amount="${app.amount}" data-app-number="${applicationNumber}" title="Kongsi" class="share-btn text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" /></svg>
-                                </button>
-                                <button data-id="${app.id}" title="Padam" class="delete-btn text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    analysisTableBody.appendChild(row);
-                });
-                if (countdownInterval) clearInterval(countdownInterval);
-                countdownInterval = setInterval(updateCountdownTimers, 60000); // Check every minute
-                updateCountdownTimers();
-                updatePaginationControls();
-            };
-            
-            // --- Modal Management ---
-            const populateAndOpenModal = (app) => {
-                const decisionDate = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
-                const contentHtml = `
-                    <div class="text-sm text-slate-700 space-y-4 leading-relaxed">
-                        <p>Assalamualaikum dan salam sejahtera,</p>
-                        <p>
-                            Merujuk kepada keputusan yang telah dibuat melalui undian 2/3 ahli Exco PIBG pada <strong>${decisionDate}</strong> berhubung 
-                            <strong>Permohonan ${app.id.substring(0, 5).toUpperCase()} : ${app.purpose.toUpperCase()}</strong>, dengan ini dimaklumkan bahawa Exco PIBG telah 
-                            bersetuju untuk <strong>MELULUSKAN</strong> pengeluaran dana berjumlah 
-                            <strong class="text-green-700">RM ${parseFloat(app.amount).toFixed(2)}</strong>.
-                        </p>
-                        <p class="font-semibold text-slate-800">Sehubungan itu, berikut adalah tindakan yang perlu diambil oleh pihak berkaitan:</p>
-                        <div class="space-y-4">
-                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                <h4 class="font-bold text-slate-800">1. Bendahari</h4>
-                                <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600">
-                                    <li>Menguruskan pengeluaran dana sebanyak <strong class="font-semibold">RM ${parseFloat(app.amount).toFixed(2)}</strong> daripada bank Islam PIBG dalam tempoh 14 hari dari tarikh keputusan ini.</li>
-                                    <li>Memastikan semua dokumen sokongan berkaitan pengeluaran, termasuk resit rasmi, disimpan dengan teliti untuk tujuan rekod dan rujukan pada masa hadapan.</li>
-                                </ul>
-                            </div>
-                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                <h4 class="font-bold text-slate-800">2. Pemohon (${app.applicant})</h4>
-                                <ul class="list-disc list-inside mt-2 space-y-1 text-slate-600">
-                                    <li>Berhubung dengan bendahari bagi urusan penerimaan dana.</li>
-                                    <li>Setelah menerima dana, sila:
-                                        <ul class="list-[circle] list-inside ml-4 mt-1">
-                                            <li>Menandatangani Akuan Penerimaan Dana sebagai bukti rasmi penerimaan.</li>
-                                            <li>Menyerahkan resit perbelanjaan kepada bendahari dan timbalan bendahari selepas pembelanjaan selesai.</li>
-                                            <li>Menyediakan laporan aktiviti dan menyerahkannya kepada setiausaha PIBG untuk tujuan dokumentasi rasmi.</li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg">
-                            <h5 class="font-bold">Peringatan Penting</h5>
-                            <p class="mt-1">Semua pihak yang terlibat dimohon untuk melaksanakan tanggungjawab masing-masing dengan telus dan teratur bagi memastikan kelancaran proses ini. Kerjasama dan perhatian semua pihak amat dihargai.</p>
-                        </div>
-                        <p class="pt-4">Sekian, terima kasih.</p>
-                    </div>
-                `;
-                modalContent.innerHTML = contentHtml;
-                openModal(keputusanModal, modalPanel);
-            };
-
-            const updatePaginationControls = () => {
-                const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
-                const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
-                prevPageBtn.disabled = currentPage === 1;
-                nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
-                const start = filteredApps.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
-                const end = Math.min(currentPage * itemsPerPage, filteredApps.length);
-                document.getElementById('page-info-start').textContent = start;
-                document.getElementById('page-info-end').textContent = end;
-                document.getElementById('page-info-total').textContent = filteredApps.length;
-            };
-
-            const openModal = (modal, panel) => {
-                modal.classList.remove('hidden');
-                setTimeout(() => { 
-                    modal.classList.remove('opacity-0');
-                    panel.classList.remove('scale-95', 'opacity-0');
-                }, 10);
-            };
-            const closeModal = (modal, panel) => {
-                modal.classList.add('opacity-0');
-                panel.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => { modal.classList.add('hidden'); }, 300);
-            };
-
-            // --- Button Actions ---
-            const shareApplication = async (id, purpose, amount, appNumber) => {
-                const shareTextArea = document.getElementById('share-text-area');
-                shareTextArea.value = 'Menjana pautan pendek...';
-                openModal(shareModal, shareModalPanel);
-                const pageUrl = window.location.href.split('?')[0];
-                const votePage = pageUrl.includes('semak.html') ? pageUrl.replace('semak.html', 'undi.html') : `${pageUrl.replace(/\/$/, '')}/undi.html`;
-                const longUrl = `${votePage}?id=${id}`;
-                let shortUrl = longUrl; 
-                try {
-                    const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-                    if (response.ok) shortUrl = await response.text();
-                } catch (error) { console.error('TinyURL API error:', error); }
-                shareTextArea.value = `Assalamualaikum & Salam Sejahtera,\n\n🗳️ *PERLUKAN UNDIAN SEGERA* 🗳️\n\nMohon jasa baik ahli Exco untuk membuat undian bagi permohonan berikut:\n\n*Permohonan #${appNumber}:*\n*${purpose.toUpperCase()}*\n\n💰 *Jumlah Dipohon:*\n*RM ${parseFloat(amount).toFixed(2)}*\n\nSila buat undian anda di pautan berikut:\n🔗 ${shortUrl}\n\n⏰ *Peringatan:* Tempoh undian akan ditutup dalam masa 48 jam dari tarikh permohonan dibuat.\n\nKerjasama anda amat dihargai. Terima kasih.`;
-            };
-            
-            const deleteApplication = async (id) => {
-                if (!confirm('Anda pasti ingin memadam permohonan ini? Tindakan ini tidak boleh diubah.')) return;
-                try {
-                    await deleteDoc(doc(db, applicationsCol.path, id));
-                    showToast('Permohonan berjaya dipadam.');
-                } catch (error) {
-                    console.error("Error deleting document:", error);
-                    showToast('Gagal memadam permohonan.', 'error');
-                }
-            };
-
-            // --- Authentication & Initial Load ---
-            (async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-                    else await signInAnonymously(auth);
-
-                    await fetchExcoMembers();
-                    fetchApplications();
-
-                } catch (error) {
-                    console.error("Gagal menyambung ke pangkalan data atau memuatkan data awal:", error);
-                    analysisTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-red-600">Gagal menyambung ke pangkalan data.</td></tr>`;
-                }
-            })();
-
-            // --- Event Listeners ---
-            monthFilter.addEventListener('change', applyFiltersAndRender); 
-            yearFilter.addEventListener('change', applyFiltersAndRender);
-            itemsPerPageSelect.addEventListener('change', () => { currentPage = 1; renderTable(); });
-            prevPageBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); } });
-            nextPageBtn.addEventListener('click', () => {
-                const itemsPerPage = parseInt(itemsPerPageSelect.value, 10);
-                const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
-                if(currentPage < totalPages){ currentPage++; renderTable(); }
-            });
-
-            // Modal Event Listeners
-            closeModalBtn.addEventListener('click', () => closeModal(keputusanModal, modalPanel));
-            keputusanModal.addEventListener('click', (e) => { if(e.target === keputusanModal) closeModal(keputusanModal, modalPanel); });
-            closeShareModalBtn.addEventListener('click', () => closeModal(shareModal, shareModalPanel));
-            shareModal.addEventListener('click', (e) => { if(e.target === shareModal) closeModal(shareModal, shareModalPanel); });
-            closeNonVotersModalBtn.addEventListener('click', () => closeModal(nonVotersModal, nonVotersModalPanel));
-            nonVotersModal.addEventListener('click', (e) => { if(e.target === nonVotersModal) closeModal(nonVotersModal, nonVotersModalPanel); });
-            
-            copyShareTextBtn.addEventListener('click', () => {
-                const shareTextArea = document.getElementById('share-text-area');
-                shareTextArea.select(); navigator.clipboard.writeText(shareTextArea.value);
-                showToast('Mesej berjaya disalin!'); copyShareTextBtn.textContent = 'Disalin!';
-                setTimeout(() => { copyShareTextBtn.textContent = 'Salin Mesej'; }, 2000);
-            });
-
-            analysisTableBody.addEventListener('click', (e) => {
-                const targetBtn = e.target.closest('button, a'); if (!targetBtn) return;
+                const members = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                if (targetBtn.matches('.keputusan-btn')) {
-                    const appId = targetBtn.dataset.id;
-                    const appData = filteredApps.find(app => app.id === appId);
-                    if (appData) populateAndOpenModal(appData);
-                } else if (targetBtn.matches('.share-btn')) {
-                    shareApplication(targetBtn.dataset.id, targetBtn.dataset.purpose, targetBtn.dataset.amount, targetBtn.dataset.appNumber);
-                } else if (targetBtn.matches('.delete-btn')) {
-                    deleteApplication(targetBtn.dataset.id);
-                } else if (targetBtn.matches('.view-non-voters-btn')) {
-                    const nonVoters = JSON.parse(targetBtn.dataset.nonVoters);
-                    nonVotersList.innerHTML = ''; // Kosongkan senarai lama
-                    
-                    if(nonVoters.length > 0) {
-                        const listElement = document.createElement('ul');
-                        listElement.className = 'space-y-3';
-                        nonVoters.forEach(name => {
-                            const item = document.createElement('li');
-                            item.className = 'flex items-center text-sm text-slate-700';
-                            item.innerHTML = `
-                                <span class="flex items-center justify-center h-6 w-6 rounded-full bg-slate-200 text-slate-600 text-xs font-semibold mr-3">
-                                    ${name.charAt(0)}
-                                </span>
-                                ${name}
-                            `;
-                            listElement.appendChild(item);
-                        });
-                        nonVotersList.appendChild(listElement);
-                    } else {
-                        nonVotersList.innerHTML = '<p class="text-slate-500">Semua ahli telah mengundi.</p>';
-                    }
-                    openModal(nonVotersModal, nonVotersModalPanel);
+                // Define the hierarchy for sorting
+                const positionOrder = [
+                    'YDP',
+                    'NYDP',
+                    'Setiausaha',
+                    'Penolong Setiausaha',
+                    'Bendahari',
+                    'Penolong Bendahari',
+                    'AJK Guru',
+                    'AJK Ibu Bapa'
+                ];
+
+                // Sort members based on the position hierarchy
+                members.sort((a, b) => {
+                    const posA = positionOrder.indexOf(a.pibgPosition);
+                    const posB = positionOrder.indexOf(b.pibgPosition);
+                    // If a position is not in the list, push it to the end
+                    if (posA === -1) return 1;
+                    if (posB === -1) return -1;
+                    return posA - posB;
+                });
+
+                members.forEach((member, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50';
+                    row.innerHTML = `
+                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${index + 1}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-sm font-medium text-slate-900">${member.name.toUpperCase()}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${member.pibgPosition}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-sm text-slate-500">${member.session}</td>
+                    `;
+                    excoListBody.appendChild(row);
+                });
+            });
+        };
+
+        openExcoModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(excoListModal);
+        });
+
+        closeExcoListModalBtn.addEventListener('click', () => closeModal(excoListModal));
+        excoListModal.addEventListener('click', (event) => { if (event.target === excoListModal) closeModal(excoListModal); });
+        
+        goToRegisterBtn.addEventListener('click', () => {
+            openModal(registrationModal); // Open registration form on top
+        });
+
+
+        // --- Modal: Exco Registration ---
+        const childrenContainer = document.getElementById('children-container');
+        const addChildBtn = document.getElementById('addChildBtn');
+        let childCount = 1;
+
+        // Reset form when opening
+        const resetRegistrationForm = () => {
+             registrationForm.reset();
+            childrenContainer.innerHTML = `
+                <div class="child-entry grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Anak</label>
+                        <input type="text" name="reg-nama-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
+                        <input type="text" name="reg-kelas-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                    </div>
+                </div>`;
+            childCount = 1;
+            document.getElementById('registration-feedback-message').classList.add('hidden');
+        }
+
+        // Call reset when the 'Daftar Nama' button is clicked.
+        goToRegisterBtn.addEventListener('click', () => {
+            resetRegistrationForm();
+            openModal(registrationModal);
+        });
+        
+        addChildBtn.addEventListener('click', () => {
+            childCount++;
+            const newChildEntry = document.createElement('div');
+            newChildEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-2 gap-4 relative pt-2';
+            newChildEntry.innerHTML = `
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Anak ${childCount}</label>
+                    <input type="text" name="reg-nama-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                </div>
+                <div class="flex items-end">
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
+                        <input type="text" name="reg-kelas-anak[]" class="w-full px-3 py-2 border border-slate-300 rounded-md">
+                    </div>
+                    <button type="button" class="remove-child-btn ml-2 mb-1 p-2 text-red-500 hover:text-red-700 text-2xl font-bold" title="Padam Anak">&times;</button>
+                </div>`;
+            childrenContainer.appendChild(newChildEntry);
+            newChildEntry.querySelector('.remove-child-btn').addEventListener('click', (e) => e.target.closest('.child-entry').remove());
+        });
+
+        closeRegistrationModalBtn.addEventListener('click', () => closeModal(registrationModal));
+        cancelRegistrationBtn.addEventListener('click', () => closeModal(registrationModal));
+        registrationModal.addEventListener('click', (event) => { if (event.target === registrationModal) closeModal(registrationModal); });
+
+        registrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedbackEl = document.getElementById('registration-feedback-message');
+            
+            try {
+                const ic = document.getElementById('reg-ic').value.trim();
+                const q = query(excoMembersCol, where("ic", "==", ic));
+                const existing = await getDocs(q);
+                if (!existing.empty) {
+                    throw new Error("No. KP ini telah didaftarkan.");
+                }
+
+                const childrenNames = Array.from(document.querySelectorAll('input[name="reg-nama-anak[]"]')).map(input => input.value);
+                const childrenClasses = Array.from(document.querySelectorAll('input[name="reg-kelas-anak[]"]')).map(input => input.value);
+                const children = childrenNames.map((name, index) => ({ name: name, class: childrenClasses[index] }))
+                                            .filter(child => child.name.trim() !== '' && child.class.trim() !== '');
+
+
+                const newExco = {
+                    name: document.getElementById('reg-nama').value,
+                    ic: ic,
+                    occupation: document.getElementById('reg-pekerjaan').value,
+                    pibgPosition: document.getElementById('reg-jawatan').value,
+                    phone: document.getElementById('reg-telefon').value,
+                    session: document.getElementById('reg-sesi').value,
+                    children: children,
+                    registeredAt: serverTimestamp()
+                };
+
+                await addDoc(excoMembersCol, newExco);
+                
+                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-green-100 text-green-800';
+                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Pendaftaran Berjaya!</h3><p>Terima kasih. Maklumat anda telah disimpan.</p>`;
+                feedbackEl.classList.remove('hidden');
+
+                setTimeout(() => {
+                    closeModal(registrationModal);
+                    closeModal(excoListModal);
+                }, 3000);
+            } catch (error) {
+                feedbackEl.className = 'text-center p-4 mb-6 rounded-lg bg-red-100 text-red-800';
+                feedbackEl.innerHTML = `<h3 class="font-bold text-lg">Pendaftaran Gagal</h3><p>${error.message}</p>`;
+                feedbackEl.classList.remove('hidden');
+            }
+        });
+
+        // --- Active Nav Link on Scroll ---
+        const sections = document.querySelectorAll('main section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = 'utama';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
                 }
             });
         });
