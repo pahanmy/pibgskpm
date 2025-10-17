@@ -231,7 +231,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div id="non-voters-list" class="p-6 max-h-[60vh] overflow-y-auto">
+            <div id="non-voters-list" class="p-6 max-h-[70vh] overflow-y-auto">
                 </div>
         </div>
     </div>
@@ -449,8 +449,8 @@
 
                     row.innerHTML = `
                         <td class="py-5 px-6 align-top">
-                            <div>
-                                <p class="text-base font-bold text-indigo-700">${app.purpose.toUpperCase()}</p>
+                            <div class="max-w-sm">
+                                <p class="text-base font-bold text-indigo-700 break-words">#${applicationNumber}: ${app.purpose.toUpperCase()}</p>
                                 <div class="flex items-center space-x-2 text-xs text-slate-600 font-medium mt-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
                                       <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -490,8 +490,16 @@
                              ${(() => {
                                 const voters = votes.map(v => v.voterName ? v.voterName.toUpperCase() : '');
                                 const votersData = JSON.stringify(voters);
+                                const votesDetails = JSON.stringify(votes);
 
-                                return `<button data-voters='${votersData}' data-purpose="${app.purpose}" data-amount="${app.amount}" class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-slate-100 text-slate-800 font-semibold rounded-md hover:bg-slate-200 text-xs">
+                                return `<button 
+                                            data-voters='${votersData}' 
+                                            data-votes-details='${votesDetails}'
+                                            data-purpose="${app.purpose}" 
+                                            data-amount="${app.amount}"
+                                            data-applicant="${app.applicant}"
+                                            data-app-id="${app.id}"
+                                            class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-slate-100 text-slate-800 font-semibold rounded-md hover:bg-slate-200 text-xs">
                                             <span>Lihat Status Undi</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" /></svg>
                                         </button>`;
@@ -811,6 +819,35 @@
                 });
             });
 
+            nonVotersList.addEventListener('click', (e) => {
+                const shareBtn = e.target.closest('#whatsapp-share-status-btn');
+                if (shareBtn) {
+                    const purpose = shareBtn.dataset.purpose;
+                    const votedCount = parseInt(shareBtn.dataset.votedCount);
+                    const totalExco = parseInt(shareBtn.dataset.totalExco);
+                    const approvePercentage = parseInt(shareBtn.dataset.approvePercentage);
+                    const notVotedCount = totalExco - votedCount;
+                    const appId = shareBtn.dataset.appId;
+
+                    const pageUrl = window.location.href.split('?')[0];
+                    const votePage = pageUrl.includes('semak.html') ? pageUrl.replace('semak.html', 'undi.html') : `${pageUrl.replace(/\/$/, '')}/undi.html`;
+                    const voteUrl = `${votePage}?id=${appId}`;
+
+                    let message = `*PERINGATAN MESRA UNDIAN PIBG*\n\n`;
+                    message += `Mohon perhatian Ahli Exco yang belum mengundi bagi permohonan berikut:\n\n`;
+                    message += `*Permohonan:*\n${purpose.toUpperCase()}\n\n`;
+                    message += `*Status Semasa:*\n`;
+                    message += `Undian Masuk: *${votedCount} / ${totalExco}*\n`;
+                    message += `Peratusan Sokong: *${approvePercentage}%*\n`;
+                    message += `Masih Perlu Undi: *${notVotedCount} orang*\n\n`;
+                    message += `Sila kemukakan undian anda melalui pautan di bawah:\n${voteUrl}\n\n`;
+                    message += `Kerjasama Tuan/Puan amat dihargai. Terima kasih.`;
+
+                    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                }
+            });
+
             analysisTableBody.addEventListener('click', (e) => {
                 const targetBtn = e.target.closest('button, a'); if (!targetBtn) return;
                 
@@ -825,10 +862,29 @@
                 } else if (targetBtn.matches('.view-voters-btn')) {
                     const purpose = targetBtn.dataset.purpose;
                     const amount = parseFloat(targetBtn.dataset.amount).toFixed(2);
+                    const applicant = targetBtn.dataset.applicant;
                     const voters = JSON.parse(targetBtn.dataset.voters);
+                    const votesDetails = JSON.parse(targetBtn.dataset.votesDetails || '[]');
+                    const appId = targetBtn.dataset.appId;
+
                     const totalExco = excoMembersList.length > 0 ? excoMembersList.length : 15;
                     const votedCount = voters.length;
                     const nonVotedCount = totalExco - votedCount;
+
+                    const approveVotes = votesDetails.filter(v => v.vote === 'approve').length;
+                    const rejectVotes = votesDetails.filter(v => v.vote === 'reject').length;
+                    const totalVotesCast = approveVotes + rejectVotes;
+
+                    let approvePercentage = 0;
+                    let rejectPercentage = 0;
+
+                    if (totalVotesCast > 0) {
+                        approvePercentage = Math.round((approveVotes / totalVotesCast) * 100);
+                        rejectPercentage = 100 - approvePercentage;
+                    }
+                    
+                    const now = new Date();
+                    const timestamp = now.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' }) + ', ' + now.toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
 
                     nonVotersList.innerHTML = `
                         <div class="space-y-4">
@@ -836,9 +892,15 @@
                                 <p class="text-xs text-slate-500">Permohonan:</p>
                                 <p class="font-bold text-indigo-700">${purpose.toUpperCase()}</p>
                             </div>
-                            <div>
-                                <p class="text-xs text-slate-500">Jumlah Dimohon:</p>
-                                <p class="font-bold text-slate-800">RM ${amount}</p>
+                             <div class="grid grid-cols-2 gap-x-4">
+                                <div>
+                                    <p class="text-xs text-slate-500">Jumlah Dimohon:</p>
+                                    <p class="font-bold text-slate-800">RM ${amount}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500">Pemohon:</p>
+                                    <p class="font-bold text-slate-800">${applicant.toUpperCase()}</p>
+                                </div>
                             </div>
                             <div class="grid grid-cols-2 gap-3 pt-3">
                                  <div class="bg-green-50 p-3 rounded-lg text-center">
@@ -855,6 +917,17 @@
                                     </div>
                                     <p class="text-xs text-slate-500 mt-1">Tidak Mengundi</p>
                                  </div>
+                            </div>
+                             <div class="pt-3">
+                                <p class="text-sm font-semibold text-slate-800 mb-2">Pecahan Undi (${totalVotesCast} undian)</p>
+                                <div class="w-full bg-slate-200 rounded-full h-4 flex overflow-hidden text-white text-xs font-medium">
+                                    <div class="bg-green-500 h-4 flex items-center justify-center" style="width: ${approvePercentage}%" title="Sokong: ${approvePercentage}%">${approvePercentage > 15 ? `${approvePercentage}%` : ''}</div>
+                                    <div class="bg-red-500 h-4 flex items-center justify-center" style="width: ${rejectPercentage}%" title="Tidak Sokong: ${rejectPercentage}%">${rejectPercentage > 15 ? `${rejectPercentage}%` : ''}</div>
+                                </div>
+                                <div class="flex justify-between text-xs mt-1">
+                                    <span class="font-semibold text-green-600">Sokong: ${approveVotes}</span>
+                                    <span class="font-semibold text-red-600">Tidak Sokong: ${rejectVotes}</span>
+                                </div>
                             </div>
                             <h4 class="text-sm font-bold text-slate-800 pt-4 border-t mt-4">Senarai Sudah Mengundi (${votedCount})</h4>
                         </div>
@@ -877,6 +950,26 @@
                         listHTML = '<p class="text-slate-500 text-sm text-center mt-3">Belum ada undian yang direkodkan.</p>';
                     }
                     nonVotersList.innerHTML += listHTML;
+
+                    const footerHTML = `
+                        <div class="border-t pt-4 mt-4 space-y-3">
+                             <p class="text-center text-xs text-slate-400">Status direkod pada: ${timestamp}</p>
+                             <button id="whatsapp-share-status-btn"
+                                data-purpose="${purpose}"
+                                data-amount="${amount}"
+                                data-voted-count="${votedCount}"
+                                data-total-exco="${totalExco}"
+                                data-approve-percentage="${approvePercentage}"
+                                data-app-id="${appId}"
+                                class="w-full flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M20.1 3.9C17.9 1.7 15 .5 12 .5 5.8.5.7 5.6.7 11.9c0 2 .5 3.9 1.5 5.6L.6 23.4l6.1-1.6c1.6.9 3.5 1.5 5.3 1.5 6.1 0 11.2-5.2 11.2-11.5 0-2.9-1.1-5.6-3.2-7.8zM12 21.4c-1.7 0-3.3-.5-4.8-1.3l-.4-.2-3.5 1 1-3.4L4 17c-1-1.5-1.5-3.2-1.5-5.1 0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.7 2.8 1.8 1.8 2.8 4.2 2.8 6.7-.1 5.2-4.3 9.4-9.5 9.4zm5.1-7.1c-.3-.1-1.7-.9-1.9-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.4c-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6s.3-.3.4-.5c.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10 9 9.3 7.5 9 7c-.3-.5-.6-.4-.8-.4h-.7c-.2 0-.5.2-.7.5-.3.3-.9 1-.9 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg>
+                                <span>Kongsi Status Undian</span>
+                             </button>
+                        </div>
+                    `;
+
+                    nonVotersList.innerHTML += footerHTML;
+
                     openModal(nonVotersModal, nonVotersModalPanel);
 
                 } else if (targetBtn.matches('.action-menu-btn')) {
