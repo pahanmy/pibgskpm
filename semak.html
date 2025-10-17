@@ -489,8 +489,9 @@
                              ${(() => {
                                 const voters = votes.map(v => v.name ? v.name.toUpperCase() : '');
                                 const nonVoters = excoMembersList.filter(member => member && !voters.includes(member.toUpperCase()));
-                                
                                 const nonVotersCount = nonVoters.length;
+                                
+                                const votersData = JSON.stringify(voters);
                                 const nonVotersData = JSON.stringify(nonVoters);
 
                                 if (finalStatus !== 'Dalam Proses' || nonVotersCount === 0) {
@@ -502,8 +503,8 @@
                                             </div>`;
                                 }
 
-                                return `<button data-non-voters='${nonVotersData}' class="view-non-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-yellow-100 text-yellow-800 font-semibold rounded-md hover:bg-yellow-200 text-xs">
-                                            <span>Lihat </span>
+                                return `<button data-voters='${votersData}' data-non-voters='${nonVotersData}' class="view-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-yellow-100 text-yellow-800 font-semibold rounded-md hover:bg-yellow-200 text-xs">
+                                            <span>Lihat Status</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
                                             </svg>
@@ -711,13 +712,13 @@
                     shareApplication(targetBtn.dataset.id, targetBtn.dataset.purpose, targetBtn.dataset.amount, targetBtn.dataset.appNumber);
                 } else if (targetBtn.matches('.delete-btn')) {
                     deleteApplication(targetBtn.dataset.id);
-                } else if (targetBtn.matches('.view-non-voters-btn')) {
+                } else if (targetBtn.matches('.view-voters-btn')) {
+                    const voters = JSON.parse(targetBtn.dataset.voters);
                     const nonVoters = JSON.parse(targetBtn.dataset.nonVoters);
                     nonVotersList.innerHTML = ''; 
                     
-                    const totalExco = excoMembersList.length;
+                    const votedCount = voters.length;
                     const notVotedCount = nonVoters.length;
-                    const votedCount = totalExco - notVotedCount;
 
                     const summaryHTML = `
                         <div class="flex justify-around mb-6 text-center">
@@ -731,13 +732,14 @@
                             </div>
                         </div>
                         <div class="border-t -mx-6 mb-6"></div>
+                        <h4 class="text-sm font-bold text-slate-800 mb-4">SENARAI SUDAH MENGUNDI</h4>
                     `;
                     nonVotersList.innerHTML += summaryHTML;
 
-                    if(nonVoters.length > 0) {
+                    if(voters.length > 0) {
                         const listElement = document.createElement('ul');
                         listElement.className = 'space-y-3';
-                        nonVoters.forEach(name => {
+                        voters.forEach(name => {
                             const item = document.createElement('li');
                             item.className = 'flex items-center text-sm text-slate-700';
                             item.innerHTML = `
@@ -750,7 +752,7 @@
                         });
                         nonVotersList.appendChild(listElement);
                     } else {
-                        nonVotersList.innerHTML += '<p class="text-slate-500 text-center">Semua ahli telah mengundi.</p>';
+                        nonVotersList.innerHTML += '<p class="text-slate-500 text-center">Belum ada undian direkodkan.</p>';
                     }
                     openModal(nonVotersModal, nonVotersModalPanel);
                 } else if (targetBtn.matches('.action-menu-btn')) {
