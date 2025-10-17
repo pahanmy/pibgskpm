@@ -225,7 +225,7 @@
     <div id="non-voters-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="non-voters-modal-panel">
             <div class="p-4 border-b flex justify-between items-center bg-slate-50 rounded-t-lg">
-                <h3 class="text-lg font-bold text-slate-800">Senarai EXCO Belum Mengundi</h3>
+                <h3 class="text-lg font-bold text-slate-800">Status Undian EXCO</h3>
                 <button id="close-non-voters-modal-btn" class="text-slate-500 hover:text-slate-800">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
@@ -450,7 +450,7 @@
                         <td class="py-5 px-6 align-top">
                             <div>
                                 <p class="text-base font-bold text-indigo-700">${app.purpose.toUpperCase()}</p>
-                                <div class="flex items-center space-x-2 text-xs text-slate-700 font-medium mt-1.5">
+                                <div class="flex items-center space-x-2 text-xs text-slate-600 font-medium mt-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
                                       <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                     </svg>
@@ -502,7 +502,7 @@
                                 }
 
                                 return `<button data-non-voters='${nonVotersData}' class="view-non-voters-btn flex items-center justify-between w-full text-left px-2 py-1 bg-yellow-100 text-yellow-800 font-semibold rounded-md hover:bg-yellow-200 text-xs">
-                                            <span>Lihat (Belum Undi)</span>
+                                            <span>Lihat</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
                                             </svg>
@@ -714,6 +714,25 @@
                     const nonVoters = JSON.parse(targetBtn.dataset.nonVoters);
                     nonVotersList.innerHTML = ''; 
                     
+                    const totalExco = excoMembersList.length;
+                    const notVotedCount = nonVoters.length;
+                    const votedCount = totalExco - notVotedCount;
+
+                    const summaryHTML = `
+                        <div class="flex justify-around mb-6 text-center">
+                            <div>
+                                <p class="text-2xl font-bold text-green-600">${votedCount}</p>
+                                <p class="text-xs text-slate-500 uppercase">Sudah Undi</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-red-600">${notVotedCount}</p>
+                                <p class="text-xs text-slate-500 uppercase">Belum Undi</p>
+                            </div>
+                        </div>
+                        <div class="border-t -mx-6 mb-6"></div>
+                    `;
+                    nonVotersList.innerHTML += summaryHTML;
+
                     if(nonVoters.length > 0) {
                         const listElement = document.createElement('ul');
                         listElement.className = 'space-y-3';
@@ -722,15 +741,15 @@
                             item.className = 'flex items-center text-sm text-slate-700';
                             item.innerHTML = `
                                 <span class="flex items-center justify-center h-6 w-6 rounded-full bg-slate-200 text-slate-600 text-xs font-semibold mr-3">
-                                    ${name.charAt(0)}
+                                    ${name.charAt(0).toUpperCase()}
                                 </span>
-                                ${name}
+                                ${name.toUpperCase()}
                             `;
                             listElement.appendChild(item);
                         });
                         nonVotersList.appendChild(listElement);
                     } else {
-                        nonVotersList.innerHTML = '<p class="text-slate-500">Semua ahli telah mengundi.</p>';
+                        nonVotersList.innerHTML += '<p class="text-slate-500 text-center">Semua ahli telah mengundi.</p>';
                     }
                     openModal(nonVotersModal, nonVotersModalPanel);
                 } else if (targetBtn.matches('.action-menu-btn')) {
