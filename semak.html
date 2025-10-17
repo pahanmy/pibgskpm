@@ -309,6 +309,29 @@
                 toast.classList.remove('opacity-0', 'translate-y-10');
                 setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); }, 3000);
             };
+
+            // --- Logic Functions ---
+
+            /**
+             * Determines the final status of an application based on votes and time.
+             * @param {object} app - The application object.
+             * @returns {string} - 'Diluluskan', 'Ditolak', or 'Dalam Proses'.
+             */
+            const getApplicationFinalStatus = (app) => {
+                const totalMembers = excoMembersList.length > 0 ? excoMembersList.length : 15;
+                const approvalThreshold = Math.ceil(totalMembers * (2 / 3));
+                const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
+                const approvalVotes = votes.filter(v => v.vote === 'approve').length;
+                const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
+                const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
+
+                if (approvalVotes >= approvalThreshold) {
+                    return 'Diluluskan';
+                } else if (votingPeriodEnded) {
+                    return 'Ditolak';
+                }
+                return 'Dalam Proses';
+            };
             
             // --- Data Fetching and Processing ---
             const fetchExcoMembers = async () => {
@@ -336,15 +359,28 @@
             };
             
             const calculateStats = () => {
+                let approvedCount = 0;
+                let pendingCount = 0;
+                let rejectedCount = 0;
+                let approvedAmount = 0;
+
+                allApps.forEach(app => {
+                    const status = getApplicationFinalStatus(app);
+                    if (status === 'Diluluskan') {
+                        approvedCount++;
+                        approvedAmount += parseFloat(app.amount);
+                    } else if (status === 'Dalam Proses') {
+                        pendingCount++;
+                    } else if (status === 'Ditolak') {
+                        rejectedCount++;
+                    }
+                });
+
                 document.getElementById('total-apps').textContent = allApps.length;
-                const approvedApps = allApps.filter(app => app.status === 'Diluluskan');
-                const pendingApps = allApps.filter(app => app.status === 'Dalam Proses');
-                const rejectedApps = allApps.filter(app => app.status === 'Ditolak');
-                document.getElementById('total-approved').textContent = approvedApps.length;
-                document.getElementById('total-pending').textContent = pendingApps.length;
-                document.getElementById('total-rejected').textContent = rejectedApps.length;
-                const totalAmount = approvedApps.reduce((sum, app) => sum + parseFloat(app.amount), 0);
-                document.getElementById('total-amount').textContent = `RM ${totalAmount.toFixed(2)}`;
+                document.getElementById('total-approved').textContent = approvedCount;
+                document.getElementById('total-pending').textContent = pendingCount;
+                document.getElementById('total-rejected').textContent = rejectedCount;
+                document.getElementById('total-amount').textContent = `RM ${approvedAmount.toFixed(2)}`;
             };
 
             const populateYearFilter = () => {
@@ -361,6 +397,8 @@
             const applyFiltersAndRender = () => {
                 const selectedMonth = monthFilter.value;
                 const selectedYear = yearFilter.value;
+
+                // 1. Filter by month and year
                 filteredApps = allApps.filter(app => {
                     const appDate = app.createdAt ? new Date(app.createdAt.seconds * 1000) : null;
                     if (!appDate) return false;
@@ -368,8 +406,24 @@
                     const yearMatch = selectedYear === 'all' || appDate.getFullYear() == selectedYear;
                     return monthMatch && yearMatch;
                 });
+
+                // 2. Sort: 'Dalam Proses' on top, then by date
+                filteredApps.sort((a, b) => {
+                    const statusA = getApplicationFinalStatus(a);
+                    const statusB = getApplicationFinalStatus(b);
+
+                    if (statusA === 'Dalam Proses' && statusB !== 'Dalam Proses') {
+                        return -1; // a comes first
+                    }
+                    if (statusB === 'Dalam Proses' && statusA !== 'Dalam Proses') {
+                        return 1; // b comes first
+                    }
+                    // If statuses are the same, sort by date (newest first)
+                    return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+                });
+
                 currentPage = 1;
-                renderTable();
+                renderTable(); // This will use the newly sorted `filteredApps`
                 calculateStats(); 
             };
             
@@ -422,28 +476,18 @@
                 const endIndex = startIndex + itemsPerPage;
                 const pageItems = filteredApps.slice(startIndex, endIndex);
 
-                pageItems.forEach((app, index) => {
+                pageItems.forEach((app) => {
+                    const finalStatus = getApplicationFinalStatus(app);
+                    const showKeputusanBtn = finalStatus === 'Diluluskan';
+
                     const totalMembers = excoMembersList.length > 0 ? excoMembersList.length : 15;
-                    const approvalThreshold = Math.ceil(totalMembers * (2 / 3));
                     const votes = app.votes && Array.isArray(app.votes) ? app.votes : [];
-                    const approvalVotes = votes.filter(v => v.vote === 'approve').length;
                     const totalVotes = votes.length;
-                    const timeElapsed = app.createdAt ? (new Date().getTime() / 1000) - app.createdAt.seconds : Infinity;
-                    const votingPeriodEnded = timeElapsed > (48 * 60 * 60);
-                    
-                    let finalStatus = 'Dalam Proses'; 
-                    let showKeputusanBtn = false;
-                    if (approvalVotes >= approvalThreshold) {
-                        finalStatus = 'Diluluskan';
-                        showKeputusanBtn = true;
-                    } else if (votingPeriodEnded) {
-                        finalStatus = 'Ditolak';
-                        showKeputusanBtn = false;
-                    }
-                    
                     const votingPercentage = totalMembers > 0 ? Math.round((totalVotes / totalMembers) * 100) : 0;
+                    
                     const appIndexInAll = allApps.findIndex(a => a.id === app.id);
                     const applicationNumber = allApps.length - appIndexInAll;
+
                     const row = document.createElement('tr');
                     row.className = "border-b border-slate-100";
 
