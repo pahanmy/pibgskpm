@@ -43,6 +43,32 @@
             color: #4f46e5;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Styles for button-like radio buttons */
+        .category-chooser input[type="radio"] {
+            display: none;
+        }
+        .category-chooser label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db; /* slate-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #ffffff;
+            font-weight: 500;
+        }
+        .category-chooser input[type="radio"]:checked + label {
+            background-color: #eef2ff; /* indigo-50 */
+            border-color: #4f46e5; /* indigo-600 */
+            color: #4338ca; /* indigo-700 */
+            font-weight: 600;
+            box-shadow: 0 0 0 1px #4f46e5;
+        }
+        .category-chooser input[type="radio"]:hover:not(:checked) + label {
+            background-color: #f9fafb; /* slate-50 */
+            border-color: #a5b4fc;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -280,11 +306,14 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-2">Kategori Pemohonan <span class="text-red-600">*</span></label>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center"><input type="radio" name="kategori" value="Akademik" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500" required> <label class="ml-2 text-sm text-slate-700">Akademik</label></div>
-                                        <div class="flex items-center"><input type="radio" name="kategori" value="Kokurikulum" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"> <label class="ml-2 text-sm text-slate-700">Kokurikulum</label></div>
-                                        <div class="flex items-center"><input type="radio" name="kategori" value="Sahsiah Murid" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"> <label class="ml-2 text-sm text-slate-700">Sahsiah Murid</label></div>
-                                        <div class="flex items-center"><input type="radio" name="kategori" value="Lain-lain" class="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"> <label class="ml-2 text-sm text-slate-700">Lain-lain:</label> <input type="text" name="kategori_lain" class="ml-2 border-0 border-b border-slate-300 focus:ring-0 focus:border-indigo-500 text-sm"></div>
+                                    <div class="category-chooser flex flex-wrap gap-3">
+                                        <span><input type="radio" id="cat-akademik" name="kategori" value="Akademik" required><label for="cat-akademik">Akademik</label></span>
+                                        <span><input type="radio" id="cat-koku" name="kategori" value="Kokurikulum"><label for="cat-koku">Kokurikulum</label></span>
+                                        <span><input type="radio" id="cat-sahsiah" name="kategori" value="Sahsiah Murid"><label for="cat-sahsiah">Sahsiah Murid</label></span>
+                                        <div class="flex items-center">
+                                            <input type="radio" id="cat-lain" name="kategori" value="Lain-lain"><label for="cat-lain">Lain-lain:</label>
+                                            <input type="text" name="kategori_lain" class="ml-2 border-0 border-b border-slate-300 focus:ring-0 focus:border-indigo-500 text-sm w-40">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -292,11 +321,25 @@
                                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label for="jumlah_murid" class="block text-sm font-medium text-slate-700 mb-1">Jumlah Murid</label>
-                                        <input type="number" id="jumlah_murid" name="jumlah_murid" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <input type="number" id="jumlah_murid" name="jumlah_murid" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" value="1">
                                     </div>
                                     <div>
                                         <label for="jumlah_guru" class="block text-sm font-medium text-slate-700 mb-1">Jumlah Guru Pengiring</label>
-                                        <input type="number" id="jumlah_guru" name="jumlah_guru" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <input type="number" id="jumlah_guru" name="jumlah_guru" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" value="1">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                     <div>
+                                        <label for="tempoh_program" class="block text-sm font-medium text-slate-700 mb-1">Tempoh Program (Hari)</label>
+                                        <input type="number" id="tempoh_program" name="tempoh_program" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" value="1" min="1">
+                                    </div>
+                                     <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">Lokasi Program</label>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center"><input type="radio" name="lokasi" value="Dalam Sekolah" class="h-4 w-4 text-indigo-600 border-slate-300" checked> <label class="ml-2 text-sm text-slate-700">Dalam Sekolah</label></div>
+                                            <div class="flex items-center"><input type="radio" name="lokasi" value="Luar Sekolah" class="h-4 w-4 text-indigo-600 border-slate-300"> <label class="ml-2 text-sm text-slate-700">Luar Sekolah</label></div>
+                                        </div>
+                                        <input type="text" id="lokasi_luar_details" name="lokasi_luar_details" placeholder="Nyatakan tempat..." class="hidden mt-2 w-full px-3 py-2 border border-slate-300 rounded-md text-sm">
                                     </div>
                                 </div>
                                  <div>
@@ -315,18 +358,18 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label class="block text-sm font-medium text-slate-700 mb-1">Makan Minum Murid (RM)</label>
-                                                <input type="number" step="0.01" id="makan_minum_murid" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md">
+                                                <input type="number" step="0.01" id="makan_minum_murid" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" value="10.00">
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-slate-700 mb-1">Makan Minum Guru (RM)</label>
-                                                <input type="number" step="0.01" id="makan_minum_guru" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md">
+                                                <input type="number" step="0.01" id="makan_minum_guru" placeholder="0.00" class="cost-input w-full px-3 py-2 border border-slate-300 rounded-md" value="10.00">
                                             </div>
                                         </div>
                                         <div class="flex items-end gap-4">
                                             <div class="flex-grow">
                                                 <label class="block text-sm font-medium text-slate-700 mb-1">Pengangkutan</label>
                                                 <select id="jenis_pengangkutan" class="w-full px-3 py-2 border border-slate-300 rounded-md">
-                                                    <option value="">-- Sila Pilih --</option>
+                                                    <option value="Tidak Perlu">Tidak Perlu</option>
                                                     <option value="Sewa Van/Bas">Sewa Van/Bas</option>
                                                     <option value="Kenderaan Guru">Kenderaan Guru (Tuntutan Perbatuan)</option>
                                                 </select>
@@ -511,6 +554,8 @@
             const ringkasanTableBody = document.getElementById('ringkasan-table');
             const jumlahKeseluruhanDisplay = document.getElementById('jumlah_keseluruhan_display');
             const budgetDetailsContainer = document.getElementById('budget-details-container');
+            const lokasiRadios = document.querySelectorAll('input[name="lokasi"]');
+            const lokasiLuarDetails = document.getElementById('lokasi_luar_details');
 
             // --- General Functions ---
             const showToast = (message, type = 'success') => {
@@ -521,6 +566,15 @@
             };
 
             const formatCurrency = (num) => `RM ${num.toFixed(2)}`;
+            
+            // --- Set Default Date ---
+            const setDefaultDate = () => {
+                const dateInput = document.getElementById('tarikh_program');
+                // Set to today's date in local timezone
+                const today = new Date();
+                today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+                dateInput.valueAsDate = today;
+            };
 
             // --- Tab Management ---
             const switchTab = (targetTabId) => {
@@ -873,6 +927,7 @@
             const resetApplicationForm = () => {
                 applicationForm.reset();
                 formCurrentStep = 1;
+                setDefaultDate();
                 updateFormSteps(); updateProgressBar(); updateButtons();
                 icFeedback.textContent = ''; icFeedback.className = 'text-sm mt-2 h-5';
                 applicantDetailsFieldset.disabled = true; nextBtn.disabled = true;
@@ -882,6 +937,9 @@
                 applicantNameInput.readOnly = true; applicantNameInput.classList.add('bg-slate-100');
                 applicantPositionInput.readOnly = true; applicantPositionInput.classList.add('bg-slate-100');
                 perkaraTambahanContainer.innerHTML = '';
+                // Reset new fields
+                lokasiLuarDetails.classList.add('hidden');
+                document.querySelector('input[name="lokasi"][value="Dalam Sekolah"]').checked = true;
                 calculateTotal();
             };
 
@@ -898,6 +956,7 @@
             })();
 
             // --- Event Listeners ---
+            setDefaultDate(); // Set default date on initial load
             switchTab('tab-analysis-btn'); resetApplicationForm();
             tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.id)));
             if(newApplicationBtnInAnalysis) newApplicationBtnInAnalysis.addEventListener('click', () => { switchTab('tab-form-btn'); resetApplicationForm(); });
@@ -999,7 +1058,7 @@
             if(nextBtn) nextBtn.addEventListener('click', () => { if (validateStep(formCurrentStep) && formCurrentStep < formSteps.length) { formCurrentStep++; updateFormSteps(); updateProgressBar(); updateButtons(); }});
             if(prevBtn) prevBtn.addEventListener('click', () => { if (formCurrentStep > 1) { formCurrentStep--; updateFormSteps(); updateProgressBar(); updateButtons(); }});
             
-            // --- NEW Event Listeners for Dynamic Budget Form ---
+            // --- NEW Event Listeners for Dynamic Budget and Location Form ---
             tambahPerkaraBtn.addEventListener('click', () => {
                 const newEntry = document.createElement('div');
                 newEntry.className = 'perkara-tambahan-entry flex items-end gap-4 mt-2';
@@ -1015,6 +1074,18 @@
                     <button type="button" class="remove-perkara-btn px-3 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200" title="Padam">-</button>
                 `;
                 perkaraTambahanContainer.appendChild(newEntry);
+            });
+            
+            lokasiRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if(e.target.value === 'Luar Sekolah') {
+                        lokasiLuarDetails.classList.remove('hidden');
+                        lokasiLuarDetails.focus();
+                    } else {
+                        lokasiLuarDetails.classList.add('hidden');
+                        lokasiLuarDetails.value = '';
+                    }
+                });
             });
 
             perkaraTambahanContainer.addEventListener('click', (e) => {
@@ -1053,6 +1124,9 @@
                         category: document.querySelector('input[name="kategori"]:checked').value === 'Lain-lain' ? document.querySelector('input[name="kategori_lain"]').value : document.querySelector('input[name="kategori"]:checked').value,
                         muridCount: parseInt(document.getElementById('jumlah_murid').value) || 0,
                         guruCount: parseInt(document.getElementById('jumlah_guru').value) || 0,
+                        programDuration: parseInt(document.getElementById('tempoh_program').value) || 1,
+                        location: document.querySelector('input[name="lokasi"]:checked').value,
+                        locationDetails: document.getElementById('lokasi_luar_details').value,
                         programLevel: document.querySelector('input[name="peringkat"]:checked')?.value || 'Tidak Dinyatakan',
                         budget: {
                             makanMurid: parseFloat(document.getElementById('makan_minum_murid').value) || 0,
