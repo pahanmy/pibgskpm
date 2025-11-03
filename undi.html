@@ -67,30 +67,24 @@
                         <p class="mt-4 text-4xl font-bold text-indigo-700" id="vote-program-amount-verify">RM 0.00</p>
                     </div>
 
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4">Status Undian Semasa</h3>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-3">Status Undian Semasa</h3>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                            <div class="bg-green-50 p-3 rounded-lg flex items-center space-x-3 border border-green-200">
-                                <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                                <div>
-                                    <p class="text-xs text-green-700 font-medium">Telah Mengundi</p>
-                                    <p id="count-voted" class="text-xl font-bold text-green-800">0</p>
-                                </div>
-                            </div>
-                            <div class="bg-yellow-50 p-3 rounded-lg flex items-center space-x-3 border border-yellow-200">
-                                <svg class="h-6 w-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-                                </svg>
-                                <div>
-                                    <p class="text-xs text-yellow-700 font-medium">Belum Mengundi</p>
-                                    <p id="count-not-voted" class="text-xl font-bold text-yellow-800">0</p>
-                                </div>
-                            </div>
+                        <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden mb-2 shadow-inner">
+                            <div id="vote-status-bar" class="bg-green-600 h-4 rounded-full transition-all duration-500 text-white text-xs flex items-center justify-center font-bold"></div>
                         </div>
+                        
+                        <div class="flex justify-between text-sm font-medium">
+                            <span class="text-green-700">
+                                Telah Mengundi: <strong id="count-voted">0</strong>
+                            </span>
+                            <span class="text-yellow-700">
+                                Belum Mengundi: <strong id="count-not-voted">0</strong>
+                            </span>
+                        </div>
+                    </div>
 
+                    <div class="mb-8">
                         <h4 class="text-base font-medium text-slate-700 mb-2">Senarai Telah Mengundi</h4>
                         <div id="voter-list-container" class="bg-slate-100 p-3 rounded-md max-h-40 overflow-y-auto border">
                             </div>
@@ -350,19 +344,26 @@
                 document.getElementById('vote-program-applicant-verify').textContent = `Oleh: ${app.applicant}`;
                 document.getElementById('vote-program-amount-verify').textContent = `RM ${parseFloat(app.amount).toFixed(2)}`;
 
-                // 4. Isi statistik undian (Permintaan Pengguna)
+                // 4. Isi statistik undian (Visual Progress Bar BARU)
                 const votes = app.votes || [];
                 const totalExco = allExcoMembers.length > 0 ? allExcoMembers.length : 15;
                 const countVoted = votes.length;
                 const countNotVoted = totalExco - countVoted;
+                const percentageVoted = totalExco > 0 ? Math.round((countVoted / totalExco) * 100) : 0;
                 
                 document.getElementById('count-voted').textContent = countVoted;
                 document.getElementById('count-not-voted').textContent = countNotVoted;
+                
+                // Set bar kemajuan
+                const statusBar = document.getElementById('vote-status-bar');
+                statusBar.style.width = `${percentageVoted}%`;
+                if (percentageVoted > 15) {
+                    statusBar.textContent = `${percentageVoted}%`;
+                }
 
                 // 5. Isi senarai pengundi (Permintaan Pengguna)
                 const voterListContainer = document.getElementById('voter-list-container');
                 if (votes.length > 0) {
-                    // JARAK DIKURANGKAN (space-y-1.5)
                     let listHTML = '<ul class="space-y-1.5">';
                     // Sort nama mengikut abjad
                     votes.sort((a, b) => a.voterName.localeCompare(b.voterName)).forEach(vote => {
