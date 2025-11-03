@@ -68,23 +68,47 @@
                     </div>
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-3">Status Undian Semasa</h3>
+                        <h3 class="text-lg font-semibold text-slate-800 mb-3">Status Undian (Kehadiran)</h3>
                         
                         <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden mb-2 shadow-inner">
-                            <div id="vote-status-bar" class="bg-green-600 h-4 rounded-full transition-all duration-500 text-white text-xs flex items-center justify-center font-bold"></div>
+                            <div id="vote-status-bar" class="bg-blue-600 h-4 rounded-full transition-all duration-500 text-white text-xs flex items-center justify-center font-bold"></div>
                         </div>
                         
-                        <div class="flex justify-between text-sm font-medium">
-                            <span class="text-green-700">
+                        <div class="flex justify-between text-sm font-medium mb-4">
+                            <span class="text-blue-700">
                                 Telah Mengundi: <strong id="count-voted">0</strong>
                             </span>
-                            <span class="text-yellow-700">
+                            <span class="text-gray-600">
                                 Belum Mengundi: <strong id="count-not-voted">0</strong>
                             </span>
                         </div>
                     </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-slate-800 mb-3">Pecahan Undi (Kelulusan)</h4>
+                        <div class="relative w-full pt-5"> <div id="lulus-threshold-line" class="absolute top-0 bottom-0 left-[66.66%] w-0.5 bg-indigo-700 z-10 flex flex-col items-center hidden" title="Majoriti 2/3 (10 Undi)">
+                                <span class="absolute -top-5 text-xs font-bold text-indigo-700 whitespace-nowrap">LULUS (10)</span>
+                                <svg class="w-3 h-3 text-indigo-700 absolute -bottom-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a.7.7 0 01-.5-.2l-4-4a.7.7 0 011-1L10 15.6l3.5-3.8a.7.7 0 011 1l-4 4a.7.7 0 01-.5.2z"/></svg>
+                            </div>
+                            
+                            <div class="w-full bg-slate-200 rounded-full h-5 flex overflow-hidden shadow-inner relative">
+                                <div id="approve-bar" class="bg-green-500 h-5 transition-all duration-500"></div>
+                                <div id="reject-bar" class="bg-red-500 h-5 transition-all duration-500"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between text-sm font-medium mt-2">
+                            <span class="text-green-700">
+                                Sokong: <strong id="count-approve">0</strong>
+                            </span>
+                            <span class="text-red-700">
+                                Tolak: <strong id="count-reject">0</strong>
+                            </span>
+                        </div>
+                    </div>
 
-                    <div class="mb-8">
+
+                    <div class="mb-8 pt-4 border-t">
                         <h4 class="text-base font-medium text-slate-700 mb-2">Senarai Telah Mengundi</h4>
                         <div id="voter-list-container" class="bg-slate-100 p-3 rounded-md max-h-40 overflow-y-auto border">
                             </div>
@@ -270,6 +294,8 @@
         let countdownInterval = null;
         let currentApplicationData = null; // Menyimpan data permohonan
         let allExcoMembers = []; // Menyimpan senarai exco
+        const TOTAL_EXCO_MEMBERS = 15; // Tetapkan jumlah exco di sini
+        const APPROVAL_THRESHOLD = 10; // 2/3 dari 15 = 10
 
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
@@ -323,70 +349,103 @@
          */
         const loadApplicationData = async (appId) => {
             try {
-                // 1. Dapatkan senarai Exco
-                const excoSnapshot = await getDocs(excoMembersCol);
-                if (!excoSnapshot.empty) {
-                    allExcoMembers = excoSnapshot.docs.map(doc => doc.data());
-                }
+                // 1. Dapatkan senarai Exco (Optional, kita guna TOTAL_EXCO_MEMBERS)
+                // const excoSnapshot = await getDocs(excoMembersCol);
+                // if (!excoSnapshot.empty) {
+                //     allExcoMembers = excoSnapshot.docs.map(doc => doc.data());
+                // }
+                // const totalExco = allExcoMembers.length > 0 ? allExcoMembers.length : TOTAL_EXCO_MEMBERS;
+                
+                // Guna nilai tetap untuk konsistensi
+                const totalExco = TOTAL_EXCO_MEMBERS;
+
 
                 // 2. Dapatkan data Permohonan
                 const appDocRef = doc(db, applicationsCol.path, appId);
-                const appSnap = await getDoc(appDocRef);
-
-                if (!appSnap.exists()) {
-                    throw new Error("Permohonan tidak dijumpai.");
-                }
-                currentApplicationData = appSnap.data();
-                const app = currentApplicationData; // Nama pendek
-
-                // 3. Isi butiran permohonan di bahagian atas
-                document.getElementById('vote-program-name-verify').textContent = app.purpose;
-                document.getElementById('vote-program-applicant-verify').textContent = `Oleh: ${app.applicant}`;
-                document.getElementById('vote-program-amount-verify').textContent = `RM ${parseFloat(app.amount).toFixed(2)}`;
-
-                // 4. Isi statistik undian (Visual Progress Bar BARU)
-                const votes = app.votes || [];
-                const totalExco = allExcoMembers.length > 0 ? allExcoMembers.length : 15;
-                const countVoted = votes.length;
-                const countNotVoted = totalExco - countVoted;
-                const percentageVoted = totalExco > 0 ? Math.round((countVoted / totalExco) * 100) : 0;
                 
-                document.getElementById('count-voted').textContent = countVoted;
-                document.getElementById('count-not-voted').textContent = countNotVoted;
-                
-                // Set bar kemajuan
-                const statusBar = document.getElementById('vote-status-bar');
-                statusBar.style.width = `${percentageVoted}%`;
-                if (percentageVoted > 15) {
-                    statusBar.textContent = `${percentageVoted}%`;
-                }
+                // Guna onSnapshot untuk data masa nyata
+                onSnapshot(appDocRef, (appSnap) => {
+                    if (!appSnap.exists()) {
+                        throw new Error("Permohonan tidak dijumpai.");
+                    }
+                    currentApplicationData = appSnap.data();
+                    const app = currentApplicationData; // Nama pendek
 
-                // 5. Isi senarai pengundi (Permintaan Pengguna)
-                const voterListContainer = document.getElementById('voter-list-container');
-                if (votes.length > 0) {
-                    let listHTML = '<ul class="space-y-1.5">';
-                    // Sort nama mengikut abjad
-                    votes.sort((a, b) => a.voterName.localeCompare(b.voterName)).forEach(vote => {
-                        listHTML += `
-                            <li class="flex items-center text-sm text-slate-700">
-                                <span class="flex items-center justify-center h-5 w-5 rounded-full bg-green-100 text-green-700 text-xs font-semibold mr-2">${vote.voterName.charAt(0).toUpperCase()}</span>
-                                ${vote.voterName.toUpperCase()}
-                            </li>`;
-                    });
-                    listHTML += '</ul>';
-                    voterListContainer.innerHTML = listHTML;
-                } else {
-                    voterListContainer.innerHTML = '<p class="text-slate-500 text-center text-sm">Belum ada undian.</p>';
-                }
+                    // 3. Isi butiran permohonan di bahagian atas
+                    document.getElementById('vote-program-name-verify').textContent = app.purpose;
+                    document.getElementById('vote-program-applicant-verify').textContent = `Oleh: ${app.applicant}`;
+                    document.getElementById('vote-program-amount-verify').textContent = `RM ${parseFloat(app.amount).toFixed(2)}`;
 
-                // 6. Tunjukkan kandungan
-                votePageLoader.classList.add('hidden');
-                votePageContent.classList.remove('hidden');
-                votePageContent.classList.add('animate-fade-in-up');
+                    // 4. Isi statistik undian (Kehadiran)
+                    const votes = app.votes || [];
+                    const countVoted = votes.length;
+                    const countNotVoted = totalExco - countVoted;
+                    const percentageVoted = totalExco > 0 ? Math.round((countVoted / totalExco) * 100) : 0;
+                    
+                    document.getElementById('count-voted').textContent = countVoted;
+                    document.getElementById('count-not-voted').textContent = countNotVoted;
+                    
+                    // Set bar kemajuan (Kehadiran)
+                    const statusBar = document.getElementById('vote-status-bar');
+                    statusBar.style.width = `${percentageVoted}%`;
+                    if (percentageVoted > 15) {
+                        statusBar.textContent = `${percentageVoted}%`;
+                    }
+
+                    // 4b. Isi statistik pecahan undi (Permintaan BARU - Kelulusan)
+                    const countApprove = votes.filter(v => v.vote === 'approve').length;
+                    const countReject = votes.filter(v => v.vote === 'reject').length;
+
+                    document.getElementById('count-approve').textContent = countApprove;
+                    document.getElementById('count-reject').textContent = countReject;
+
+                    // Kira peratusan berdasarkan JUMLAH EXCO (15)
+                    const approvePercent = totalExco > 0 ? (countApprove / totalExco) * 100 : 0;
+                    const rejectPercent = totalExco > 0 ? (countReject / totalExco) * 100 : 0;
+
+                    document.getElementById('approve-bar').style.width = `${approvePercent}%`;
+                    document.getElementById('reject-bar').style.width = `${rejectPercent}%`;
+
+                    // Tunjukkan garisan lulus
+                    document.getElementById('lulus-threshold-line').classList.remove('hidden');
+
+                    // 5. Isi senarai pengundi (Permintaan Pengguna)
+                    const voterListContainer = document.getElementById('voter-list-container');
+                    if (votes.length > 0) {
+                        let listHTML = '<ul class="space-y-1.5">';
+                        // Sort nama mengikut abjad
+                        votes.sort((a, b) => a.voterName.localeCompare(b.voterName)).forEach(vote => {
+                            listHTML += `
+                                <li class="flex items-center text-sm text-slate-700">
+                                    <span class="flex items-center justify-center h-5 w-5 rounded-full bg-green-100 text-green-700 text-xs font-semibold mr-2">${vote.voterName.charAt(0).toUpperCase()}</span>
+                                    ${vote.voterName.toUpperCase()}
+                                </li>`;
+                        });
+                        listHTML += '</ul>';
+                        voterListContainer.innerHTML = listHTML;
+                    } else {
+                        voterListContainer.innerHTML = '<p class="text-slate-500 text-center text-sm">Belum ada undian.</p>';
+                    }
+
+                    // 6. Tunjukkan kandungan (hanya jika ia kali pertama)
+                    if (votePageLoader.classList.contains('hidden') === false) {
+                        votePageLoader.classList.add('hidden');
+                        votePageContent.classList.remove('hidden');
+                        votePageContent.classList.add('animate-fade-in-up');
+                    }
+                });
 
             } catch (error) {
                 mainContent.innerHTML = `<div class="p-8 text-center"><h2 class="text-2xl font-bold text-red-600">Gagal Memuatkan Data</h2><p class="mt-2 text-slate-500">${error.message}</p></div>`;
             }
+        };
+        
+        // Fungsi untuk memuatkan senarai Exco (diperlukan untuk pengesahan IC)
+        const loadExcoMembers = async () => {
+             const excoSnapshot = await getDocs(excoMembersCol);
+             if (!excoSnapshot.empty) {
+                allExcoMembers = excoSnapshot.docs.map(doc => doc.data());
+             }
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -406,8 +465,11 @@
                     return;
                 }
                 
-                // Panggil fungsi baru untuk memuatkan data sebaik sahaja halaman dibuka
-                await loadApplicationData(currentApplicationId);
+                // Muatkan data serentak
+                await Promise.all([
+                    loadApplicationData(currentApplicationId), // Mulakan listener masa nyata
+                    loadExcoMembers() // Muatkan senarai exco untuk pengesahan
+                ]);
 
             } catch (error) {
                  console.error("Firebase authentication failed:", error);
@@ -430,7 +492,12 @@
 
             try {
                 // 1. Semak IC dari senarai Exco yang telah dimuatkan
+                if (allExcoMembers.length === 0) {
+                    // Cuba muat semula jika senarai kosong (fallback)
+                    await loadExcoMembers();
+                }
                 currentVoterData = allExcoMembers.find(member => member.ic === icValue);
+                
                 if (!currentVoterData) {
                     throw new Error("No. KP tidak sah atau bukan Exco.");
                 }
@@ -530,8 +597,8 @@
             </tfoot></table>`;
             budgetContainer.innerHTML = budgetHTML;
 
-            // Statistik Undian di Skrin Undian
-            const totalExco = allExcoMembers.length > 0 ? allExcoMembers.length : 15;
+            // Statistik Undian di Skrin Undian (Kehadiran)
+            const totalExco = TOTAL_EXCO_MEMBERS;
             const currentVotes = app.votes?.length || 0;
             const percentage = totalExco > 0 ? Math.round((currentVotes / totalExco) * 100) : 0;
             document.getElementById('vote-progress-bar').style.width = `${percentage}%`;
