@@ -51,29 +51,76 @@
     <main class="container mx-auto">
         <div id="main-content" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-4xl mx-auto overflow-hidden">
             
-            <div id="ic-verification-section" class="relative p-8 md:p-12 flex flex-col items-center justify-center text-center bg-slate-50 overflow-hidden">
-                <div class="absolute inset-0 w-full h-full bg-pattern opacity-50"></div>
+            <div id="ic-verification-section" class="relative p-8 md:p-12 bg-white overflow-hidden">
                 
-                <div class="relative z-10 animate-fade-in-up" style="animation-delay: 100ms;">
-                    <img src="https://i.imgur.com/VfEOv80.png" alt="Logo PIBG SK Pulau Melayu" class="h-24 w-24 rounded-full mb-6 shadow-lg mx-auto border-2 border-amber-300/80">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Pengesahan Exco</h2>
-                    <p class="text-slate-500 mb-8 max-w-sm">Akses undian adalah terhad. Sila sahkan identiti anda.</p>
+                <div id="vote-page-loader" class="text-center p-12">
+                    <div class="loader mx-auto"></div>
+                    <p class="mt-4 text-slate-500">Memuatkan maklumat permohonan...</p>
                 </div>
-
-                <div class="w-full max-w-sm space-y-4 relative z-10 animate-fade-in-up" style="animation-delay: 200ms;">
-                    <div class="relative w-full">
-                        <label for="voter-ic-verify" class="sr-only">No. Kad Pengenalan</label>
-                        <input type="password" id="voter-ic-verify" placeholder="••••••••••••" maxlength="12" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')" class="w-full text-center tracking-widest px-4 py-3 bg-white border border-slate-300 text-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-lg" autocomplete="off">
+                
+                <div id="vote-page-content" class="hidden">
+                    
+                    <div class="mb-8 p-6 bg-slate-50/50 rounded-lg text-center">
+                        <p class="text-sm font-medium text-indigo-600">Permohonan Untuk Undian</p>
+                        <h2 class="text-3xl font-bold text-slate-900 mt-2" id="vote-program-name-verify">Borang Undian Permohonan</h2>
+                        <p class="mt-1 text-slate-500" id="vote-program-applicant-verify">Oleh: Nama Pemohon</p>
+                        <p class="mt-4 text-4xl font-bold text-indigo-700" id="vote-program-amount-verify">RM 0.00</p>
                     </div>
-                    <button id="verify-ic-btn" class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600 shadow-lg shadow-amber-500/30 transition-all transform hover:scale-105">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
-                        </svg>
-                        Sahkan Identiti
-                    </button>
+
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold text-slate-800 mb-4">Status Undian Semasa</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50 p-4 rounded-lg flex items-center space-x-3 border border-green-200">
+                                <svg class="h-8 w-8 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <p class="text-xs text-green-700 font-medium">Telah Mengundi</p>
+                                    <p id="count-voted" class="text-2xl font-bold text-green-800">0</p>
+                                </div>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg flex items-center space-x-3 border border-yellow-200">
+                                <svg class="h-8 w-8 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <p class="text-xs text-yellow-700 font-medium">Belum Mengundi</p>
+                                    <p id="count-not-voted" class="text-2xl font-bold text-yellow-800">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-lg font-medium text-slate-700 mb-3">Senarai Telah Mengundi</h4>
+                        <div id="voter-list-container" class="bg-slate-100 p-4 rounded-md max-h-48 overflow-y-auto border">
+                            </div>
+                    </div>
+
+                    <div class="mt-10 pt-8 border-t border-slate-200">
+                        <div class="max-w-sm mx-auto text-center">
+                            <img src="https://i.imgur.com/VfEOv80.png" alt="Logo PIBG SK Pulau Melayu" class="h-20 w-20 rounded-full mb-5 shadow-lg mx-auto border-2 border-amber-300/80">
+                            <h2 class="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Pengesahan Exco</h2>
+                            <p class="text-slate-500 mb-8 max-w-sm mx-auto">Sila masukkan No. KP anda untuk mengundi.</p>
+                            
+                            <div class="w-full max-w-sm space-y-4 relative z-10 mx-auto">
+                                <div class="relative w-full">
+                                    <label for="voter-ic-verify" class="sr-only">No. Kad Pengenalan</label>
+                                    <input type="password" id="voter-ic-verify" placeholder="••••••••••••" maxlength="12" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')" class="w-full text-center tracking-widest px-4 py-3 bg-white border border-slate-300 text-slate-800 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-lg" autocomplete="off">
+                                </div>
+                                <button id="verify-ic-btn" class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600 shadow-lg shadow-amber-500/30 transition-all transform hover:scale-105">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+                                    </svg>
+                                    Sahkan Identiti
+                                </button>
+                            </div>
+                            <p id="ic-verify-feedback" class="text-sm mt-4 text-center h-5 relative z-10"></p>
+                        </div>
+                    </div>
+
                 </div>
-                <p id="ic-verify-feedback" class="text-sm mt-4 text-center h-5 relative z-10"></p>
             </div>
+
             <div id="voting-section" class="hidden bg-white">
                  <div class="p-6 border-b border-slate-200 bg-slate-50/50 rounded-t-xl">
                     <h2 class="text-2xl font-bold text-slate-900" id="vote-program-name">Borang Undian Permohonan</h2>
@@ -220,10 +267,15 @@
         const mainContent = document.getElementById('main-content');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
+        const votePageLoader = document.getElementById('vote-page-loader');
+        const votePageContent = document.getElementById('vote-page-content');
 
+        // --- State Variables ---
         let currentApplicationId = null;
         let currentVoterData = null;
         let countdownInterval = null;
+        let currentApplicationData = null; // Menyimpan data permohonan
+        let allExcoMembers = []; // Menyimpan senarai exco
 
         // --- General Functions ---
         const showToast = (message, type = 'success') => {
@@ -270,6 +322,71 @@
         }
         
         // --- Page Load Logic ---
+
+        /**
+         * Memuatkan data permohonan dan senarai exco sebaik sahaja halaman dibuka.
+         * Ini untuk memaparkan status undian sebelum pengesahan IC.
+         */
+        const loadApplicationData = async (appId) => {
+            try {
+                // 1. Dapatkan senarai Exco
+                const excoSnapshot = await getDocs(excoMembersCol);
+                if (!excoSnapshot.empty) {
+                    allExcoMembers = excoSnapshot.docs.map(doc => doc.data());
+                }
+
+                // 2. Dapatkan data Permohonan
+                const appDocRef = doc(db, applicationsCol.path, appId);
+                const appSnap = await getDoc(appDocRef);
+
+                if (!appSnap.exists()) {
+                    throw new Error("Permohonan tidak dijumpai.");
+                }
+                currentApplicationData = appSnap.data();
+                const app = currentApplicationData; // Nama pendek
+
+                // 3. Isi butiran permohonan di bahagian atas
+                document.getElementById('vote-program-name-verify').textContent = app.purpose;
+                document.getElementById('vote-program-applicant-verify').textContent = `Oleh: ${app.applicant}`;
+                document.getElementById('vote-program-amount-verify').textContent = `RM ${parseFloat(app.amount).toFixed(2)}`;
+
+                // 4. Isi statistik undian (Permintaan Pengguna)
+                const votes = app.votes || [];
+                const totalExco = allExcoMembers.length > 0 ? allExcoMembers.length : 15;
+                const countVoted = votes.length;
+                const countNotVoted = totalExco - countVoted;
+                
+                document.getElementById('count-voted').textContent = countVoted;
+                document.getElementById('count-not-voted').textContent = countNotVoted;
+
+                // 5. Isi senarai pengundi (Permintaan Pengguna)
+                const voterListContainer = document.getElementById('voter-list-container');
+                if (votes.length > 0) {
+                    let listHTML = '<ul class="space-y-2">';
+                    // Sort nama mengikut abjad
+                    votes.sort((a, b) => a.voterName.localeCompare(b.voterName)).forEach(vote => {
+                        listHTML += `
+                            <li class="flex items-center text-sm text-slate-700">
+                                <span class="flex items-center justify-center h-5 w-5 rounded-full bg-green-100 text-green-700 text-xs font-semibold mr-2">${vote.voterName.charAt(0).toUpperCase()}</span>
+                                ${vote.voterName.toUpperCase()}
+                            </li>`;
+                    });
+                    listHTML += '</ul>';
+                    voterListContainer.innerHTML = listHTML;
+                } else {
+                    voterListContainer.innerHTML = '<p class="text-slate-500 text-center text-sm">Belum ada undian.</p>';
+                }
+
+                // 6. Tunjukkan kandungan
+                votePageLoader.classList.add('hidden');
+                votePageContent.classList.remove('hidden');
+                votePageContent.classList.add('animate-fade-in-up');
+
+            } catch (error) {
+                mainContent.innerHTML = `<div class="p-8 text-center"><h2 class="text-2xl font-bold text-red-600">Gagal Memuatkan Data</h2><p class="mt-2 text-slate-500">${error.message}</p></div>`;
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                  if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -287,6 +404,9 @@
                     return;
                 }
                 
+                // Panggil fungsi baru untuk memuatkan data sebaik sahaja halaman dibuka
+                await loadApplicationData(currentApplicationId);
+
             } catch (error) {
                  console.error("Firebase authentication failed:", error);
                 showToast("Gagal menyambung ke pangkalan data.", 'error');
@@ -307,30 +427,29 @@
             icVerifyFeedback.textContent = "";
 
             try {
-                const q = query(excoMembersCol, where("ic", "==", icValue));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
+                // 1. Semak IC dari senarai Exco yang telah dimuatkan
+                currentVoterData = allExcoMembers.find(member => member.ic === icValue);
+                if (!currentVoterData) {
                     throw new Error("No. KP tidak sah atau bukan Exco.");
                 }
-                currentVoterData = querySnapshot.docs[0].data();
 
-                const appDocRef = doc(db, applicationsCol.path, currentApplicationId);
-                const appSnap = await getDoc(appDocRef);
-
-                if (!appSnap.exists()) {
-                    throw new Error("Permohonan tidak dijumpai.");
+                // 2. Guna data permohonan yang telah dimuatkan
+                if (!currentApplicationData) {
+                    throw new Error("Data permohonan tidak ditemui. Sila muat semula halaman.");
                 }
-                const appData = appSnap.data();
+                const appData = currentApplicationData;
 
+                // 3. Mulakan kiraan detik
                 if(appData.createdAt?.seconds) {
                     startVoteCountdown(appData.createdAt.seconds);
                 }
 
+                // 4. Semak jika telah mengundi
                 if (appData.votes?.some(vote => vote.voterIc === icValue)) {
                     throw new Error("Anda telah mengundi untuk permohonan ini.");
                 }
 
+                // 5. Semak tempoh undian
                 if(appData.createdAt?.seconds) {
                     const fortyEightHoursInSeconds = 48 * 60 * 60;
                     const nowInSeconds = Math.floor(Date.now() / 1000);
@@ -339,6 +458,7 @@
                     }
                 }
 
+                // 6. Isi borang undian dan tukar paparan
                 populateVotingForm(appData);
                 icVerificationSection.classList.add('hidden');
                 votingSection.classList.remove('hidden');
@@ -408,7 +528,8 @@
             </tfoot></table>`;
             budgetContainer.innerHTML = budgetHTML;
 
-            const totalExco = 15; 
+            // Statistik Undian di Skrin Undian
+            const totalExco = allExcoMembers.length > 0 ? allExcoMembers.length : 15;
             const currentVotes = app.votes?.length || 0;
             const percentage = totalExco > 0 ? Math.round((currentVotes / totalExco) * 100) : 0;
             document.getElementById('vote-progress-bar').style.width = `${percentage}%`;
