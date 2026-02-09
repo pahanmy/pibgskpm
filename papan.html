@@ -95,6 +95,12 @@
                 </div>
 
                 <p class="text-lg text-indigo-200 max-w-2xl mx-auto mb-8">Serlahkan kreativiti Panitia, Kelab, dan Unit anda! Jadikan ruang informasi sebagai hab ilmu yang interaktif dan menarik.</p>
+                
+                <!-- Tarikh Tutup Banner -->
+                <div class="mb-8 inline-block bg-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg animate-pulse border-2 border-red-400">
+                    ⚠️ Tarikh Tutup Penyertaan: 20 Februari 2026
+                </div>
+
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
                     <a href="#rubrik" class="px-8 py-3 bg-white text-indigo-900 font-bold rounded-lg hover:bg-indigo-50 transition-colors shadow-lg">Lihat Syarat & Rubrik</a>
                     <a href="#daftar" class="px-8 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-colors border border-indigo-500 shadow-lg">Daftar Penyertaan</a>
@@ -107,8 +113,8 @@
             <!-- Timeline & Info Section -->
             <section id="info-penting" class="mb-20">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-800">Tarikh Penting & Penilaian</h2>
-                    <p class="text-slate-500 mt-2">Sila ambil perhatian tarikh-tarikh berikut untuk persediaan anda.</p>
+                    <h2 class="text-3xl font-bold text-slate-800">Tarikh Penting & Sistem Pemarkahan</h2>
+                    <p class="text-slate-500 mt-2">Sila ambil perhatian tarikh dan kaedah penilaian.</p>
                     <div class="mt-4 inline-block bg-indigo-50 border border-indigo-200 rounded-lg px-6 py-3 shadow-sm">
                         <p class="text-indigo-800 font-medium flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -117,52 +123,101 @@
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-8 relative max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-4 gap-6 relative max-w-6xl mx-auto mb-12">
                     <!-- Timeline connection line -->
                     <div class="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-slate-200 -z-10 transform -translate-y-1/2"></div>
 
+                    <!-- Date 0: Tutup Penyertaan -->
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center relative card-hover">
+                        <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 border-4 border-white shadow-md absolute -top-5 left-1/2 transform -translate-x-1/2">!</div>
+                        <div class="mt-4">
+                            <span class="text-xs font-bold text-red-600 uppercase tracking-wider">Tutup Penyertaan</span>
+                            <h3 class="font-bold text-lg text-slate-800 mt-1">20 Feb 2026</h3>
+                            <p class="text-xs text-slate-500 mt-2">Tarikh akhir untuk mendaftar pasukan anda.</p>
+                        </div>
+                    </div>
+
                     <!-- Date 1 -->
-                    <div class="bg-white p-8 rounded-2xl shadow-md border border-slate-200 text-center relative card-hover">
-                        <div class="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-md absolute -top-7 left-1/2 transform -translate-x-1/2">1</div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center relative card-hover">
+                        <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 border-4 border-white shadow-md absolute -top-5 left-1/2 transform -translate-x-1/2">1</div>
                         <div class="mt-4">
                             <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Fasa Pertama</span>
-                            <h3 class="font-bold text-xl text-slate-800 mt-1">13 Mac 2026</h3>
-                            <p class="text-sm text-slate-500 mt-3 leading-relaxed">Permulaan semakan kriteria asas, susun atur, dan kreativiti awal.</p>
+                            <h3 class="font-bold text-lg text-slate-800 mt-1">13 Mac 2026</h3>
+                            <p class="text-xs text-slate-500 mt-2">Semakan kriteria asas & susun atur.</p>
                         </div>
                     </div>
 
                     <!-- Date 2 -->
-                    <div class="bg-white p-8 rounded-2xl shadow-md border border-slate-200 text-center relative card-hover">
-                        <div class="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-md absolute -top-7 left-1/2 transform -translate-x-1/2">2</div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center relative card-hover">
+                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 border-4 border-white shadow-md absolute -top-5 left-1/2 transform -translate-x-1/2">2</div>
                         <div class="mt-4">
                             <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Fasa Kedua</span>
-                            <h3 class="font-bold text-xl text-slate-800 mt-1">17 April 2026</h3>
-                            <p class="text-sm text-slate-500 mt-3 leading-relaxed">Semakan kemaskini maklumat terkini dan elemen interaktiviti murid.</p>
+                            <h3 class="font-bold text-lg text-slate-800 mt-1">17 April 2026</h3>
+                            <p class="text-xs text-slate-500 mt-2">Semakan info terkini & interaktiviti.</p>
                         </div>
                     </div>
 
                     <!-- Date 3 -->
-                    <div class="bg-white p-8 rounded-2xl shadow-md border border-slate-200 text-center relative card-hover">
-                        <div class="w-14 h-14 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-md absolute -top-7 left-1/2 transform -translate-x-1/2">3</div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center relative card-hover ring-2 ring-purple-100">
+                        <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 border-4 border-white shadow-md absolute -top-5 left-1/2 transform -translate-x-1/2">3</div>
                         <div class="mt-4">
-                            <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Fasa Akhir</span>
-                            <h3 class="font-bold text-xl text-slate-800 mt-1">15 Mei 2026</h3>
-                            <p class="text-sm text-slate-500 mt-3 leading-relaxed">Penilaian keseluruhan, kekemasan akhir, dan pemarkahan bonus.</p>
+                            <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Fasa Akhir (40%)</span>
+                            <h3 class="font-bold text-lg text-slate-800 mt-1">15 Mei 2026</h3>
+                            <p class="text-xs text-slate-500 mt-2">Penilaian keseluruhan & pemberatan tinggi.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-16 bg-gradient-to-br from-yellow-50 to-amber-100 rounded-2xl p-10 text-center border border-amber-200 shadow-sm max-w-4xl mx-auto relative overflow-hidden">
-                    <div class="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-amber-300 rounded-full opacity-20 blur-3xl"></div>
-                    <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 bg-yellow-300 rounded-full opacity-20 blur-3xl"></div>
-                    
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center justify-center p-4 bg-white text-amber-600 rounded-full mb-6 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>
+                <!-- Info Pengiraan Markah -->
+                <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-12">
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 flex items-start space-x-4">
+                        <div class="bg-blue-100 p-3 rounded-lg text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         </div>
-                        <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Majlis Penyampaian Hadiah</h3>
-                        <p class="text-lg text-slate-600">Akan dilangsungkan dengan penuh gilang-gemilang pada:</p>
-                        <div class="mt-6 inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-extrabold text-xl md:text-2xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform">
+                        <div>
+                            <h4 class="font-bold text-blue-800 text-lg">Format Pengiraan Markah</h4>
+                            <p class="text-slate-600 text-sm mt-1">Pemenang ditentukan berdasarkan <strong>Purata Markah Bulanan</strong>. Markah setiap bulan akan dikumpul dan dipuratakan untuk keputusan akhir yang adil.</p>
+                        </div>
+                    </div>
+                    <div class="bg-purple-50 p-6 rounded-xl border border-purple-100 flex items-start space-x-4">
+                        <div class="bg-purple-100 p-3 rounded-lg text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-purple-800 text-lg">Pemberatan Bulan Akhir</h4>
+                            <p class="text-slate-600 text-sm mt-1">Bulan terakhir (Mei) membawa pemberatan markah sebanyak <strong>40%</strong>. Kekalkan momentum dan kekemasan sehingga ke garisan penamat!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Hadiah -->
+                <div class="bg-gradient-to-br from-yellow-50 to-amber-100 rounded-2xl p-8 text-center border border-amber-200 shadow-sm max-w-4xl mx-auto relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold text-amber-800 mb-4">🏆 Kategori Pemenang & Hadiah</h3>
+                        <div class="grid sm:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-white/60 p-4 rounded-lg backdrop-blur-sm border border-amber-200">
+                                <span class="block text-sm font-bold text-amber-600 uppercase">Kategori 1</span>
+                                <span class="block font-bold text-slate-800">Panitia Mata Pelajaran</span>
+                            </div>
+                            <div class="bg-white/60 p-4 rounded-lg backdrop-blur-sm border border-amber-200">
+                                <span class="block text-sm font-bold text-amber-600 uppercase">Kategori 2</span>
+                                <span class="block font-bold text-slate-800">Kelab & Persatuan</span>
+                            </div>
+                            <div class="bg-white/60 p-4 rounded-lg backdrop-blur-sm border border-amber-200">
+                                <span class="block text-sm font-bold text-amber-600 uppercase">Kategori 3</span>
+                                <span class="block font-bold text-slate-800">Unit Khas (HEM/Ko-K)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-amber-500 text-white p-4 rounded-lg shadow-md inline-block max-w-lg mx-auto">
+                            <div class="flex items-center justify-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                                <span class="font-bold text-lg">ANUGERAH PAPAN NOTIS TERBAIK KESELURUHAN 2026</span>
+                            </div>
+                        </div>
+
+                        <p class="text-amber-800 mt-6 font-medium">Majlis Penyampaian Hadiah pada:</p>
+                        <div class="mt-2 text-2xl font-extrabold text-amber-900 uppercase">
                             SAMBUTAN HARI GURU 2026
                         </div>
                     </div>
@@ -573,8 +628,8 @@
                             <tr>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Kategori</th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Nama Kumpulan</th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Unit / Bilik</th>
-                                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Ketua Pasukan</th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Ahli Pasukan</th>
+                                <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Tindakan</th>
                             </tr>
                         </thead>
                         <tbody id="entriesTableBody" class="bg-white divide-y divide-slate-200 text-sm">
@@ -605,7 +660,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pibgskpm-01';
@@ -726,8 +781,14 @@
                     badgeColor = 'bg-orange-100 text-orange-800';
                 }
 
-                // Get leader name from the first object in teamMembers array
-                const leaderName = entry.teamMembers && entry.teamMembers.length > 0 ? entry.teamMembers[0].name : 'Tidak dinyatakan';
+                let membersList = '';
+                if (entry.teamMembers && entry.teamMembers.length > 0) {
+                    membersList = '<ul class="list-disc list-inside text-xs text-slate-700">';
+                    entry.teamMembers.forEach(member => {
+                        membersList += `<li>${member.name}</li>`;
+                    });
+                    membersList += '</ul>';
+                }
 
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -738,11 +799,15 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-bold text-slate-900">${entry.teamName || '-'}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                        ${entry.unitName}
+                    <td class="px-6 py-4 text-sm text-slate-600">
+                        ${membersList}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-slate-800">
-                        ${leaderName}
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                        <button class="delete-btn text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full hover:bg-red-100 transition-colors" data-id="${entry.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
                     </td>
                 `;
                 entriesTableBody.appendChild(row);
@@ -768,6 +833,27 @@
                     console.error("Snapshot error:", error);
                     if (error.code === 'permission-denied') {
                         showToast("Tiada kebenaran akses. Sila muat semula.", 'error');
+                    }
+                });
+
+                // Delete Logic
+                entriesTableBody.addEventListener('click', async (e) => {
+                    const btn = e.target.closest('.delete-btn');
+                    if (!btn) return;
+                    
+                    const id = btn.dataset.id;
+                    const code = prompt("Masukkan kod keselamatan untuk memadam:");
+                    
+                    if (code === "890522135381") {
+                        try {
+                            await deleteDoc(doc(db, `/artifacts/${appId}/public/data/board_entries`, id));
+                            showToast("Penyertaan berjaya dipadam!");
+                        } catch (error) {
+                            console.error(error);
+                            showToast("Ralat memadam penyertaan.", "error");
+                        }
+                    } else if (code !== null) {
+                        alert("Kod akses salah!");
                     }
                 });
 
